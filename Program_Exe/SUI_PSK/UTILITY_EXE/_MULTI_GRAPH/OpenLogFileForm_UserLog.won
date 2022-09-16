@@ -1,0 +1,26 @@
+14:42:22.525 >>>> Start Log <<<<
+14:42:22.650 0
+14:42:22.655 1
+14:42:22.656 2
+14:42:22.659 3
+14:42:23.024 Load
+14:42:23.056 4
+14:42:23.080 Update_ListView Start : D:\WORK_PSK\PROGRAM_EXE\PM1_METAL-PSK\EQP_LOG\DATALOG\\
+14:42:23.080 Update_ListView Exist
+14:42:23.107 Update_ListView GetDirectories
+14:42:23.132 Update_ListView GetFiles
+14:42:23.132 Update_ListView End
+14:42:23.137 Update_TreeFolder Start : D:\WORK_PSK\PROGRAM_EXE\PM1_METAL-PSK\EQP_LOG\DATALOG\
+14:42:23.158 Update_TreeFolder End
+14:42:23.277 Shown
+14:42:24.952 Update_ListView Start : D:\WORK_PSK\PROGRAM_EXE\PM1_METAL-PSK\EQP_LOG\DATALOG\\2022_06_07
+14:42:24.956 Update_ListView Exist
+14:42:25.012 Update_ListView GetDirectories
+14:42:25.019 Update_ListView GetFiles
+14:42:25.019 Update_ListView End
+14:42:25.593 Update_ListView Start : D:\WORK_PSK\PROGRAM_EXE\PM1_METAL-PSK\EQP_LOG\DATALOG\\2022_06_07\MNT
+14:42:25.595 Update_ListView Exist
+14:42:25.631 Update_ListView GetDirectories
+14:42:25.632 Update_ListView GetFiles
+14:42:25.680 Update_ListView End
+14:42:27.402 >>>> Log Close <<<<

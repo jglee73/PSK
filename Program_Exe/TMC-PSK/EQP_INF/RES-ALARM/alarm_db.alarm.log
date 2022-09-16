@@ -1,0 +1,9770 @@
+//==================================================================================== 
+// Command Info ... 
+/* 
+#EQP1__ALARM_OFFSET   ??? 
+#EQP1__ALARM_RANGE   ??? 
+
+#INCLUDE   ??? 
+
+#DEFINE   ?[Name)  ?[Data) 
+
+#OBJECT   ?[Name)  ?[OffsetID)  ?[ToolID)  ?[UnitID)  
+... 
+
+#OBJECT_START   ?[Name) 
+#ALID   ??? 
+#LEVEL     // HEAVY(Default)  LIGHT  WARNING  
+#HOST_REPORT_DISABLE
+#HOST_REPORT_ENABLE     // Default 
+#TITLE   " ... " 
+#MESSAGE   " ... " 
+#OPTION1   " ... " 
+#OPTION2   " ... " 
+#OPTION3   " ... " 
+#ACTION
+{ 
+   " ... " 
+} 
+#OBJECT_END
+*/ 
+
+//==================================================================================== 
+// Define List ... 
+
+
+
+//==================================================================================== 
+// Object Define Info ... 
+
+"__EQP" Object not defined ! 
+"PAGE__LBA_LEAK" Object not defined ! 
+"PAGE__LBA_VLV" Object not defined ! 
+"PAGE__LBB_LEAK" Object not defined ! 
+"PAGE__LBB_VLV" Object not defined ! 
+"PAGE__LBx_TEST" Object not defined ! 
+"PAGE__LP1" Object not defined ! 
+"PAGE__LP2" Object not defined ! 
+"PAGE__LP3" Object not defined ! 
+"PAGE__MANIFOLD_TEST" Object not defined ! 
+"PAGE__SYS_CTRL" Object not defined ! 
+"PAGE__TMC_LEAK" Object not defined ! 
+"PHY_PSK__LAMP" Object not defined ! 
+
+
+//==================================================================================== 
+// Alarm Info ... 
+//------------------------------------------------------------
+OBJECT_NAME : DB_CFG   (OffsetID:20100) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   20101 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"DB_CFG - The config setting of "Setup Mode" is "ENABLE" !"
+#MESSAGE 
+"Please, check config page.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   20102 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"DB_CFG - Simulation mode is active !"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   20103 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"DB_CFG - PMC-Dummy mode is active !"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : DB_GUI   (OffsetID:20200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : DB_LBA   (OffsetID:20300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : DB_LBB   (OffsetID:20400) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : DB_RCP   (OffsetID:20500) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : TMC_LINK   (OffsetID:20600) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC_BALLAST_DATALOG   (OffsetID:20700) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__SIGNAL_TOWER   (OffsetID:20800) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : INF__UPPER_VAC_ROBOT   (OffsetID:21100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : INF__VAC_ROBOT   (OffsetID:21200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : OPR__VAC_ROBOT   (OffsetID:21300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__VAC_ROBOT   (OffsetID:21400) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   21401 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__VAC_ROBOT - Unknown Module Name !"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   21402 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__VAC_ROBOT - PMC's Slit Valve is not closed !"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   21403 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__VAC_ROBOT - There is no material on Robot's A-Arm.
+"
+#MESSAGE 
+"Please, check material on Robot's A-Arm.
+PHY_VAC_ROBOT+OTR.OUT.MON.dARM_A.MATERIAL.STATUS"
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   21404 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__VAC_ROBOT - There is no material on Robot's B-Arm.
+"
+#MESSAGE 
+"Please, check material on Robot's B-Arm.
+PHY_VAC_ROBOT+OTR.OUT.MON.dARM_B.MATERIAL.STATUS"
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   5 
+#EXTERNAL_ID   21405 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__VAC_ROBOT - There is material on Robot's A-Arm."
+#MESSAGE 
+"Please, check material on Robot's A-Arm.
+PHY_VAC_ROBOT+OTR.OUT.MON.dARM_A.MATERIAL.STATUS"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   6 
+#EXTERNAL_ID   21406 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__VAC_ROBOT - There is material on Robot's B-Arm."
+#MESSAGE 
+"Please, check material on Robot's B-Arm.
+PHY_VAC_ROBOT+OTR.OUT.MON.dARM_B.MATERIAL.STATUS"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   7 
+#EXTERNAL_ID   21407 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__VAC_ROBOT - There is no material in PMC."
+#MESSAGE 
+"Please, check material in PMC.
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   8 
+#EXTERNAL_ID   21408 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__VAC_ROBOT - There is material in PMC."
+#MESSAGE 
+"Please, check material in PMC.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   9 
+#EXTERNAL_ID   21409 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__VAC_ROBOT - Target PM's transfer state is not ready to pick."
+#MESSAGE 
+"Please, check transfer ready state.
+"
+#RECOVERY_ACTION 
+     CHECK_RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   10 
+#EXTERNAL_ID   21410 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__VAC_ROBOT - Target PM's transfer state is not ready to place."
+#MESSAGE 
+"Please, check transfer ready state.
+"
+#RECOVERY_ACTION 
+     CHECK_RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   21411 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__VAC_ROBOT - Target PM's PIN not Up."
+#MESSAGE 
+"Please, check PIN State.
+"
+#RECOVERY_ACTION 
+     CHECK_RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   21412 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__VAC_ROBOT - Target PM's PIN not Down."
+#MESSAGE 
+"Please, check PIN State.
+"
+#RECOVERY_ACTION 
+     CHECK_RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__VAC_ROBOT   (OffsetID:21500) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   7 
+#EXTERNAL_ID   21507 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - Pick action error !"
+#MESSAGE 
+"Or check the state response of robot-driver. 
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   8 
+#EXTERNAL_ID   21508 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - Place action error !"
+#MESSAGE 
+"Or check the state response of robot-driver. 
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   5 
+#EXTERNAL_ID   21505 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - You can't use Arm-A."
+#MESSAGE 
+"Please, check robot-config page.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   6 
+#EXTERNAL_ID   21506 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - You can't use Arm-B."
+#MESSAGE 
+"Please, check robot-config page.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   21501 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - There is material on Robot's A-Arm."
+#MESSAGE 
+"Please, check material on Robot's A-Arm.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   21502 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - There is material on Robot's B-Arm."
+#MESSAGE 
+"Please, check material on Robot's B-Arm.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   21511 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - There is material in LLx."
+#MESSAGE 
+"Please, check material in LLx.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   21512 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - There is material in PMx."
+#MESSAGE 
+"Please, check material in PMx.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   21503 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - There is no material on Robot's A-Arm."
+#MESSAGE 
+"Please, check material on Robot's A-Arm.
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   21504 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - There is no material on Robot's B-Arm."
+#MESSAGE 
+"Please, check material on Robot's B-Arm.
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   21513 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - There is no material in LLx."
+#MESSAGE 
+"Please, check material in LLx.
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   14 
+#EXTERNAL_ID   21514 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - There is no material in PMx."
+#MESSAGE 
+"Please, check material in PMx.
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   15 
+#EXTERNAL_ID   21515 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - STN does not exist."
+#MESSAGE 
+"Please, check config page.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   16 
+#EXTERNAL_ID   21516 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - LLx Slot_ID Error !"
+#MESSAGE 
+"Please, check the LLx slot parameter of command. 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   21 
+#EXTERNAL_ID   21521 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - LLx's valve status is not open."
+#MESSAGE 
+"Please, check LLx's valve status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   22 
+#EXTERNAL_ID   21522 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - PMx's valve status is not open."
+#MESSAGE 
+"PHY__VAC_ROBOT - PMx's valve status is not open."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   23 
+#EXTERNAL_ID   21523 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - TMC_CHM's Pressure is not ATM."
+#MESSAGE 
+"Please, Check TMC_CHM's Pressure !
+TMC_CHM's Pressure must be ATM.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   24 
+#EXTERNAL_ID   21524 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - LLx's Pressure is not ATM."
+#MESSAGE 
+"Please, Check LLx's Pressure !
+LLx's Pressure must be ATM.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   25 
+#EXTERNAL_ID   21525 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - PMx's pressure is not ATM."
+#MESSAGE 
+"Please, check PMx's pressure !
+PMx's pressure must be ATM.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   31 
+#EXTERNAL_ID   21531 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - TMC_CHM's Pressure is not VAC."
+#MESSAGE 
+"Please, Check TMC_CHM's Pressure !
+TMC_CHM's Pressure must be VAC.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   32 
+#EXTERNAL_ID   21532 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - LLx's Pressure is not VAC."
+#MESSAGE 
+"Please, Check LLx's Pressure !
+LLx's Pressure must be VAC.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   33 
+#EXTERNAL_ID   21533 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - PMx's pressure is not VAC."
+#MESSAGE 
+"Please, check PMx's pressure !
+PMx's pressure must be VAC.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   41 
+#EXTERNAL_ID   21541 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - Cannot use PICK or PLACE Command in PM CHAMBER."
+#MESSAGE 
+"Please, check Command !
+Only Use EXTEND or RETRACT Command in PM CHAMBER.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   42 
+#EXTERNAL_ID   21542 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - DA Soft-Offset Error !"
+#MESSAGE 
+"Please, check DA result !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   43 
+#EXTERNAL_ID   21543 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__VAC_ROBOT - DA Hard-Offset Error !"
+#MESSAGE 
+"Please, check DA result !
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__PMx   (OffsetID:22100) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   22101 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__PMx - Valve Open TimeOut."
+#MESSAGE 
+"Please, Check I/O Object !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   22102 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__PMx - PM Slot Valve.. PM Close TimeOut."
+#MESSAGE 
+"Please, Check I/O Status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   22103 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__PMx - PM Slot Valve.. TM Close TimeOut."
+#MESSAGE 
+"Please, Check I/O Status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   22104 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__PMx - VAC Robot's Arm not retracted sts."
+#MESSAGE 
+"Please, Check VAC Robot's Arm Status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   5 
+#EXTERNAL_ID   22105 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__PMx - Slit Valve can not open, because of not ATM Pressure !"
+#MESSAGE 
+"Please, check PM and TM pressure Status.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   6 
+#EXTERNAL_ID   22106 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__PMx - Slit Valve can not open, because of not VAC Pressure !"
+#MESSAGE 
+"Please, check PM and TM pressure Status.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   7 
+#EXTERNAL_ID   22107 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__PMx - PM Slit Valve can not UP, because of not PM or TM SV OPEN Sts !"
+#MESSAGE 
+"Please, check PM and TM SV OPEN Sensor Status.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   8 
+#EXTERNAL_ID   22108 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__PMx - Max Difference Press Alarm Occur !"
+#MESSAGE 
+"Please, check PM and TM Pressure Status.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   9 
+#EXTERNAL_ID   22109 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__PMx - PM Not Exist Config Value !"
+#MESSAGE 
+"Please, check PM Station Status.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   10 
+#EXTERNAL_ID   22110 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__PMx - Can't Close Slot Valve ! 
+"
+#MESSAGE 
+"PM and TM Station's Pressure Must be Equal.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   22111 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__PMx - TMC and PMC's pressure is not same !"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : OPR__PMx_HANDOFF   (OffsetID:22200) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   22201 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"OPR__PMx_HANDOFF - MODULE OBJECT - ABORTED"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   22202 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"OPR__PMx_HANDOFF - MODULE OBJECT - OFFLINE"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   22203 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"OPR__PMx_HANDOFF - MODULE OBJECT - NOT STANDBY"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   22204 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"OPR__PMx_HANDOFF - MODULE OBJECT - CALL ERROR"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   22211 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"OPR__PMx_HANDOFF - OBJECT MODE : UNKNOWN"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   22212 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"OPR__PMx_HANDOFF - PMC ID : UNKNOWN"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_IO__VAC_ROBOT   (OffsetID:22300) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   22311 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__VAC_ROBOT - Offline."
+#MESSAGE 
+"Controller is Offline.
+Please, Check Communication Status !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   22312 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__VAC_ROBOT - Error Code !"
+#MESSAGE 
+"Please, check HW status !
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   22313 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__VAC_ROBOT - Function dose not exist !"
+#MESSAGE 
+"Please, check the object code !
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : INF__UPPER_ATM_ROBOT   (OffsetID:23100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : INF__ATM_ROBOT   (OffsetID:23200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : OPR__ATM_ROBOT   (OffsetID:23300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__ATM_ROBOT   (OffsetID:23400) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__ATM_ROBOT   (OffsetID:23500) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   7 
+#EXTERNAL_ID   23507 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - Pick action error !"
+#MESSAGE 
+"Or check the state response of robot-driver. 
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   8 
+#EXTERNAL_ID   23508 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - Place action error !"
+#MESSAGE 
+"Or check the state response of robot-driver. 
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   5 
+#EXTERNAL_ID   23505 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - You can't use Arm-A."
+#MESSAGE 
+"Please, check robot-config page.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   6 
+#EXTERNAL_ID   23506 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - You can't use Arm-B."
+#MESSAGE 
+"Please, check robot-config page.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   23501 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is material on Robot's A-Arm."
+#MESSAGE 
+"Please, check material on Robot's A-Arm.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   23502 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is material on Robot's B-Arm."
+#MESSAGE 
+"Please, check material on Robot's B-Arm.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   23503 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - After Mapping Crossed Wafer Detected."
+#MESSAGE 
+"Please, check Wafer Status.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   23511 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is material in LP1."
+#MESSAGE 
+"Please, check material in LP1.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   23512 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is material in LP2."
+#MESSAGE 
+"Please, check material in LP2.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   23513 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is material in LP3."
+#MESSAGE 
+"Please, check material in LP3.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   14 
+#EXTERNAL_ID   23514 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is material in LP4."
+#MESSAGE 
+"Please, check material in LP4.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   15 
+#EXTERNAL_ID   23515 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is material in LP5."
+#MESSAGE 
+"Please, check material in LP5.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   21 
+#EXTERNAL_ID   23521 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is material in AL1."
+#MESSAGE 
+"Please, check material in AL1.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   22 
+#EXTERNAL_ID   23522 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is material in LBA."
+#MESSAGE 
+"Please, check material in LBA.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   23 
+#EXTERNAL_ID   23523 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is material in LBB."
+#MESSAGE 
+"Please, check material in LBB.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   24 
+#EXTERNAL_ID   23524 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is material in VIS1."
+#MESSAGE 
+"Please, check material in VIS1.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   25 
+#EXTERNAL_ID   23525 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is material in side storage(1)."
+#MESSAGE 
+"Please, check material in side storage(1).
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   26 
+#EXTERNAL_ID   23526 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is material in side storage(2)."
+#MESSAGE 
+"Please, check material in side storage(2).
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   31 
+#EXTERNAL_ID   23531 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is material in PMC."
+#MESSAGE 
+"Please, check material in PMC.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   32 
+#EXTERNAL_ID   23532 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - ALx Slot_ID Error !"
+#MESSAGE 
+"Please, check the ALx slot parameter of command. 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   33 
+#EXTERNAL_ID   23533 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - LLx Slot_ID Error !"
+#MESSAGE 
+"Please, check the LLx slot parameter of command. 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   41 
+#EXTERNAL_ID   23541 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is no material on Robot's A-Arm."
+#MESSAGE 
+"Please, check material on Robot's A-Arm.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   42 
+#EXTERNAL_ID   23542 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is no material on Robot's B-Arm."
+#MESSAGE 
+"Please, check material on Robot's B-Arm.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   51 
+#EXTERNAL_ID   23551 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is no material in LP1."
+#MESSAGE 
+"Please, check material in LP1.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   52 
+#EXTERNAL_ID   23552 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is no material in LP2."
+#MESSAGE 
+"Please, check material in LP2.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   53 
+#EXTERNAL_ID   23553 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is no material in LP3."
+#MESSAGE 
+"Please, check material in LP3.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   54 
+#EXTERNAL_ID   23554 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is no material in LP4."
+#MESSAGE 
+"Please, check material in LP4.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   55 
+#EXTERNAL_ID   23555 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is no material in LP5."
+#MESSAGE 
+"Please, check material in LP5.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   61 
+#EXTERNAL_ID   23561 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is no material in AL1."
+#MESSAGE 
+"Please, check material in AL1.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   62 
+#EXTERNAL_ID   23562 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is no material in LBA."
+#MESSAGE 
+"Please, check material in LBA.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   63 
+#EXTERNAL_ID   23563 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is no material in LBB."
+#MESSAGE 
+"Please, check material in LBB.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   64 
+#EXTERNAL_ID   23564 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is no material in VIS1."
+#MESSAGE 
+"Please, check material in VIS1.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   65 
+#EXTERNAL_ID   23565 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is no material in side storage(1)."
+#MESSAGE 
+"Please, check material in side storage(1).
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   66 
+#EXTERNAL_ID   23566 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is no material in side storage(2)."
+#MESSAGE 
+"Please, check material in side storage(2).
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   71 
+#EXTERNAL_ID   23571 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - There is no material in PMC."
+#MESSAGE 
+"Please, check material in PMC.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   72 
+#EXTERNAL_ID   23572 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - STN does not exist."
+#MESSAGE 
+"Please, check config page.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   81 
+#EXTERNAL_ID   23581 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - LBA's door status is not open."
+#MESSAGE 
+"Please, check LBA's door status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   82 
+#EXTERNAL_ID   23582 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - LBB's door status is not open."
+#MESSAGE 
+"Please, check LBB's door status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   83 
+#EXTERNAL_ID   23583 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - LPx's door status is not open."
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   84 
+#EXTERNAL_ID   23584 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - LPx's foup does not exist."
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   85 
+#EXTERNAL_ID   23585 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - LPx's foup does not clamp."
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   86 
+#EXTERNAL_ID   23586 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - LPx's foup position is not load."
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   87 
+#EXTERNAL_ID   23587 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - EFEM DOOR is not Close."
+#MESSAGE 
+"So... Robot Can't do any command.
+Please..., Check EFEM Side Door Status"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   88 
+#EXTERNAL_ID   23588 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - Material Exist On Arm."
+#MESSAGE 
+"So... Robot Can't do Mapping Action.
+Please..., Check Robot's Arm Status"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   89 
+#EXTERNAL_ID   23589 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__ATM_ROBOT - ATM_Robot has no mapping sensor !."
+#MESSAGE 
+"So, Robot Can't do Mapping Action.
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__BUFF1   (OffsetID:23600) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__BUFF2   (OffsetID:23700) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_IO__ATM_ROBOT   (OffsetID:23800) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   23811 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - Offline."
+#MESSAGE 
+"Controller is Offline.
+Please, Check Communication Status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   23812 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - Align and Pick Action Timeout Occur."
+#MESSAGE 
+"Align and Pick Action Timeout Occur.
+Please, Check ATM Robot Status !
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   23813 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - Config Option, Mapping Disable Alarm."
+#MESSAGE 
+"Now, Mapping Disable Config Option Selected.
+Would you like to continue ??
+"
+#RECOVERY_ACTION 
+     NO   ""
+     YES   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   15 
+#EXTERNAL_ID   23815 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - Error State"
+#MESSAGE 
+"Error state must be "OFF". 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   16 
+#EXTERNAL_ID   23816 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - Servo State"
+#MESSAGE 
+"Servo state must be "ON". 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   17 
+#EXTERNAL_ID   23817 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - Robot's FAN State"
+#MESSAGE 
+"Robot's FAN state must be "ON". 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   101 
+#EXTERNAL_ID   23901 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Command failed"
+#MESSAGE 
+"This is a generic command that requires the operator to have a knowledge.
+of the events leading to the failure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   102 
+#EXTERNAL_ID   23902 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : MCC Error"
+#MESSAGE 
+"MCC Error Already Displayed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   103 
+#EXTERNAL_ID   23903 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Not at Station"
+#MESSAGE 
+"Station based command issued while robot was
+not at a station."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   104 
+#EXTERNAL_ID   23904 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Radial axis not at retract position"
+#MESSAGE 
+"Robot must be retracted prior to executing desired move."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   105 
+#EXTERNAL_ID   23905 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Invalid Arm selection"
+#MESSAGE 
+"Verify that arm A is being selected for single arm robot.
+Arm B is available for dual arm."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   106 
+#EXTERNAL_ID   23906 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Wrist axis not at unflipped position"
+#MESSAGE 
+"This error is displayed anytime a robot is commanded to retract from a
+station and the W-axis is at the FLIPPED position with the Z-axis DOWN
+for the station."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   107 
+#EXTERNAL_ID   23907 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Wrist axis not at flipped position [ErrorID:%d]"
+#MESSAGE 
+"Wrist axis not at flipped position."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   108 
+#EXTERNAL_ID   23908 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : R and T axis must be referenced before homing Z"
+#MESSAGE 
+"R and T axis must be referenced before homing Z."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   109 
+#EXTERNAL_ID   23909 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Robot Extended to VCE"
+#MESSAGE 
+"Robot Extended to VCE."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   110 
+#EXTERNAL_ID   23910 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Atmospheric Robot Extended to VCE"
+#MESSAGE 
+"Atmospheric Robot Extended to VCE."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   111 
+#EXTERNAL_ID   23911 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Platform 97 Pneumatic Fault"
+#MESSAGE 
+"Platform 97 Pneumatic Fault."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   112 
+#EXTERNAL_ID   23912 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Extend to station not enabled"
+#MESSAGE 
+"Extend to station not enabled.
+ATM Robot occurred H/W Alarm.
+Please, Check ATM Robot H/W Status"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   113 
+#EXTERNAL_ID   23913 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Valve not closed"
+#MESSAGE 
+"Valve not closed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   114 
+#EXTERNAL_ID   23914 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Command argument already used"
+#MESSAGE 
+"Command argument already used."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   115 
+#EXTERNAL_ID   23915 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Unknown command"
+#MESSAGE 
+"Unrecognized command. An optional parameter is missing or the command was
+entered incorrectly."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   116 
+#EXTERNAL_ID   23916 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Command not supported"
+#MESSAGE 
+"Command not supported."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   117 
+#EXTERNAL_ID   23917 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Parser error, bad node in parse tree"
+#MESSAGE 
+"Parser error, bad node in parse tree."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   118 
+#EXTERNAL_ID   23918 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Parser error, stack overflow"
+#MESSAGE 
+"Parser error, stack overflow."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   119 
+#EXTERNAL_ID   23919 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Parse error, no memory available"
+#MESSAGE 
+"Parse error, no memory available."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   120 
+#EXTERNAL_ID   23920 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Unexpected mail to UIO task"
+#MESSAGE 
+"Unexpected mail to UIO task"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   121 
+#EXTERNAL_ID   23921 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Command checksum error"
+#MESSAGE 
+"Command checksum error"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   122 
+#EXTERNAL_ID   23922 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Bad slot number"
+#MESSAGE 
+"Bad slot number
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   123 
+#EXTERNAL_ID   23923 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Bad Lower Position"
+#MESSAGE 
+"Bad Lower Position.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   124 
+#EXTERNAL_ID   23924 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Station not initialized"
+#MESSAGE 
+"Station not initialized.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   125 
+#EXTERNAL_ID   23925 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : No Z-axis on robot"
+#MESSAGE 
+"No Z-axis on robot.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   126 
+#EXTERNAL_ID   23926 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Command sequencer busy"
+#MESSAGE 
+"Wait for the robot to complete its last operation. If the error persists,
+reset the robot by issuing the RESET command or toggling power."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   127 
+#EXTERNAL_ID   23927 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Command halted"
+#MESSAGE 
+"A HALT command was issued to stop robot motion. The robot remains referenced.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   129 
+#EXTERNAL_ID   23929 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Digital I/O in control of robot"
+#MESSAGE 
+"To release digital I/O control of robot, enter the command DIO STOP.
+Refer to DIO Start/Stop on page 8-66 for additional information."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   130 
+#EXTERNAL_ID   23930 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Serial I/O in control of robot"
+#MESSAGE 
+"To initiate digital I/O control of robot, enter the command DIO START.
+Refer to DIO Start/Stop on page 8-66 for additional information."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   131 
+#EXTERNAL_ID   23931 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Emergency stop on"
+#MESSAGE 
+"The EMER_STOP interlock for the robot has been activated.
+Refer to Operational Interlocks on page 6-66. Verify that a robot
+Emergency Stop (EMS) button has been activated and deactivate
+as appropriate. Check host controller software."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   132 
+#EXTERNAL_ID   23932 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Warning, CDM has been turned on"
+#MESSAGE 
+"Warning, CDM has been turned on.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   133 
+#EXTERNAL_ID   23933 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Warning, CDM has been turned off"
+#MESSAGE 
+"Warning, CDM has been turned off.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   134 
+#EXTERNAL_ID   23934 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Unknown command"
+#MESSAGE 
+"Unknown command.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   135 
+#EXTERNAL_ID   23935 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Invalid command identifier"
+#MESSAGE 
+"Invalid command identifier.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   136 
+#EXTERNAL_ID   23936 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Wafer detected on paddle"
+#MESSAGE 
+"Wafer detected on paddle
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   137 
+#EXTERNAL_ID   23937 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Slot valve not open"
+#MESSAGE 
+"Slot valve not open
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   138 
+#EXTERNAL_ID   23938 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : No Vacuum Grip Arm A"
+#MESSAGE 
+"Occurs during a PICK operation if successful vacuum gripping is NOT
+detected for the specified arm at the completion of the operation,
+whether the arm is retracted or not.
+Occurs during a PLACE operation if successful vacuum gripping is
+NOT detected for the specified arm prior to placing the wafer.
+Occurs during either the PICK or PLACE portion of a XFER operation.
+Occurs during a GOTO operation if successful vacuum gripping is NOT
+detected for the specified arm prior to the specified motion."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   139 
+#EXTERNAL_ID   23939 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Slow Vacuum Grip Arm A"
+#MESSAGE 
+"Occurs during a PICK operation if successful vacuum gripping is NOT
+detected for the specified arm when a wafer has been picked up and the
+robot arm is still extended, but IS detected at the completion of the operation."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   140 
+#EXTERNAL_ID   23940 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Possible Material on Arm A"
+#MESSAGE 
+"Possible Material on Arm A."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   141 
+#EXTERNAL_ID   23941 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Pick failed"
+#MESSAGE 
+"Pick failed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   142 
+#EXTERNAL_ID   23942 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Placed failed"
+#MESSAGE 
+"Placed failed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   143 
+#EXTERNAL_ID   23943 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : RE wafer sensor error prior to PLACE:NoWafer Sensed"
+#MESSAGE 
+"RE wafer sensor error prior to PLACE:NoWafer Sensed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   144 
+#EXTERNAL_ID   23944 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : RE wafer sensor error after a PLACE:Wafer Sensed"
+#MESSAGE 
+"RE wafer sensor error after a PLACE:Wafer Sensed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   145 
+#EXTERNAL_ID   23945 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : EX wafer sensor error prior to a PLACE: Wafer Sensed"
+#MESSAGE 
+"EX wafer sensor error prior to a PLACE: Wafer Sensed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   146 
+#EXTERNAL_ID   23946 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : EX wafer sensor error after a PLACE: No Wafer Sensed"
+#MESSAGE 
+"EX wafer sensor error after a PLACE: No Wafer Sensed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   147 
+#EXTERNAL_ID   23947 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : RE wafer sensor error prior to a PICK: Wafer Sensed"
+#MESSAGE 
+"RE wafer sensor error prior to a PICK: Wafer Sensed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   148 
+#EXTERNAL_ID   23948 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : RE wafer sensor error after a PICK:NoWafer Sensed"
+#MESSAGE 
+"RE wafer sensor error after a PICK:NoWafer Sensed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   149 
+#EXTERNAL_ID   23949 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : EX wafer sensor error prior to a PICK:NoWafer Sensed"
+#MESSAGE 
+"EX wafer sensor error prior to a PICK:NoWafer Sensed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   150 
+#EXTERNAL_ID   23950 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : EX wafer sensor error after a PICK: Wafer Sensed"
+#MESSAGE 
+"EX wafer sensor error after a PICK: Wafer Sensed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   151 
+#EXTERNAL_ID   23951 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Possible material on Arm A"
+#MESSAGE 
+"Prior to a PICK operation, it is not known if a wafer is on the arm."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   152 
+#EXTERNAL_ID   23952 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Unknown serial port"
+#MESSAGE 
+"Unknown serial port."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   153 
+#EXTERNAL_ID   23953 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Can't allocate serial port semaphore"
+#MESSAGE 
+"Can't allocate serial port semaphore."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   154 
+#EXTERNAL_ID   23954 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Secondary Serial Port mode"
+#MESSAGE 
+"Secondary Serial Port mode."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   155 
+#EXTERNAL_ID   23955 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Secondary Serial Port is busy"
+#MESSAGE 
+"Secondary Serial Port is busy."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   156 
+#EXTERNAL_ID   23956 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Secondary Serial Port response timeout"
+#MESSAGE 
+"Secondary Serial Port response timeout."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   157 
+#EXTERNAL_ID   23957 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : No serial communication with remote MCC"
+#MESSAGE 
+"No serial communication with remote MCC."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   158 
+#EXTERNAL_ID   23958 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Default debug message from the MCC"
+#MESSAGE 
+"Default debug message from the MCC."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   159 
+#EXTERNAL_ID   23959 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Sync error, motor moving or encoder noisy"
+#MESSAGE 
+"Sync error, motor moving or encoder noisy."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   160 
+#EXTERNAL_ID   23960 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : MCC board memory allocation error"
+#MESSAGE 
+"MCC board memory allocation error."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   161 
+#EXTERNAL_ID   23961 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : MCC board unexpected event error"
+#MESSAGE 
+"MCC board unexpected event error."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   162 
+#EXTERNAL_ID   23962 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : MCC board, bad command state"
+#MESSAGE 
+"MCC board, bad command state."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   163 
+#EXTERNAL_ID   23963 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : MCC Board Sync error"
+#MESSAGE 
+"MCC Board Sync error, can't move motor. Possible binding.
+See Z Binding Test Using the Trace Command on page 10-37.
+Obstruction in way ofmotion.
+Perform Verifying Robot Calibration Parameters on page 10-44."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   164 
+#EXTERNAL_ID   23964 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : MCC encoder VABS adjusted"
+#MESSAGE 
+"MCC encoder VABS adjusted (small)."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   165 
+#EXTERNAL_ID   23965 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : MCC board position settle error"
+#MESSAGE 
+"MCC board position settle error/unable to obtain position The robot has
+a settling window at the end of the trajectory."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   166 
+#EXTERNAL_ID   23966 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : MCC unable to hold position"
+#MESSAGE 
+"MCC unable to hold position.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   167 
+#EXTERNAL_ID   23967 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : MCC hard tracking error"
+#MESSAGE 
+"Verify that robot arm state is correct (arms on or arms off).
+Verify robot application number is correct.
+Check for physical obstruction."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   168 
+#EXTERNAL_ID   23968 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : MCC soft tracking error"
+#MESSAGE 
+"MCC soft tracking error."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   169 
+#EXTERNAL_ID   23969 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, motor is already moving"
+#MESSAGE 
+"Error, motor is already moving."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   170 
+#EXTERNAL_ID   23970 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, motor is not configured"
+#MESSAGE 
+"Error, motor is not configured."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   171 
+#EXTERNAL_ID   23971 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, motor is not referenced"
+#MESSAGE 
+"Error, motor is not referenced."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   172 
+#EXTERNAL_ID   23972 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, motor is already referencing"
+#MESSAGE 
+"Error, motor is already referencing."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   173 
+#EXTERNAL_ID   23973 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, motor is currently moving"
+#MESSAGE 
+"Error, Error, motor is currently moving."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   174 
+#EXTERNAL_ID   23974 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, unable to calculate trajectory"
+#MESSAGE 
+"Error, unable to calculate trajectory."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   175 
+#EXTERNAL_ID   23975 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Illegal number of polls calculated"
+#MESSAGE 
+"Illegal number of polls calculated."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   176 
+#EXTERNAL_ID   23976 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Unable to calculate absolute position"
+#MESSAGE 
+"Unable to calculate absolute position."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   178 
+#EXTERNAL_ID   23978 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, Encoder failed multiple times"
+#MESSAGE 
+"Check if failure location is repeatable.
+Record position of failure."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   179 
+#EXTERNAL_ID   23979 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, Board Power Failure"
+#MESSAGE 
+"Error, Board Power Failure (Blown Fuse?).
+Check if fuse is blown by inspecting fuses or if respective
+LED is not illuminated.
+Replace fuse as needed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   180 
+#EXTERNAL_ID   23980 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, Z axis overtravel limit reached"
+#MESSAGE 
+"Error, Z axis overtravel limit reached."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   181 
+#EXTERNAL_ID   23981 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Arm actual position impossible, check sync zero"
+#MESSAGE 
+"Arm actual position impossible, check sync zero."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   182 
+#EXTERNAL_ID   23982 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, MCC watchdog timed out"
+#MESSAGE 
+"Error, MCC watchdog timed out."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   183 
+#EXTERNAL_ID   23983 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, obstruction encounter for axis"
+#MESSAGE 
+"Error, obstruction encounter for axis."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   184 
+#EXTERNAL_ID   23984 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, Emergency Stop circuit is active"
+#MESSAGE 
+"Error, Emergency Stop circuit is active."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   185 
+#EXTERNAL_ID   23985 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, excessive current detected"
+#MESSAGE 
+"Error, excessive current detected."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   186 
+#EXTERNAL_ID   23986 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Warning, Home Sensor position moved"
+#MESSAGE 
+"Warning, Home Sensor position moved."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   187 
+#EXTERNAL_ID   23987 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, encoder min/max value out of range"
+#MESSAGE 
+"Error, encoder min/max value out of range."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   188 
+#EXTERNAL_ID   23988 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, bad sync phase offset value"
+#MESSAGE 
+"Error, bad sync phase offset value."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   189 
+#EXTERNAL_ID   23989 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, robot links are not yet defined"
+#MESSAGE 
+"Error, robot links are not yet defined."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   190 
+#EXTERNAL_ID   23990 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, MCC code date/stamp mismatch"
+#MESSAGE 
+"Error, MCC code date/stamp mismatch."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   191 
+#EXTERNAL_ID   23991 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, MCC stored code checksum incorrect"
+#MESSAGE 
+"Error, MCC stored code checksum incorrect."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   192 
+#EXTERNAL_ID   23992 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, MCC code size too large to store"
+#MESSAGE 
+"Error, MCC code size too large to store."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   193 
+#EXTERNAL_ID   23993 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, i2c bus is busy"
+#MESSAGE 
+"Error, i2c bus is busy."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   194 
+#EXTERNAL_ID   23994 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, no ack on i2c send data"
+#MESSAGE 
+"Error, no ack on i2c send data."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   195 
+#EXTERNAL_ID   23995 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, no ack on i2c send address"
+#MESSAGE 
+"Error, no ack on i2c send address."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   196 
+#EXTERNAL_ID   23996 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, i2c bus error"
+#MESSAGE 
+"Error, i2c bus error."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   197 
+#EXTERNAL_ID   23997 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, DPRAM bad MCC head/tail pointer"
+#MESSAGE 
+"Error, DPRAM bad MCC head/tail pointer."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   198 
+#EXTERNAL_ID   23998 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, DPRAM bad SUP head/tail pointer"
+#MESSAGE 
+"Error, DPRAM bad SUP head/tail pointer."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   199 
+#EXTERNAL_ID   23999 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, DPRAM bad SUP message site"
+#MESSAGE 
+"Error, DPRAM bad SUP message site."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   200 
+#EXTERNAL_ID   24000 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, Home Sensor position moved too far"
+#MESSAGE 
+"Error, Home Sensor position moved too far."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   201 
+#EXTERNAL_ID   24001 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, Set loop mode failed"
+#MESSAGE 
+"Error, Set loop mode failed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   202 
+#EXTERNAL_ID   24002 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, Motor Stop Move timed out"
+#MESSAGE 
+"Error, Motor Stop Move timed out."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   203 
+#EXTERNAL_ID   24003 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Error, Reference Faile"
+#MESSAGE 
+"Error, Reference Failed."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   204 
+#EXTERNAL_ID   24004 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Find Bias required"
+#MESSAGE 
+"Find Bias required."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   205 
+#EXTERNAL_ID   24005 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Aligner not specified"
+#MESSAGE 
+"Aligner not specified."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   206 
+#EXTERNAL_ID   24006 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Aligner not at station specified [ErrorID:%d]"
+#MESSAGE 
+"Aligner not at station specified."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   207 
+#EXTERNAL_ID   24007 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Aligner has not finished last operation"
+#MESSAGE 
+"Aligner has not finished last operation."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   208 
+#EXTERNAL_ID   24008 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Received bad message from Aligner"
+#MESSAGE 
+"Received bad message from Aligner."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   209 
+#EXTERNAL_ID   24009 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Aligner has an error"
+#MESSAGE 
+"Aligner has an error."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   210 
+#EXTERNAL_ID   24010 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Receive bad data from Aligner"
+#MESSAGE 
+"Receive bad data from Aligner."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   211 
+#EXTERNAL_ID   24011 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Wafer needs to be scanned again"
+#MESSAGE 
+"Wafer needs to be scanned again."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   212 
+#EXTERNAL_ID   24012 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Communication with aligner timeout"
+#MESSAGE 
+"Communication with aligner timeout."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   213 
+#EXTERNAL_ID   24013 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Communication with aligner not initialized"
+#MESSAGE 
+"Communication with aligner not initialized."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   214 
+#EXTERNAL_ID   24014 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Aligner parameter mismatch"
+#MESSAGE 
+"Issue the INIT ALIGNER command to upload the aligner parameters,
+then request the settings using the command RQ ALIGNER 1
+(WAFERID|POSTPOS 1 POS) and verify the correct parameters are set.
+The wafer ID or the Post Position were SET but not STORED then the robot
+was rebooted. User STORE ALIGNER command to store parameters.
+The robot was reset after the wafer ID or Post Position was SET.
+The aligner retained the setting, however, the robot lost the information.
+Reset the robot and the aligner at the same time.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   215 
+#EXTERNAL_ID   24015 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Data out of range"
+#MESSAGE 
+"Data out of range."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   216 
+#EXTERNAL_ID   24016 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : No Wafer Detected"
+#MESSAGE 
+"No Wafer Detected."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   217 
+#EXTERNAL_ID   24017 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Vacuum Suction Error [ErrorID:%d]"
+#MESSAGE 
+"Vacuum Suction Error."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   218 
+#EXTERNAL_ID   24018 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Vacuum Release Error"
+#MESSAGE 
+"Vacuum Release Error."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   219 
+#EXTERNAL_ID   24019 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : EEPROMChecksum Error"
+#MESSAGE 
+"EEPROM Checksum Error."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   221 
+#EXTERNAL_ID   24021 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Value out of range"
+#MESSAGE 
+"Value out of range."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   223 
+#EXTERNAL_ID   24023 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Argument not found"
+#MESSAGE 
+"Argument not found."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   224 
+#EXTERNAL_ID   24024 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Command not available"
+#MESSAGE 
+"Command not available."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   225 
+#EXTERNAL_ID   24025 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Z-lift mechanism is not present"
+#MESSAGE 
+"Z-lift mechanism is not present."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   226 
+#EXTERNAL_ID   24026 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Abnormal Fiducial Mark Size (N)"
+#MESSAGE 
+"Abnormal Fiducial Mark Size (N)."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   227 
+#EXTERNAL_ID   24027 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Abnormal Fiducial Mark Size (FD)"
+#MESSAGE 
+"Abnormal Fiducial Mark Size (FD)."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   228 
+#EXTERNAL_ID   24028 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Too Large Average"
+#MESSAGE 
+"Too Large Average."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   229 
+#EXTERNAL_ID   24029 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Too Small Average"
+#MESSAGE 
+"Too Small Average."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   230 
+#EXTERNAL_ID   24030 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : No Distinct Fiducial Mark Detected"
+#MESSAGE 
+"No Distinct Fiducial Mark Detected."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   231 
+#EXTERNAL_ID   24031 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Too Large Fiducial Mark"
+#MESSAGE 
+"Too Large Fiducial Mark."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   232 
+#EXTERNAL_ID   24032 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Too Small Wafer"
+#MESSAGE 
+"Too Small Wafer."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   233 
+#EXTERNAL_ID   24033 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Too Large Wafer"
+#MESSAGE 
+"Too Large Wafer."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   234 
+#EXTERNAL_ID   24034 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Out of CCD Range or Video Threshold is Low"
+#MESSAGE 
+"Out of CCD Range or Video Threshold is Low."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   235 
+#EXTERNAL_ID   24035 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Invalid Cal Factor"
+#MESSAGE 
+"Invalid Cal Factor."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   236 
+#EXTERNAL_ID   24036 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : No Distinct Fiducial Mark Detected"
+#MESSAGE 
+"No Distinct Fiducial Mark Detected."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   237 
+#EXTERNAL_ID   24037 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Invalid Wafer Size"
+#MESSAGE 
+"Invalid Wafer Size."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   238 
+#EXTERNAL_ID   24038 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Out of CCD Range or Video Threshold is Low"
+#MESSAGE 
+"Out of CCD Range or Video Threshold is Low."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   240 
+#EXTERNAL_ID   24040 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Fiducial Differentiation Error (D)"
+#MESSAGE 
+"Fiducial Differentiation Error (D)."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   241 
+#EXTERNAL_ID   24041 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Noisy Fiducial Mark Edge (N) [ErrorID:%d]"
+#MESSAGE 
+"Noisy Fiducial Mark Edge (N)."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   242 
+#EXTERNAL_ID   24042 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Bad Video Data"
+#MESSAGE 
+"Bad Video Data."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   243 
+#EXTERNAL_ID   24043 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Bad Video Data"
+#MESSAGE 
+"Bad Video Data."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   244 
+#EXTERNAL_ID   24044 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : No Results Available"
+#MESSAGE 
+"No Results Available."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   245 
+#EXTERNAL_ID   24045 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Module No Exist Error"
+#MESSAGE 
+"Can't Set Command, Check Config option.."
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   246 
+#EXTERNAL_ID   24046 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__ATM_ROBOT - ATM-Robot Error : Robot System Error"
+#MESSAGE 
+"Unknown Error is Occured, Please Reference Manual"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : INF__AL1   (OffsetID:24100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : OPR__AL1   (OffsetID:24200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__AL1   (OffsetID:24300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_IO__AL1   (OffsetID:24400) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PAGE__TMC_CHM   (OffsetID:25100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PAGE__LBA   (OffsetID:25200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PAGE__LBB   (OffsetID:25300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PAGE__LBC   (OffsetID:25400) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PAGE__LBD   (OffsetID:25500) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PAGE__LP1_RF   (OffsetID:25600) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PAGE__LP2_RF   (OffsetID:25700) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PAGE__LP3_RF   (OffsetID:25800) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : INF__TMC_SYS   (OffsetID:26100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : INF__TMC_CHM   (OffsetID:26200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : OPR__TMC_SYS   (OffsetID:26300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : OPR__TMC_CHM   (OffsetID:26400) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__VAC_CHM   (OffsetID:26500) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   26511 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__VAC_CHM - Slot-Valve is not Close !"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     CHECK_RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   26512 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__VAC_CHM - TMC Leak Check is higher than config value !"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__TMC_VLV   (OffsetID:26600) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   26601 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__TMC_VLV - TMC_CHM & PMC's Transfer Pressure Error."
+#MESSAGE 
+"Please, Check TMC_CHM & PMC's Pressure !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   26602 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__TMC_VLV - Pressure is not ATM."
+#MESSAGE 
+"Please, Check module pressure !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   26611 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__TMC_VLV - PMC Shutter is not open !"
+#MESSAGE 
+"Please, Check PMC's shutter status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   26612 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__TMC_VLV - PMC lift-pin status is not down !"
+#MESSAGE 
+"Please, Check PMC's lift-pin status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__PMx_VLV   (OffsetID:26700) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__TMC_VLV   (OffsetID:26800) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__TMC_CHM   (OffsetID:26900) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   26901 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_CHM - Soft Pumping Timeout !"
+#MESSAGE 
+"Please, check TMC_CHM's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   26902 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_CHM - Fast Pumping Timeout !"
+#MESSAGE 
+"Please, check TMC_CHM's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   26903 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_CHM - Soft Venting Timeout !"
+#MESSAGE 
+"Please, check TMC_CHM's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   26904 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_CHM - Fast Venting Timeout !"
+#MESSAGE 
+"Please, check TMC_CHM's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   5 
+#EXTERNAL_ID   26905 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_CHM - Vent Valve Interlock With Pumping Valve Open !"
+#MESSAGE 
+"All pumping valve must be closed !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   6 
+#EXTERNAL_ID   26906 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_CHM - Dry Pump is Offline or Not Run Status !"
+#MESSAGE 
+"TMC CHAMBER's Fast Rough Valve will be closed.. !
+Please, check pump status !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   7 
+#EXTERNAL_ID   26907 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_CHM - Exhaust Pressure Timeout !"
+#MESSAGE 
+"Please, check exhaust pressure gauge !
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   8 
+#EXTERNAL_ID   26908 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_CHM - Chamber's lid is not closed !"
+#MESSAGE 
+"Please, check the lid of chamber !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   9 
+#EXTERNAL_ID   26909 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_CHM - ATM High Pressure limit !"
+#MESSAGE 
+"Please, check config pressure or gauge status.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   26911 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_CHM - SR Valve Close Timeout !"
+#MESSAGE 
+"Please, check the state of SR valve.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   26912 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_CHM - SR Valve Open Timeout !"
+#MESSAGE 
+"Please, check the state of SR valve.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   26913 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_CHM - FR Valve Close Timeout !"
+#MESSAGE 
+"Please, check the state of FR valve.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   14 
+#EXTERNAL_ID   26914 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_CHM - FR Valve Open Timeout !"
+#MESSAGE 
+"Please, check the state of FR valve.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : INF__LBA   (OffsetID:27100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : INF__LBB   (OffsetID:27200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : INF__LBC   (OffsetID:27300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : INF__LBD   (OffsetID:27400) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : OPR__LBA   (OffsetID:27500) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : OPR__LBB   (OffsetID:27600) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : OPR__LBC   (OffsetID:27700) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : OPR__LBD   (OffsetID:27800) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : MNT__LBA_PROC   (OffsetID:28100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LBA_PROC   (OffsetID:28200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LBA_STEP   (OffsetID:28300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LBA_LOG   (OffsetID:28400) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : MNT__LBB_PROC   (OffsetID:28500) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LBB_PROC   (OffsetID:28600) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LBB_STEP   (OffsetID:28700) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LBB_LOG   (OffsetID:28800) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LBx_TEST   (OffsetID:28900) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   28901 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__LBx_TEST - LBA's status is not "MAINTMODE"."
+#MESSAGE 
+"Please, convert LBA's status to "MAINTMODE" !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   28902 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__LBx_TEST - LBB's status is not "MAINTMODE"."
+#MESSAGE 
+"Please, convert LBB's status to "MAINTMODE" !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   28903 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__LBx_TEST - LBC's status is not "MAINTMODE"."
+#MESSAGE 
+"Please, convert LBC's status to "MAINTMODE" !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   28904 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__LBx_TEST - LBD's status is not "MAINTMODE"."
+#MESSAGE 
+"Please, convert LBD's status to "MAINTMODE" !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LBA   (OffsetID:29100) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   29111 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__LBA - SV & Door Open Error"
+#MESSAGE 
+"You can't open SV and Door at same time !"
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   29112 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__LBA - Leak Check is higher than config value !"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LBB   (OffsetID:29200) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   29211 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__LBB - SV & Door Open Error"
+#MESSAGE 
+"You can't open SV and Door at same time !"
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   29212 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__LBB - Leak Check is higher than config value !"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LBC   (OffsetID:29300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LBD   (OffsetID:29400) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LBA_CHM   (OffsetID:29500) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LBB_CHM   (OffsetID:29600) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LBCD_CHM   (OffsetID:29700) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__LBCD_VLV   (OffsetID:29800) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__LBA   (OffsetID:29900) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   29901 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Door Valve Open TimeOut."
+#MESSAGE 
+"Please, Check I/O Object !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   29902 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Door Valve Close TimeOut."
+#MESSAGE 
+"Please, Check I/O Object !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   9 
+#EXTERNAL_ID   29909 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Lift_Pin Up TimeOut."
+#MESSAGE 
+"Please, Check I/O Object !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   10 
+#EXTERNAL_ID   29910 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Lift_Pin Down TimeOut."
+#MESSAGE 
+"Please, Check I/O Object !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   29903 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Slit Valve Open TimeOut."
+#MESSAGE 
+"Please, Check I/O Object !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   29904 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Slit Valve Close TimeOut."
+#MESSAGE 
+"Please, Check I/O Object !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   5 
+#EXTERNAL_ID   29905 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Slit Valve Can't Close Because Of not exist."
+#MESSAGE 
+"Please, Check Config Value !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   6 
+#EXTERNAL_ID   29906 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Slit Valve Can't Open Because Of not exist."
+#MESSAGE 
+"Please, Check Config Value !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   29911 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Slit Valve can not open, because of not ATM Pressure !"
+#MESSAGE 
+"Please, check 's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   29912 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Slit Valve can not open, because of not VAC Pressure !"
+#MESSAGE 
+"Please, check 's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   29913 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Door Valve can not open, because of not ATM Pressure !"
+#MESSAGE 
+"Please, check 's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   14 
+#EXTERNAL_ID   29914 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Soft Pumping Timeout !"
+#MESSAGE 
+"Please, check 's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   15 
+#EXTERNAL_ID   29915 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Fast Pumping Timeout !"
+#MESSAGE 
+"Please, check 's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   16 
+#EXTERNAL_ID   29916 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Soft Venting Timeout !"
+#MESSAGE 
+"Please, check 's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   17 
+#EXTERNAL_ID   29917 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Fast Venting Timeout !"
+#MESSAGE 
+"Please, check 's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   18 
+#EXTERNAL_ID   29918 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Lift_Pin is not used !"
+#MESSAGE 
+"Please, check 's config page.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   21 
+#EXTERNAL_ID   29921 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Vent Valve Interlock With Pumping Valve Open !"
+#MESSAGE 
+"All vent valve must be closed !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   22 
+#EXTERNAL_ID   29922 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Pump Valve Interlock With Door open !"
+#MESSAGE 
+"All pump valve must be closed !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   23 
+#EXTERNAL_ID   29923 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Door Valve is not close !"
+#MESSAGE 
+"Please, check door valve !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   24 
+#EXTERNAL_ID   29924 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Slit Valve is not close !"
+#MESSAGE 
+"Please, check slit valve !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   25 
+#EXTERNAL_ID   29925 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Dry Pump is Offline or Not Run Status !"
+#MESSAGE 
+"LoadLock : [PHY__LBA], Slow/Fast Rough Valve will be closed.. !
+Please, check pump status !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   26 
+#EXTERNAL_ID   29926 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - VAC Robot's Arm not retracted sts."
+#MESSAGE 
+"Please, Check VAC Robot's Arm Status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   27 
+#EXTERNAL_ID   29927 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - ATM Robot's Arm not retracted sts."
+#MESSAGE 
+"Please, Check ATM Robot's Arm Status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   7 
+#EXTERNAL_ID   29907 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Can't SV Open, Max Difference Press Alarm Occur !"
+#MESSAGE 
+"Please, check LL and TM Pressure Status.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   8 
+#EXTERNAL_ID   29908 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - ATM High Pressure limit !"
+#MESSAGE 
+"Please, check config pressure or gauge status.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   28 
+#EXTERNAL_ID   29928 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - Exhaust Pressure Timeout !"
+#MESSAGE 
+"Please, check exhaust pressure gauge !
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   29 
+#EXTERNAL_ID   29929 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - LLx's lid is not closed !"
+#MESSAGE 
+"Please, check the lid of LLx !
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   31 
+#EXTERNAL_ID   29931 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - SR Valve Close Timeout !"
+#MESSAGE 
+"Please, check the state of SR valve.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   32 
+#EXTERNAL_ID   29932 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - SR Valve Open Timeout !"
+#MESSAGE 
+"Please, check the state of SR valve.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   33 
+#EXTERNAL_ID   29933 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - FR Valve Close Timeout !"
+#MESSAGE 
+"Please, check the state of FR valve.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   34 
+#EXTERNAL_ID   29934 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBA - FR Valve Open Timeout !"
+#MESSAGE 
+"Please, check the state of FR valve.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__LBB   (OffsetID:30000) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   30001 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Door Valve Open TimeOut."
+#MESSAGE 
+"Please, Check I/O Object !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   30002 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Door Valve Close TimeOut."
+#MESSAGE 
+"Please, Check I/O Object !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   9 
+#EXTERNAL_ID   30009 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Lift_Pin Up TimeOut."
+#MESSAGE 
+"Please, Check I/O Object !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   10 
+#EXTERNAL_ID   30010 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Lift_Pin Down TimeOut."
+#MESSAGE 
+"Please, Check I/O Object !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   30003 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Slit Valve Open TimeOut."
+#MESSAGE 
+"Please, Check I/O Object !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   30004 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Slit Valve Close TimeOut."
+#MESSAGE 
+"Please, Check I/O Object !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   5 
+#EXTERNAL_ID   30005 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Slit Valve Can't Close Because Of not exist."
+#MESSAGE 
+"Please, Check Config Value !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   6 
+#EXTERNAL_ID   30006 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Slit Valve Can't Open Because Of not exist."
+#MESSAGE 
+"Please, Check Config Value !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   30011 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Slit Valve can not open, because of not ATM Pressure !"
+#MESSAGE 
+"Please, check 's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   30012 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Slit Valve can not open, because of not VAC Pressure !"
+#MESSAGE 
+"Please, check 's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   30013 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Door Valve can not open, because of not ATM Pressure !"
+#MESSAGE 
+"Please, check 's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   14 
+#EXTERNAL_ID   30014 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Soft Pumping Timeout !"
+#MESSAGE 
+"Please, check 's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   15 
+#EXTERNAL_ID   30015 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Fast Pumping Timeout !"
+#MESSAGE 
+"Please, check 's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   16 
+#EXTERNAL_ID   30016 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Soft Venting Timeout !"
+#MESSAGE 
+"Please, check 's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   17 
+#EXTERNAL_ID   30017 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Fast Venting Timeout !"
+#MESSAGE 
+"Please, check 's pressure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   18 
+#EXTERNAL_ID   30018 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Lift_Pin is not used !"
+#MESSAGE 
+"Please, check 's config page.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   21 
+#EXTERNAL_ID   30021 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Vent Valve Interlock With Pumping Valve Open !"
+#MESSAGE 
+"All vent valve must be closed !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   22 
+#EXTERNAL_ID   30022 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Pump Valve Interlock With Door open !"
+#MESSAGE 
+"All pump valve must be closed !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   23 
+#EXTERNAL_ID   30023 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Door Valve is not close !"
+#MESSAGE 
+"Please, check door valve !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   24 
+#EXTERNAL_ID   30024 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Slit Valve is not close !"
+#MESSAGE 
+"Please, check slit valve !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   25 
+#EXTERNAL_ID   30025 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Dry Pump is Offline or Not Run Status !"
+#MESSAGE 
+"LoadLock : [PHY__LBB], Slow/Fast Rough Valve will be closed.. !
+Please, check pump status !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   26 
+#EXTERNAL_ID   30026 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - VAC Robot's Arm not retracted sts."
+#MESSAGE 
+"Please, Check VAC Robot's Arm Status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   27 
+#EXTERNAL_ID   30027 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - ATM Robot's Arm not retracted sts."
+#MESSAGE 
+"Please, Check ATM Robot's Arm Status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   7 
+#EXTERNAL_ID   30007 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Can't SV Open, Max Difference Press Alarm Occur !"
+#MESSAGE 
+"Please, check LL and TM Pressure Status.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   8 
+#EXTERNAL_ID   30008 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - ATM High Pressure limit !"
+#MESSAGE 
+"Please, check config pressure or gauge status.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   28 
+#EXTERNAL_ID   30028 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - Exhaust Pressure Timeout !"
+#MESSAGE 
+"Please, check exhaust pressure gauge !
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   29 
+#EXTERNAL_ID   30029 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - LLx's lid is not closed !"
+#MESSAGE 
+"Please, check the lid of LLx !
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   31 
+#EXTERNAL_ID   30031 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - SR Valve Close Timeout !"
+#MESSAGE 
+"Please, check the state of SR valve.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   32 
+#EXTERNAL_ID   30032 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - SR Valve Open Timeout !"
+#MESSAGE 
+"Please, check the state of SR valve.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   33 
+#EXTERNAL_ID   30033 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - FR Valve Close Timeout !"
+#MESSAGE 
+"Please, check the state of FR valve.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   34 
+#EXTERNAL_ID   30034 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LBB - FR Valve Open Timeout !"
+#MESSAGE 
+"Please, check the state of FR valve.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__LBC   (OffsetID:30100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__LBD   (OffsetID:30200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__CHM_PUMP   (OffsetID:31100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__LBA_PUMP   (OffsetID:31200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__LBB_PUMP   (OffsetID:31300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__LBCD_PUMP   (OffsetID:31400) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : INF__LP1   (OffsetID:32100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : OPR__LP1   (OffsetID:32200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LP1   (OffsetID:32300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__LP1   (OffsetID:32400) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   32401 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP1 - Pump Pressure TimeOut."
+#MESSAGE 
+"Please, check pump pressure config !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   32402 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP1 - Door Status is not open !"
+#MESSAGE 
+"Please, check loadport door status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   32403 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP1 - Currently, Load Port's status is "Mapping_Sequence Lock"."
+#MESSAGE 
+"Please, check ATM Robot's status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   32404 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP1 - Robot's arm is not retracted !"."
+#MESSAGE 
+"Please, check the RNE sensor of ATM Robot's arm ! 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   5 
+#EXTERNAL_ID   32405 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP1 - LOAD... FOUP NONE ALARM."
+#MESSAGE 
+"Before load action, foup dosen't exist on the load-port.
+Please, Check if foup is properly placed !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   6 
+#EXTERNAL_ID   32406 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP1 - LP Mapping Sensor Not Use"
+#MESSAGE 
+"Please, check config option !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   7 
+#EXTERNAL_ID   32407 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP1 - LP PADDLE UP... WAFER SLIDE OUT SENSOR ALARM."
+#MESSAGE 
+"Before LP Paddle Up Action, Wafer Slide Out Sensor On Status.
+Please, Check Wafer Status in the loadport !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   32411 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP1 - MAP ERROR (Door doesn't open) !"
+#MESSAGE 
+"The "Map" command cannot be executed, because the door of loadport is not open. 
+Please, open the door of loadport ! 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   32412 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP1 - MAP ERROR (Foup doesn't exist) !"
+#MESSAGE 
+"The "Map" command cannot be executed, because foup doesn't exist. 
+Please, check the state of foup ! 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   32413 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP1 - MAP ERROR (Foup isn't loadded) !"
+#MESSAGE 
+"The "Map" command cannot be executed, because foup isn't loaded. 
+Please, check the state of foup ! 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_IO__LP1   (OffsetID:32500) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   32511 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__LP1 : Offline !"
+#MESSAGE 
+"Please, check communication line !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   32512 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__LP1 : LPx Error Code !"
+#MESSAGE 
+"Please, check HW status !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_RS232__LP1   (OffsetID:32600) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_OHT__LP1   (OffsetID:32700) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : INF__LP2   (OffsetID:33100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : OPR__LP2   (OffsetID:33200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LP2   (OffsetID:33300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__LP2   (OffsetID:33400) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   33401 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP2 - Pump Pressure TimeOut."
+#MESSAGE 
+"Please, check pump pressure config !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   33402 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP2 - Door Status is not open !"
+#MESSAGE 
+"Please, check loadport door status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   33403 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP2 - Currently, Load Port's status is "Mapping_Sequence Lock"."
+#MESSAGE 
+"Please, check ATM Robot's status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   33404 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP2 - Robot's arm is not retracted !"."
+#MESSAGE 
+"Please, check the RNE sensor of ATM Robot's arm ! 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   5 
+#EXTERNAL_ID   33405 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP2 - LOAD... FOUP NONE ALARM."
+#MESSAGE 
+"Before load action, foup dosen't exist on the load-port.
+Please, Check if foup is properly placed !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   6 
+#EXTERNAL_ID   33406 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP2 - LP Mapping Sensor Not Use"
+#MESSAGE 
+"Please, check config option !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   7 
+#EXTERNAL_ID   33407 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP2 - LP PADDLE UP... WAFER SLIDE OUT SENSOR ALARM."
+#MESSAGE 
+"Before LP Paddle Up Action, Wafer Slide Out Sensor On Status.
+Please, Check Wafer Status in the loadport !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   33411 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP2 - MAP ERROR (Door doesn't open) !"
+#MESSAGE 
+"The "Map" command cannot be executed, because the door of loadport is not open. 
+Please, open the door of loadport ! 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   33412 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP2 - MAP ERROR (Foup doesn't exist) !"
+#MESSAGE 
+"The "Map" command cannot be executed, because foup doesn't exist. 
+Please, check the state of foup ! 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   33413 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP2 - MAP ERROR (Foup isn't loadded) !"
+#MESSAGE 
+"The "Map" command cannot be executed, because foup isn't loaded. 
+Please, check the state of foup ! 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_IO__LP2   (OffsetID:33500) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   33511 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__LP2 : Offline !"
+#MESSAGE 
+"Please, check communication line !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   33512 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__LP2 : LPx Error Code !"
+#MESSAGE 
+"Please, check HW status !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_RS232__LP2   (OffsetID:33600) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_OHT__LP2   (OffsetID:33700) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : INF__LP3   (OffsetID:34100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : OPR__LP3   (OffsetID:34200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__LP3   (OffsetID:34300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__LP3   (OffsetID:34400) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   34401 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP3 - Pump Pressure TimeOut."
+#MESSAGE 
+"Please, check pump pressure config !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   34402 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP3 - Door Status is not open !"
+#MESSAGE 
+"Please, check loadport door status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   34403 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP3 - Currently, Load Port's status is "Mapping_Sequence Lock"."
+#MESSAGE 
+"Please, check ATM Robot's status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   34404 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP3 - Robot's arm is not retracted !"."
+#MESSAGE 
+"Please, check the RNE sensor of ATM Robot's arm ! 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   5 
+#EXTERNAL_ID   34405 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP3 - LOAD... FOUP NONE ALARM."
+#MESSAGE 
+"Before load action, foup dosen't exist on the load-port.
+Please, Check if foup is properly placed !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   6 
+#EXTERNAL_ID   34406 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP3 - LP Mapping Sensor Not Use"
+#MESSAGE 
+"Please, check config option !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   7 
+#EXTERNAL_ID   34407 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP3 - LP PADDLE UP... WAFER SLIDE OUT SENSOR ALARM."
+#MESSAGE 
+"Before LP Paddle Up Action, Wafer Slide Out Sensor On Status.
+Please, Check Wafer Status in the loadport !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   34411 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP3 - MAP ERROR (Door doesn't open) !"
+#MESSAGE 
+"The "Map" command cannot be executed, because the door of loadport is not open. 
+Please, open the door of loadport ! 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   34412 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP3 - MAP ERROR (Foup doesn't exist) !"
+#MESSAGE 
+"The "Map" command cannot be executed, because foup doesn't exist. 
+Please, check the state of foup ! 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   34413 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LP3 - MAP ERROR (Foup isn't loadded) !"
+#MESSAGE 
+"The "Map" command cannot be executed, because foup isn't loaded. 
+Please, check the state of foup ! 
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_IO__LP3   (OffsetID:34500) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   34511 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__LP3 : Offline !"
+#MESSAGE 
+"Please, check communication line !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   34512 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__LP3 : LPx Error Code !"
+#MESSAGE 
+"Please, check HW status !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_RS232__LP3   (OffsetID:34600) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_OHT__LP3   (OffsetID:34700) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_LBA_VAT   (OffsetID:40100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_LBB_VAT   (OffsetID:40200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_HTR__LL1_CHUCK   (OffsetID:41100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_HTR__LL1_PUMP   (OffsetID:41200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_HTR__LL2_CHUCK   (OffsetID:41300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_HTR__LL2_PUMP   (OffsetID:41400) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_HTR__LL1_3_WALL   (OffsetID:41500) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_HTR__LL2_4_WALL   (OffsetID:41600) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_HTR__LL3_4_PUMP   (OffsetID:41700) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_HTR__TM_PUMP   (OffsetID:41800) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_HTR__PM1_GATE   (OffsetID:41900) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_HTR__PM2_GATE   (OffsetID:42000) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_HTR__PM3_GATE   (OffsetID:42100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_HTR__PM4_GATE   (OffsetID:42200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_HTR__PM5_GATE   (OffsetID:42300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_HTR__PM6_GATE   (OffsetID:42400) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : MON__CDA   (OffsetID:43100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : IO   (OffsetID:51100) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   51101 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO - Offline !"
+#MESSAGE 
+"Check the line & parameter."
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   51102 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO - Last Error Code !"
+#MESSAGE 
+"Check the line & parameter."
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   51103 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO - Device-Net Node Error !"
+#MESSAGE 
+"Check the device-net node."
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   51104 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO - Device-Net Initial Error !"
+#MESSAGE 
+"Check the device-net state."
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_LBA_MFC1   (OffsetID:51200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_LBB_MFC1   (OffsetID:51300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : IO_LBA__CHM_GAUGE   (OffsetID:51400) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : IO_LBB__CHM_GAUGE   (OffsetID:51500) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : IO_LBC__CHM_GAUGE   (OffsetID:51600) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : IO_LBD__CHM_GAUGE   (OffsetID:51700) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : IO_TM1__CHM_GAUGE   (OffsetID:51800) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : IO_LBA__PUMP_GAUGE   (OffsetID:51900) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : IO_LBB__PUMP_GAUGE   (OffsetID:52000) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : IO_LBCD__PUMP_GAUGE   (OffsetID:52100) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : IO_TM1__PUMP_GAUGE   (OffsetID:52200) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_RS232__RF1   (OffsetID:52300) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_RS232__RF2   (OffsetID:52400) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_RS232__RF3   (OffsetID:52500) (ToolID:) (UnitID:) 
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_IO__FFU   (OffsetID:52600) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   52601 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Offline !"
+#MESSAGE 
+"FFU Controller is Offline.
+Please, Check Communication Status !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   52602 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Low Limit differential pressure !"
+#MESSAGE 
+"The log limit differential pressure error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   52611 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(1) : Low Limit differential pressure !"
+#MESSAGE 
+"The log limit differential pressure error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   21 
+#EXTERNAL_ID   52621 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(1) : Power Off !"
+#MESSAGE 
+"Power-Off error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   31 
+#EXTERNAL_ID   52631 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(1) : Over-Current !"
+#MESSAGE 
+"Over-current error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   41 
+#EXTERNAL_ID   52641 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(1) : Motor Error !"
+#MESSAGE 
+"Motor error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   51 
+#EXTERNAL_ID   52651 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(1) : Connection Error !"
+#MESSAGE 
+"Connection error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   52612 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(2) : Low Limit differential pressure !"
+#MESSAGE 
+"The log limit differential pressure error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   22 
+#EXTERNAL_ID   52622 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(2) : Power Off !"
+#MESSAGE 
+"Power-Off error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   32 
+#EXTERNAL_ID   52632 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(2) : Over-Current !"
+#MESSAGE 
+"Over-current error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   42 
+#EXTERNAL_ID   52642 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(2) : Motor Error !"
+#MESSAGE 
+"Motor error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   52 
+#EXTERNAL_ID   52652 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(2) : Connection Error !"
+#MESSAGE 
+"Connection error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   52613 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(3) : Low Limit differential pressure !"
+#MESSAGE 
+"The log limit differential pressure error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   23 
+#EXTERNAL_ID   52623 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(3) : Power Off !"
+#MESSAGE 
+"Power-Off error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   33 
+#EXTERNAL_ID   52633 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(3) : Over-Current !"
+#MESSAGE 
+"Over-current error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   43 
+#EXTERNAL_ID   52643 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(3) : Motor Error !"
+#MESSAGE 
+"Motor error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   53 
+#EXTERNAL_ID   52653 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(3) : Connection Error !"
+#MESSAGE 
+"Connection error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   14 
+#EXTERNAL_ID   52614 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(4) : Low Limit differential pressure !"
+#MESSAGE 
+"The log limit differential pressure error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   24 
+#EXTERNAL_ID   52624 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(4) : Power Off !"
+#MESSAGE 
+"Power-Off error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   34 
+#EXTERNAL_ID   52634 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(4) : Over-Current !"
+#MESSAGE 
+"Over-current error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   44 
+#EXTERNAL_ID   52644 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(4) : Motor Error !"
+#MESSAGE 
+"Motor error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   54 
+#EXTERNAL_ID   52654 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__FFU - Fan(4) : Connection Error !"
+#MESSAGE 
+"Connection error has occurred. 
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : __SYS   (OffsetID:0) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   0 
+#EXTERNAL_ID   0 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"__SYS - SYSTEM ERROR"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   11 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"__SYS - System Error 11 - Dll Title"
+#MESSAGE 
+"System Error 11 - Dll Message"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   13 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"__SYS - Alarm Clear Test !"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   12 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"__SYS - SYSTEM WARNING 12"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   21 
+#EXTERNAL_ID   21 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"__SYS - System Error : Async Timer Max Error"
+#MESSAGE 
+""
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   31 
+#EXTERNAL_ID   31 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"__SYS -  AlarmID(1)"
+#MESSAGE 
+"AlarmID(1)'s message ..."
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     ACT.1   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   32 
+#EXTERNAL_ID   32 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"__SYS -  AlarmID(2)"
+#MESSAGE 
+"AlarmID(2)'s message ..."
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     ACT.2   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   33 
+#EXTERNAL_ID   33 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"__SYS -  AlarmID(3)"
+#MESSAGE 
+"AlarmID(3)'s message ..."
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     ACT.3   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   34 
+#EXTERNAL_ID   34 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"__SYS -  AlarmID(4)"
+#MESSAGE 
+"AlarmID(4)'s message ..."
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     ACT.4   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   35 
+#EXTERNAL_ID   35 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"__SYS -  AlarmID(5)"
+#MESSAGE 
+"AlarmID(5)'s message ..."
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     ACT.5   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : FNC__MANIFOLD_TEST   (OffsetID:0) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   1 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__MANIFOLD_TEST - LL1's status is not "MAINTMODE"."
+#MESSAGE 
+"Please, convert LL's status to "MAINTMODE" !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   2 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__MANIFOLD_TEST - LL2's status is not "MAINTMODE"."
+#MESSAGE 
+"Please, convert LL's status to "MAINTMODE" !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   3 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__MANIFOLD_TEST - LL3's status is not "MAINTMODE"."
+#MESSAGE 
+"Please, convert LL's status to "MAINTMODE" !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   4 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__MANIFOLD_TEST - LL4's status is not "MAINTMODE"."
+#MESSAGE 
+"Please, convert LL's status to "MAINTMODE" !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   5 
+#EXTERNAL_ID   5 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"FNC__MANIFOLD_TEST - LL5's status is not "MAINTMODE"."
+#MESSAGE 
+"Please, convert LL's status to "MAINTMODE" !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : MNG__SYS_CTRL   (OffsetID:0) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   1 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"MNG__SYS_CTRL : SYSTEM INIT FAILED."
+#MESSAGE 
+"System component Initial-Action is failed !"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__LLx_PUMP   (OffsetID:0) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   1 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LLx_PUMP - The state of pump is not running !"
+#MESSAGE 
+"Please, check the state of pump !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   2 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LLx_PUMP - The state of pump blower is not running !"
+#MESSAGE 
+"Please, check the state of pump !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   3 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LLx_PUMP - The state of pump warning is not normal !"
+#MESSAGE 
+"Please, check the state of pump !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   4 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LLx_PUMP - The state of pump alarm is not normal !"
+#MESSAGE 
+"Please, check the state of pump !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   5 
+#EXTERNAL_ID   5 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LLx_PUMP - The state of pump operation is not ready !"
+#MESSAGE 
+"Please, check the state of pump !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   6 
+#EXTERNAL_ID   6 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LLx_PUMP - The state of pump alarm is error !"
+#MESSAGE 
+"Please, check the state of pump !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   7 
+#EXTERNAL_ID   7 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LLx_PUMP - Pump Initial Error !"
+#MESSAGE 
+"Please, check the state of pump !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   8 
+#EXTERNAL_ID   8 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__LLx_PUMP - Pump valve is not close !"
+#MESSAGE 
+"Please, check the pump valve !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY__TMC_PUMP   (OffsetID:0) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   1 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_PUMP - The state of pump is not running !"
+#MESSAGE 
+"Please, check the state of pump !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   2 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_PUMP - The state of pump blower is not running !"
+#MESSAGE 
+"Please, check the state of pump !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   3 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_PUMP - The state of pump warning is not normal !"
+#MESSAGE 
+"Please, check the state of pump !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   4 
+#EXTERNAL_ID   4 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_PUMP - The state of pump alarm is not normal !"
+#MESSAGE 
+"Please, check the state of pump !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   5 
+#EXTERNAL_ID   5 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_PUMP - The state of pump operation is not ready !"
+#MESSAGE 
+"Please, check the state of pump !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   6 
+#EXTERNAL_ID   6 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_PUMP - The state of pump alarm is error !"
+#MESSAGE 
+"Please, check the state of pump !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   7 
+#EXTERNAL_ID   7 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_PUMP - Pump Initial Error !"
+#MESSAGE 
+"Please, check the state of pump !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   8 
+#EXTERNAL_ID   8 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY__TMC_PUMP - Pump valve is not close !"
+#MESSAGE 
+"Please, check the pump valve !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_RFID__LP1   (OffsetID:0) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   1 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Offline"
+#MESSAGE 
+"1. Check the Serial cable.
+2. Check the RF Reader power.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   2 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Offline [Full Auto]"
+#MESSAGE 
+"1. Check the Serial cable.
+2. Check the RF Reader power.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   3 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Offline [Not Full Auto]"
+#MESSAGE 
+"1. Check the Serial cable.
+2. Check the RF Reader power.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     IGNORE   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   11 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Auto Fail"
+#MESSAGE 
+"1. Automatic reading is not possible.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   12 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Auto Fail [Full Auto]"
+#MESSAGE 
+"1. Automatic reading is not possible.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   13 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Auto Fail [Not Full Auto]"
+#MESSAGE 
+"1. Automatic reading is not possible.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   14 
+#EXTERNAL_ID   14 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader :  Ex-Fail"
+#MESSAGE 
+"1. read of write initiated from the terminal respectively other.
+  actions cannot be carried out.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   15 
+#EXTERNAL_ID   15 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader :  Ex-Fail [Full Auto]"
+#MESSAGE 
+"1. read of write initiated from the terminal respectively other.
+  actions cannot be carried out.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   16 
+#EXTERNAL_ID   16 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader :  Ex-Fail [Not Full Auto]"
+#MESSAGE 
+"1. read of write initiated from the terminal respectively other.
+  actions cannot be carried out.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   17 
+#EXTERNAL_ID   17 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader :  Write-Fail"
+#MESSAGE 
+"1. data transfer to the tag not possible.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   18 
+#EXTERNAL_ID   18 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader :  Write-Fail [Full Auto]"
+#MESSAGE 
+"1. data transfer to the tag not possible.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   19 
+#EXTERNAL_ID   19 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader :  Write-Fail [Not Full Auto]"
+#MESSAGE 
+"1. data transfer to the tag not possible.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   20 
+#EXTERNAL_ID   20 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : NO Tag"
+#MESSAGE 
+"1. NO Tag or antenna installed.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   21 
+#EXTERNAL_ID   21 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : NO Tag [Full Auto]"
+#MESSAGE 
+"1. NO Tag or antenna installed.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   22 
+#EXTERNAL_ID   22 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : NO Tag [Not Full Auto]"
+#MESSAGE 
+"1. NO Tag or antenna installed.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   23 
+#EXTERNAL_ID   23 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Invalid1"
+#MESSAGE 
+"1. Invalid paramter or command.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   24 
+#EXTERNAL_ID   24 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Invalid1 [Full Auto]"
+#MESSAGE 
+"1. Invalid paramter or command.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   25 
+#EXTERNAL_ID   25 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Invalid1 [Not Full Auto]"
+#MESSAGE 
+"1. Invalid paramter or command.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   26 
+#EXTERNAL_ID   26 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Unknown"
+#MESSAGE 
+"1. Unknown failure.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   27 
+#EXTERNAL_ID   27 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Unknown [Full Auto]"
+#MESSAGE 
+"1. Unknown failure.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   28 
+#EXTERNAL_ID   28 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Unknown [Not Full Auto]"
+#MESSAGE 
+"1. Unknown failure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   29 
+#EXTERNAL_ID   29 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Unconfig"
+#MESSAGE 
+"1. The device is not configured.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   30 
+#EXTERNAL_ID   30 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Unconfig [Full Auto]"
+#MESSAGE 
+"1. The device is not configured.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   31 
+#EXTERNAL_ID   31 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Unconfig [Not Full Auto]"
+#MESSAGE 
+"1. The device is not configured.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   32 
+#EXTERNAL_ID   32 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Check"
+#MESSAGE 
+"1. Parity or and checksum failure.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   33 
+#EXTERNAL_ID   33 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Check [Full Auto]"
+#MESSAGE 
+"1. Parity or and checksum failure.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   34 
+#EXTERNAL_ID   34 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Check [Not Full Auto]"
+#MESSAGE 
+"1. Parity or and checksum failure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   35 
+#EXTERNAL_ID   35 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Void Ackn"
+#MESSAGE 
+"1. No Valid Acknowledge.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   36 
+#EXTERNAL_ID   36 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Void Ackn [Full Auto]"
+#MESSAGE 
+"1. No Valid Acknowledge.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   37 
+#EXTERNAL_ID   37 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Void Ackn [Not Full Auto]"
+#MESSAGE 
+"1. No Valid Acknowledge.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   38 
+#EXTERNAL_ID   38 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Locked"
+#MESSAGE 
+"1. Locked Page cannot be written.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   39 
+#EXTERNAL_ID   39 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Locked [Full Auto]"
+#MESSAGE 
+"1. Locked Page cannot be written.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   40 
+#EXTERNAL_ID   40 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Locked [Not Full Auto]"
+#MESSAGE 
+"1. Locked Page cannot be written.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   41 
+#EXTERNAL_ID   41 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Msg Len"
+#MESSAGE 
+"1. Message too long.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   42 
+#EXTERNAL_ID   42 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Msg Len [Full Auto]"
+#MESSAGE 
+"1. Message too long.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   43 
+#EXTERNAL_ID   43 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Msg Len [Not Full Auto]"
+#MESSAGE 
+"1. Message too long.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   44 
+#EXTERNAL_ID   44 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Invalid2"
+#MESSAGE 
+"1. Invalid Parameter or Command.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   45 
+#EXTERNAL_ID   45 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Invalid2 [Full Auto]"
+#MESSAGE 
+"1. Invalid Parameter or Command.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   46 
+#EXTERNAL_ID   46 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : Invalid2 [Not Full Auto]"
+#MESSAGE 
+"1. Invalid Parameter or Command.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   47 
+#EXTERNAL_ID   47 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : No Ackn"
+#MESSAGE 
+"1. The Message which has to be confirmed has been sent maximally.
+   (RS232 maxrepeat) and has not been confirmed by the terminal.
+   within the defined thme frame (see paramter 5).
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   48 
+#EXTERNAL_ID   48 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : No Ackn [Full Auto]"
+#MESSAGE 
+"1. The Message which has to be confirmed has been sent maximally.
+   (RS232 maxrepeat) and has not been confirmed by the terminal.
+   within the defined thme frame (see paramter 5).
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   49 
+#EXTERNAL_ID   49 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP1 - RF Reader : No Ackn [Not Full Auto]"
+#MESSAGE 
+"1. The Message which has to be confirmed has been sent maximally.
+   (RS232 maxrepeat) and has not been confirmed by the terminal.
+   within the defined thme frame (see paramter 5).
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_RFID__LP2   (OffsetID:0) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   1 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Offline"
+#MESSAGE 
+"1. Check the Serial cable.
+2. Check the RF Reader power.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   2 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Offline [Full Auto]"
+#MESSAGE 
+"1. Check the Serial cable.
+2. Check the RF Reader power.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   3 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Offline [Not Full Auto]"
+#MESSAGE 
+"1. Check the Serial cable.
+2. Check the RF Reader power.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     IGNORE   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   11 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Auto Fail"
+#MESSAGE 
+"1. Automatic reading is not possible.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   12 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Auto Fail [Full Auto]"
+#MESSAGE 
+"1. Automatic reading is not possible.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   13 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Auto Fail [Not Full Auto]"
+#MESSAGE 
+"1. Automatic reading is not possible.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   14 
+#EXTERNAL_ID   14 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader :  Ex-Fail"
+#MESSAGE 
+"1. read of write initiated from the terminal respectively other.
+  actions cannot be carried out.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   15 
+#EXTERNAL_ID   15 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader :  Ex-Fail [Full Auto]"
+#MESSAGE 
+"1. read of write initiated from the terminal respectively other.
+  actions cannot be carried out.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   16 
+#EXTERNAL_ID   16 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader :  Ex-Fail [Not Full Auto]"
+#MESSAGE 
+"1. read of write initiated from the terminal respectively other.
+  actions cannot be carried out.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   17 
+#EXTERNAL_ID   17 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader :  Write-Fail"
+#MESSAGE 
+"1. data transfer to the tag not possible.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   18 
+#EXTERNAL_ID   18 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader :  Write-Fail [Full Auto]"
+#MESSAGE 
+"1. data transfer to the tag not possible.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   19 
+#EXTERNAL_ID   19 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader :  Write-Fail [Not Full Auto]"
+#MESSAGE 
+"1. data transfer to the tag not possible.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   20 
+#EXTERNAL_ID   20 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : NO Tag"
+#MESSAGE 
+"1. NO Tag or antenna installed.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   21 
+#EXTERNAL_ID   21 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : NO Tag [Full Auto]"
+#MESSAGE 
+"1. NO Tag or antenna installed.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   22 
+#EXTERNAL_ID   22 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : NO Tag [Not Full Auto]"
+#MESSAGE 
+"1. NO Tag or antenna installed.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   23 
+#EXTERNAL_ID   23 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Invalid1"
+#MESSAGE 
+"1. Invalid paramter or command.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   24 
+#EXTERNAL_ID   24 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Invalid1 [Full Auto]"
+#MESSAGE 
+"1. Invalid paramter or command.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   25 
+#EXTERNAL_ID   25 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Invalid1 [Not Full Auto]"
+#MESSAGE 
+"1. Invalid paramter or command.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   26 
+#EXTERNAL_ID   26 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Unknown"
+#MESSAGE 
+"1. Unknown failure.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   27 
+#EXTERNAL_ID   27 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Unknown [Full Auto]"
+#MESSAGE 
+"1. Unknown failure.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   28 
+#EXTERNAL_ID   28 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Unknown [Not Full Auto]"
+#MESSAGE 
+"1. Unknown failure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   29 
+#EXTERNAL_ID   29 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Unconfig"
+#MESSAGE 
+"1. The device is not configured.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   30 
+#EXTERNAL_ID   30 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Unconfig [Full Auto]"
+#MESSAGE 
+"1. The device is not configured.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   31 
+#EXTERNAL_ID   31 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Unconfig [Not Full Auto]"
+#MESSAGE 
+"1. The device is not configured.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   32 
+#EXTERNAL_ID   32 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Check"
+#MESSAGE 
+"1. Parity or and checksum failure.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   33 
+#EXTERNAL_ID   33 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Check [Full Auto]"
+#MESSAGE 
+"1. Parity or and checksum failure.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   34 
+#EXTERNAL_ID   34 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Check [Not Full Auto]"
+#MESSAGE 
+"1. Parity or and checksum failure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   35 
+#EXTERNAL_ID   35 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Void Ackn"
+#MESSAGE 
+"1. No Valid Acknowledge.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   36 
+#EXTERNAL_ID   36 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Void Ackn [Full Auto]"
+#MESSAGE 
+"1. No Valid Acknowledge.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   37 
+#EXTERNAL_ID   37 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Void Ackn [Not Full Auto]"
+#MESSAGE 
+"1. No Valid Acknowledge.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   38 
+#EXTERNAL_ID   38 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Locked"
+#MESSAGE 
+"1. Locked Page cannot be written.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   39 
+#EXTERNAL_ID   39 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Locked [Full Auto]"
+#MESSAGE 
+"1. Locked Page cannot be written.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   40 
+#EXTERNAL_ID   40 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Locked [Not Full Auto]"
+#MESSAGE 
+"1. Locked Page cannot be written.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   41 
+#EXTERNAL_ID   41 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Msg Len"
+#MESSAGE 
+"1. Message too long.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   42 
+#EXTERNAL_ID   42 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Msg Len [Full Auto]"
+#MESSAGE 
+"1. Message too long.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   43 
+#EXTERNAL_ID   43 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Msg Len [Not Full Auto]"
+#MESSAGE 
+"1. Message too long.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   44 
+#EXTERNAL_ID   44 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Invalid2"
+#MESSAGE 
+"1. Invalid Parameter or Command.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   45 
+#EXTERNAL_ID   45 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Invalid2 [Full Auto]"
+#MESSAGE 
+"1. Invalid Parameter or Command.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   46 
+#EXTERNAL_ID   46 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : Invalid2 [Not Full Auto]"
+#MESSAGE 
+"1. Invalid Parameter or Command.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   47 
+#EXTERNAL_ID   47 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : No Ackn"
+#MESSAGE 
+"1. The Message which has to be confirmed has been sent maximally.
+   (RS232 maxrepeat) and has not been confirmed by the terminal.
+   within the defined thme frame (see paramter 5).
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   48 
+#EXTERNAL_ID   48 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : No Ackn [Full Auto]"
+#MESSAGE 
+"1. The Message which has to be confirmed has been sent maximally.
+   (RS232 maxrepeat) and has not been confirmed by the terminal.
+   within the defined thme frame (see paramter 5).
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   49 
+#EXTERNAL_ID   49 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP2 - RF Reader : No Ackn [Not Full Auto]"
+#MESSAGE 
+"1. The Message which has to be confirmed has been sent maximally.
+   (RS232 maxrepeat) and has not been confirmed by the terminal.
+   within the defined thme frame (see paramter 5).
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_RFID__LP3   (OffsetID:0) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   1 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Offline"
+#MESSAGE 
+"1. Check the Serial cable.
+2. Check the RF Reader power.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   2 
+#EXTERNAL_ID   2 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Offline [Full Auto]"
+#MESSAGE 
+"1. Check the Serial cable.
+2. Check the RF Reader power.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   3 
+#EXTERNAL_ID   3 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Offline [Not Full Auto]"
+#MESSAGE 
+"1. Check the Serial cable.
+2. Check the RF Reader power.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     IGNORE   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   11 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Auto Fail"
+#MESSAGE 
+"1. Automatic reading is not possible.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   12 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Auto Fail [Full Auto]"
+#MESSAGE 
+"1. Automatic reading is not possible.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   13 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Auto Fail [Not Full Auto]"
+#MESSAGE 
+"1. Automatic reading is not possible.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   14 
+#EXTERNAL_ID   14 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader :  Ex-Fail"
+#MESSAGE 
+"1. read of write initiated from the terminal respectively other.
+  actions cannot be carried out.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   15 
+#EXTERNAL_ID   15 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader :  Ex-Fail [Full Auto]"
+#MESSAGE 
+"1. read of write initiated from the terminal respectively other.
+  actions cannot be carried out.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   16 
+#EXTERNAL_ID   16 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader :  Ex-Fail [Not Full Auto]"
+#MESSAGE 
+"1. read of write initiated from the terminal respectively other.
+  actions cannot be carried out.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   17 
+#EXTERNAL_ID   17 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader :  Write-Fail"
+#MESSAGE 
+"1. data transfer to the tag not possible.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   18 
+#EXTERNAL_ID   18 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader :  Write-Fail [Full Auto]"
+#MESSAGE 
+"1. data transfer to the tag not possible.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   19 
+#EXTERNAL_ID   19 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader :  Write-Fail [Not Full Auto]"
+#MESSAGE 
+"1. data transfer to the tag not possible.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   20 
+#EXTERNAL_ID   20 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : NO Tag"
+#MESSAGE 
+"1. NO Tag or antenna installed.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   21 
+#EXTERNAL_ID   21 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : NO Tag [Full Auto]"
+#MESSAGE 
+"1. NO Tag or antenna installed.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   22 
+#EXTERNAL_ID   22 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : NO Tag [Not Full Auto]"
+#MESSAGE 
+"1. NO Tag or antenna installed.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   23 
+#EXTERNAL_ID   23 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Invalid1"
+#MESSAGE 
+"1. Invalid paramter or command.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   24 
+#EXTERNAL_ID   24 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Invalid1 [Full Auto]"
+#MESSAGE 
+"1. Invalid paramter or command.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   25 
+#EXTERNAL_ID   25 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Invalid1 [Not Full Auto]"
+#MESSAGE 
+"1. Invalid paramter or command.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   26 
+#EXTERNAL_ID   26 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Unknown"
+#MESSAGE 
+"1. Unknown failure.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   27 
+#EXTERNAL_ID   27 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Unknown [Full Auto]"
+#MESSAGE 
+"1. Unknown failure.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   28 
+#EXTERNAL_ID   28 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Unknown [Not Full Auto]"
+#MESSAGE 
+"1. Unknown failure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   29 
+#EXTERNAL_ID   29 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Unconfig"
+#MESSAGE 
+"1. The device is not configured.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   30 
+#EXTERNAL_ID   30 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Unconfig [Full Auto]"
+#MESSAGE 
+"1. The device is not configured.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   31 
+#EXTERNAL_ID   31 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Unconfig [Not Full Auto]"
+#MESSAGE 
+"1. The device is not configured.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   32 
+#EXTERNAL_ID   32 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Check"
+#MESSAGE 
+"1. Parity or and checksum failure.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   33 
+#EXTERNAL_ID   33 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Check [Full Auto]"
+#MESSAGE 
+"1. Parity or and checksum failure.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   34 
+#EXTERNAL_ID   34 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Check [Not Full Auto]"
+#MESSAGE 
+"1. Parity or and checksum failure.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   35 
+#EXTERNAL_ID   35 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Void Ackn"
+#MESSAGE 
+"1. No Valid Acknowledge.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   36 
+#EXTERNAL_ID   36 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Void Ackn [Full Auto]"
+#MESSAGE 
+"1. No Valid Acknowledge.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   37 
+#EXTERNAL_ID   37 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Void Ackn [Not Full Auto]"
+#MESSAGE 
+"1. No Valid Acknowledge.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   38 
+#EXTERNAL_ID   38 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Locked"
+#MESSAGE 
+"1. Locked Page cannot be written.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   39 
+#EXTERNAL_ID   39 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Locked [Full Auto]"
+#MESSAGE 
+"1. Locked Page cannot be written.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   40 
+#EXTERNAL_ID   40 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Locked [Not Full Auto]"
+#MESSAGE 
+"1. Locked Page cannot be written.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   41 
+#EXTERNAL_ID   41 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Msg Len"
+#MESSAGE 
+"1. Message too long.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   42 
+#EXTERNAL_ID   42 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Msg Len [Full Auto]"
+#MESSAGE 
+"1. Message too long.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   43 
+#EXTERNAL_ID   43 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Msg Len [Not Full Auto]"
+#MESSAGE 
+"1. Message too long.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   44 
+#EXTERNAL_ID   44 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Invalid2"
+#MESSAGE 
+"1. Invalid Parameter or Command.
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   45 
+#EXTERNAL_ID   45 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Invalid2 [Full Auto]"
+#MESSAGE 
+"1. Invalid Parameter or Command.
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   46 
+#EXTERNAL_ID   46 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : Invalid2 [Not Full Auto]"
+#MESSAGE 
+"1. Invalid Parameter or Command.
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   47 
+#EXTERNAL_ID   47 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : No Ackn"
+#MESSAGE 
+"1. The Message which has to be confirmed has been sent maximally.
+   (RS232 maxrepeat) and has not been confirmed by the terminal.
+   within the defined thme frame (see paramter 5).
+"
+#RECOVERY_ACTION 
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   48 
+#EXTERNAL_ID   48 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : No Ackn [Full Auto]"
+#MESSAGE 
+"1. The Message which has to be confirmed has been sent maximally.
+   (RS232 maxrepeat) and has not been confirmed by the terminal.
+   within the defined thme frame (see paramter 5).
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   49 
+#EXTERNAL_ID   49 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_RFID__LP3 - RF Reader : No Ackn [Not Full Auto]"
+#MESSAGE 
+"1. The Message which has to be confirmed has been sent maximally.
+   (RS232 maxrepeat) and has not been confirmed by the terminal.
+   within the defined thme frame (see paramter 5).
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : IO__CHILLER_AB   (OffsetID:0) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   1 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO__CHILLER_AB - Pump Offline !"
+#MESSAGE 
+"Check the status of communication !"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   11 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO__CHILLER_AB - Channel(1) Fault !"
+#MESSAGE 
+"Please, check the state of chiller !"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   12 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO__CHILLER_AB - Channel(2) Fault !"
+#MESSAGE 
+"Please, check the state of chiller !"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   21 
+#EXTERNAL_ID   21 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO__CHILLER_AB - Channel(1) Warning !"
+#MESSAGE 
+"Please, check the state of chiller !"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   22 
+#EXTERNAL_ID   22 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO__CHILLER_AB - Channel(2) Warning !"
+#MESSAGE 
+"Please, check the state of chiller !"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : IO__CHILLER_EF   (OffsetID:0) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   1 
+#EXTERNAL_ID   1 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO__CHILLER_EF - Pump Offline !"
+#MESSAGE 
+"Check the status of communication !"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   11 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO__CHILLER_EF - Channel(1) Fault !"
+#MESSAGE 
+"Please, check the state of chiller !"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   12 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO__CHILLER_EF - Channel(2) Fault !"
+#MESSAGE 
+"Please, check the state of chiller !"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   21 
+#EXTERNAL_ID   21 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO__CHILLER_EF - Channel(1) Warning !"
+#MESSAGE 
+"Please, check the state of chiller !"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   22 
+#EXTERNAL_ID   22 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO__CHILLER_EF - Channel(2) Warning !"
+#MESSAGE 
+"Please, check the state of chiller !"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : IO_EFEM   (OffsetID:0) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   11 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO_EFEM - Offline."
+#MESSAGE 
+"Controller is Offline.
+Please, Check Communication Status !
+"
+#RECOVERY_ACTION 
+     RETRY   ""
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   12 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO_EFEM - Error Code !"
+#MESSAGE 
+"Please, check HW status !
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+     RETRY   ""
+     IGNORE   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   13 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO_EFEM - Error Code !"
+#MESSAGE 
+"Please, check HW status !
+"
+#RECOVERY_ACTION 
+     CHECK   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   14 
+#EXTERNAL_ID   14 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO_EFEM - Align and Pick Action Timeout Occur."
+#MESSAGE 
+"Align and Pick Action Timeout Occur.
+Please, Check ATM Robot Status !
+"
+#RECOVERY_ACTION 
+     ABORT   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   15 
+#EXTERNAL_ID   15 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"IO_EFEM - Config Option, Mapping Disable Alarm."
+#MESSAGE 
+"Now, Mapping Disable Config Option Selected.
+Would you like to continue ??
+"
+#RECOVERY_ACTION 
+     NO   ""
+     YES   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_IO__PUMP_LL   (OffsetID:0) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   11 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__PUMP_LL - Pump Offline !"
+#MESSAGE 
+"Check the status of communication !"
+#RECOVERY_ACTION 
+     RETRY   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   12 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__PUMP_LL - Pump Alarm !"
+#MESSAGE 
+"Please, check the status of pump !"
+#RECOVERY_ACTION 
+     RETRY   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   13 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__PUMP_LL - Blower Warning !"
+#MESSAGE 
+"Please, check the status of blower !"
+#RECOVERY_ACTION 
+     RETRY   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   14 
+#EXTERNAL_ID   14 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__PUMP_LL - Pump Warning !"
+#MESSAGE 
+"Please, check the status of pump !"
+#RECOVERY_ACTION 
+     RETRY   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+
+//------------------------------------------------------------
+OBJECT_NAME : PHY_IO__PUMP_TM   (OffsetID:0) (ToolID:) (UnitID:) 
+
+#INTERNAL_ID   11 
+#EXTERNAL_ID   11 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__PUMP_TM - Pump Offline !"
+#MESSAGE 
+"Check the status of communication !"
+#RECOVERY_ACTION 
+     RETRY   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   12 
+#EXTERNAL_ID   12 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__PUMP_TM - Pump Alarm !"
+#MESSAGE 
+"Please, check the status of pump !"
+#RECOVERY_ACTION 
+     RETRY   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   13 
+#EXTERNAL_ID   13 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__PUMP_TM - Blower Warning !"
+#MESSAGE 
+"Please, check the status of blower !"
+#RECOVERY_ACTION 
+     RETRY   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+#INTERNAL_ID   14 
+#EXTERNAL_ID   14 
+#LEVEL   LIGHT 
+#HOST_REPORT   YES
+#TITLE 
+"PHY_IO__PUMP_TM - Pump Warning !"
+#MESSAGE 
+"Please, check the status of pump !"
+#RECOVERY_ACTION 
+     RETRY   ""
+#OPTION1    
+#OPTION2    
+#OPTION3    
+
+

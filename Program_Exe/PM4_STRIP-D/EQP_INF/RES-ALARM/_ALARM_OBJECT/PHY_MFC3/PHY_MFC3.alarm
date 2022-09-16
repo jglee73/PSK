@@ -1,0 +1,10 @@
+#ID=2	3902	LIGHT	PHY_MFC3 - In MFC config page, MFC's use is selected to "YES".
+#ID=1	3901	LIGHT	PHY_MFC3 - MFC Flow Control Aborted !.
+#ID=3	3903	LIGHT	PHY_MFC3 - MFC Flow Control Warning Range Alarm.
+#ID=4	3904	LIGHT	PHY_MFC3 - MFC Flow Control Abort Range Alarm.
+#ID=5	3905	LIGHT	PHY_MFC3 - During Idle, MFC Flow Control Warning Range Alarm.
+#ID=6	3906	LIGHT	PHY_MFC3 - During Idle, MFC Flow Control Abort Range Alarm.
+#ID=7	3907	LIGHT	PHY_MFC3 - System interlock sensor detected !
+#ID=8	3908	LIGHT	PHY_MFC3 - Chamber interlock sensor detected !
+#ID=9	3909	LIGHT	PHY_MFC3 - Gas box interlock sensor detected !
+#ID=10	3910	LIGHT	PHY_MFC3 - ATM.Maint selected!

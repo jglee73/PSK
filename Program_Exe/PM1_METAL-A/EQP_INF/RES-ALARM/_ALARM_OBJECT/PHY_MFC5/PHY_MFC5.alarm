@@ -1,0 +1,10 @@
+#ID=2	4502	LIGHT	PHY_MFC5 - In MFC config page, MFC's use is selected to "YES".
+#ID=1	4501	LIGHT	PHY_MFC5 - MFC Flow Control Aborted !.
+#ID=3	4503	LIGHT	PHY_MFC5 - MFC Flow Control Warning Range Alarm.
+#ID=4	4504	LIGHT	PHY_MFC5 - MFC Flow Control Abort Range Alarm.
+#ID=5	4505	LIGHT	PHY_MFC5 - During Idle, MFC Flow Control Warning Range Alarm.
+#ID=6	4506	LIGHT	PHY_MFC5 - During Idle, MFC Flow Control Abort Range Alarm.
+#ID=7	4507	LIGHT	PHY_MFC5 - System interlock sensor detected !
+#ID=8	4508	LIGHT	PHY_MFC5 - Chamber interlock sensor detected !
+#ID=9	4509	LIGHT	PHY_MFC5 - Gas box interlock sensor detected !
+#ID=10	4510	LIGHT	PHY_MFC5 - ATM.Maint selected!

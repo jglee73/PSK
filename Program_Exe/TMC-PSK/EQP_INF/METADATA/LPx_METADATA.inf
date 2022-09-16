@@ -1,0 +1,145 @@
+
+//------------------------------------------------
+#OBJECT_PROPERTY    PAGE__LP1
+#FNC_MODE           HOME                  OPR__LP1         HOME
+#FNC_MODE           ALARM.RESET           OPR__LP1         ALARM.RESET
+#FNC_MODE           PREPLOAD              OPR__LP1         PREPLOAD
+#FNC_MODE           CLAMP                 OPR__LP1         CLAMP
+#FNC_MODE           UNCLAMP               OPR__LP1         UNCLAMP
+#FNC_MODE           LOAD                  OPR__LP1         LOAD
+#FNC_MODE           RLSUNLOAD             OPR__LP1         RLSUNLOAD
+#FNC_MODE           UNLOAD                OPR__LP1         UNLOAD
+#FNC_MODE           DOOR.OPEN             OPR__LP1         OPENDOOR
+#FNC_MODE           DOOR.CLOSE            OPR__LP1         CLOSEDOOR
+#FNC_MODE           MAP                   OPR__LP1         MAP
+
+#OBJECT_PROPERTY    PAGE__LP2
+#FNC_MODE           HOME                  OPR__LP2         HOME
+#FNC_MODE           ALARM.RESET           OPR__LP2         ALARM.RESET
+#FNC_MODE           PREPLOAD              OPR__LP2         PREPLOAD
+#FNC_MODE           CLAMP                 OPR__LP2         CLAMP
+#FNC_MODE           UNCLAMP               OPR__LP2         UNCLAMP
+#FNC_MODE           LOAD                  OPR__LP2         LOAD
+#FNC_MODE           RLSUNLOAD             OPR__LP2         RLSUNLOAD
+#FNC_MODE           UNLOAD                OPR__LP2         UNLOAD
+#FNC_MODE           DOOR.OPEN             OPR__LP2         OPENDOOR
+#FNC_MODE           DOOR.CLOSE            OPR__LP2         CLOSEDOOR
+#FNC_MODE           MAP                   OPR__LP2         MAP
+
+#OBJECT_PROPERTY    PAGE__LP3
+#FNC_MODE           HOME                  OPR__LP3         HOME
+#FNC_MODE           ALARM.RESET           OPR__LP3         ALARM.RESET
+#FNC_MODE           PREPLOAD              OPR__LP3         PREPLOAD
+#FNC_MODE           CLAMP                 OPR__LP3         CLAMP
+#FNC_MODE           UNCLAMP               OPR__LP3         UNCLAMP
+#FNC_MODE           LOAD                  OPR__LP3         LOAD
+#FNC_MODE           RLSUNLOAD             OPR__LP3         RLSUNLOAD
+#FNC_MODE           UNLOAD                OPR__LP3         UNLOAD
+#FNC_MODE           DOOR.OPEN             OPR__LP3         OPENDOOR
+#FNC_MODE           DOOR.CLOSE            OPR__LP3         CLOSEDOOR
+#FNC_MODE           MAP                   OPR__LP3         MAP
+
+
+//------------------------------------------------
+#OBJECT_PROPERTY    PAGE__LP1_RF
+#FNC_MODE           CID_READ              PHY__LP1         CID_READ 
+#FNC_MODE           PAGE_READ             PHY__LP1         PAGE_READ 
+
+#OBJECT_PROPERTY    PAGE__LP2_RF
+#FNC_MODE           CID_READ              PHY__LP2         CID_READ 
+#FNC_MODE           PAGE_READ             PHY__LP2         PAGE_READ 
+
+#OBJECT_PROPERTY    PAGE__LP3_RF
+#FNC_MODE           CID_READ              PHY__LP3         CID_READ 
+#FNC_MODE           PAGE_READ             PHY__LP3         PAGE_READ 
+
+
+//------------------------------------------------
+#OBJECT_PROPERTY    INF__LP1
+
+#DEFINE_CONSTANT    OBJ.LPx     	        OPR__LP1
+#FNC_VARIABLE       VAR__LP_RELOAD_FLAG		PHY__LP1      OTR.IN.CFG.RELOAD.FLAG
+                                         
+//------------------------------------------------
+#OBJECT_PROPERTY    INF__LP2
+
+#DEFINE_CONSTANT    OBJ.LPx     	        OPR__LP2
+#FNC_VARIABLE       VAR__LP_RELOAD_FLAG		PHY__LP2      OTR.IN.CFG.RELOAD.FLAG
+
+//------------------------------------------------
+#OBJECT_PROPERTY    INF__LP3
+
+#DEFINE_CONSTANT    OBJ.LPx     	        OPR__LP3
+#FNC_VARIABLE       VAR__LP_RELOAD_FLAG		PHY__LP3      OTR.IN.CFG.RELOAD.FLAG
+
+
+//------------------------------------------------
+#OBJECT_PROPERTY    OPR__LP1
+
+#DEFINE_CONSTANT    OBJ.LPx      		      PHY__LP1
+
+//------------------------------------------------
+#OBJECT_PROPERTY    OPR__LP2
+
+#DEFINE_CONSTANT    OBJ.LPx      		      PHY__LP2
+
+//------------------------------------------------
+#OBJECT_PROPERTY    OPR__LP3
+
+#DEFINE_CONSTANT    OBJ.LPx      		      PHY__LP3
+
+
+//------------------------------------------------
+#OBJECT_PROPERTY    PHY__LP1
+
+#DEFINE_CONSTANT    CH__OBJ_STATE         OPR__LP1+OBJ.STATUS
+
+#DEFINE_CONSTANT    LPx.ID                1
+#DEFINE_CONSTANT    OBJ.LPx          		  PHY_IO__LP1
+#DEFINE_CONSTANT    OBJ.RFx          		  PHY_RFID__LP1
+#DEFINE_CONSTANT    OBJ.OHT          		  PHY_OHT__LP1
+
+#DEFINE_CONSTANT		CH.SLIDE_OUT.DI       NULL
+#DEFINE_CONSTANT    CH.ARM_RNE_SNS.DI     NULL
+
+#DEFINE_CONSTANT    DATA.RNE_ON           None
+#DEFINE_CONSTANT    DATA.RNE_OFF          Extend
+
+#DEFINE_CONSTANT    OBJ.ROBOT             PHY__ATM_ROBOT
+
+//------------------------------------------------
+#OBJECT_PROPERTY    PHY__LP2
+
+#DEFINE_CONSTANT    CH__OBJ_STATE         OPR__LP2+OBJ.STATUS
+
+#DEFINE_CONSTANT    LPx.ID                2
+#DEFINE_CONSTANT    OBJ.LPx          		  PHY_IO__LP2
+#DEFINE_CONSTANT    OBJ.RFx          		  PHY_RFID__LP2
+#DEFINE_CONSTANT    OBJ.OHT          		  PHY_OHT__LP2
+
+#DEFINE_CONSTANT		CH.SLIDE_OUT.DI       NULL
+#DEFINE_CONSTANT    CH.ARM_RNE_SNS.DI     NULL
+
+#DEFINE_CONSTANT    DATA.RNE_ON           None
+#DEFINE_CONSTANT    DATA.RNE_OFF          Extend
+
+#DEFINE_CONSTANT    OBJ.ROBOT             PHY__ATM_ROBOT
+
+//------------------------------------------------
+#OBJECT_PROPERTY    PHY__LP3
+
+#DEFINE_CONSTANT    CH__OBJ_STATE         OPR__LP3+OBJ.STATUS
+
+#DEFINE_CONSTANT    LPx.ID                3
+#DEFINE_CONSTANT    OBJ.LPx          		  PHY_IO__LP3
+#DEFINE_CONSTANT    OBJ.RFx          		  PHY_RFID__LP3
+#DEFINE_CONSTANT    OBJ.OHT          		  PHY_OHT__LP3
+
+#DEFINE_CONSTANT		CH.SLIDE_OUT.DI       NULL
+#DEFINE_CONSTANT    CH.ARM_RNE_SNS.DI     NULL
+
+#DEFINE_CONSTANT    DATA.RNE_ON           None
+#DEFINE_CONSTANT    DATA.RNE_OFF          Extend
+
+#DEFINE_CONSTANT    OBJ.ROBOT             PHY__ATM_ROBOT
+

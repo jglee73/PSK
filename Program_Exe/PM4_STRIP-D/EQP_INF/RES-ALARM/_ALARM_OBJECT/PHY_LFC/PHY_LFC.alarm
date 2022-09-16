@@ -1,0 +1,10 @@
+#ID=2	2	LIGHT	PHY_LFC - In LFC config page, LFC's use is selected to "YES".
+#ID=1	1	LIGHT	PHY_LFC - LFC Flow Control Aborted !.
+#ID=3	3	LIGHT	PHY_LFC - LFC Flow Control Warning Range Alarm.
+#ID=4	4	LIGHT	PHY_LFC - LFC Flow Control Abort Range Alarm.
+#ID=5	5	LIGHT	PHY_LFC - During Idle, LFC Flow Control Warning Range Alarm.
+#ID=6	6	LIGHT	PHY_LFC - During Idle, LFC Flow Control Abort Range Alarm.
+#ID=7	7	LIGHT	PHY_LFC - System interlock sensor detected !
+#ID=8	8	LIGHT	PHY_LFC - Chamber interlock sensor detected !
+#ID=9	9	LIGHT	PHY_LFC - Gas box interlock sensor detected !
+#ID=10	10	LIGHT	PHY_LFC - ATM.Maint selected!

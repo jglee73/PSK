@@ -1,0 +1,6 @@
+; IO__CHILLER_FST.def : Declares the module parameters for the DLL.
+
+LIBRARY      "IO__CHILLER_FST"
+
+EXPORTS
+    ; Explicit exports can go here

@@ -1,0 +1,543 @@
+/*  SCREEN INFOMATION  */
+
+#SCREEN_DIR  SCR__TMC-PSK\
+
+
+// -----------------------------------------------------------------------
+#DEFINE  DEF__FRAME_CLIENT
+	POPUP              NO
+	LOW_LEFT_X         0  
+	LOW_LEFT_Y         55
+	WIDTH              1280 
+	HEIGHT             770 
+#END
+
+#DEFINE  DEF__FRAME_BOTTOM_SUB
+	POPUP              NO
+	LOW_LEFT_X         173 
+	LOW_LEFT_Y         825
+	WIDTH              1107 
+	HEIGHT             41
+#END
+
+#DEFINE  DEF__FRAME_BOTTOM_MAIN
+	POPUP              NO
+	LOW_LEFT_X         173 
+	LOW_LEFT_Y         866
+	WIDTH              1107 
+	HEIGHT             58
+#END
+
+
+// -----------------------------------------------------------------------
+// Side
+WINDOW_NAME TMC_BTM_MAIN_BAR
+{
+	#CALL_DEFINE                    DEF__FRAME_BOTTOM_MAIN
+	
+	CTRL_CHANNEL                    SCR.BTM_MAIN
+	USER_LEVEL                      Operate  
+}
+
+
+// Bottom
+WINDOW_NAME TMC_BTM_OPERATE      
+{
+	#CALL_DEFINE                    DEF__FRAME_BOTTOM_SUB
+	
+	CTRL_CHANNEL                    SCR.BOTTOM
+	USER_LEVEL                      Operate  
+}
+
+WINDOW_NAME TMC_BTM_CONFIG 
+{
+	#CALL_DEFINE                    DEF__FRAME_BOTTOM_SUB
+
+	CTRL_CHANNEL                    SCR.BOTTOM
+	USER_LEVEL                      Operate  
+}
+
+WINDOW_NAME TMC_BTM_MAINT 
+{
+	#CALL_DEFINE                    DEF__FRAME_BOTTOM_SUB
+
+	CTRL_CHANNEL                    SCR.BOTTOM
+	USER_LEVEL                      Operate  
+}
+
+WINDOW_NAME TMC_BTM_PART
+{
+	#CALL_DEFINE                    DEF__FRAME_BOTTOM_SUB
+	
+	CTRL_CHANNEL                    SCR.BOTTOM
+	USER_LEVEL                      Operate
+}
+
+
+// Client
+// Bottom => Operate
+WINDOW_NAME TMC_OPERATE__MAIN
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+	
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Operate  
+}
+
+WINDOW_NAME TMC_TAS_INFO__ROBOT
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Operate  
+}
+WINDOW_NAME TMC_TAS_INFO__LLx
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Operate  
+}
+WINDOW_NAME TMC_TAS_INFO__PMx
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Operate  
+}
+
+WINDOW_NAME TMC_SYSTEM_INFO
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Operate  
+}
+
+
+// Bottom => Config
+WINDOW_NAME TMC_CFG__ROBOT
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+	
+	PAGE_TYPE			                  CONFIG 
+	STATUS_CHANNEL		              DB_CFG+CFG.PAGE.ROBOT.SAVE 
+}
+
+WINDOW_NAME TMC_CFG__PRESSURE
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+	
+	PAGE_TYPE			                  CONFIG 
+	STATUS_CHANNEL		              DB_CFG+CFG.PAGE.PRESSURE.SAVE 
+}
+
+WINDOW_NAME TMC_CFG__SLOT_VALVE 
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+	
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+	
+	PAGE_TYPE			                  CONFIG 
+	STATUS_CHANNEL		              DB_CFG+CFG.PAGE.SLOT_VALVE.SAVE 
+}
+
+WINDOW_NAME TMC_CFG__FA_INTERFACE 
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+	
+	PAGE_TYPE			                  CONFIG 
+	STATUS_CHANNEL		              DB_CFG+CFG.PAGE.FA_INTERFACE.SAVE 
+}
+
+WINDOW_NAME TMC_CFG__SYSTEM
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+	
+	PAGE_TYPE			                  CONFIG 
+	STATUS_CHANNEL			            DB_CFG+CFG.PAGE.SYSTEM.SAVE 
+}
+
+WINDOW_NAME TMC_CFG__LLx 
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+	
+	PAGE_TYPE			                  CONFIG 
+	STATUS_CHANNEL		              DB_CFG+CFG.PAGE.LLx.SAVE 
+}
+
+WINDOW_NAME TMC_CFG__LPx_COMMON
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+	
+	PAGE_TYPE			                  CONFIG 
+	STATUS_CHANNEL		              DB_CFG+CFG.PAGE.LPx_COMMON.SAVE 
+}
+
+WINDOW_NAME TMC_CFG__LPx_PURGE
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+	
+	PAGE_TYPE			                  CONFIG 
+	STATUS_CHANNEL		              DB_CFG+CFG.PAGE.LPx_PURGE.SAVE 
+}
+
+WINDOW_NAME TMC_CFG__DA 
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+	
+	PAGE_TYPE			                  CONFIG 
+	STATUS_CHANNEL		              DB_CFG+CFG.PAGE.DA.SAVE 
+}
+
+WINDOW_NAME TMC_CFG__ACTIVE_HANDOFF
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+	
+	PAGE_TYPE			                  CONFIG 
+	STATUS_CHANNEL		              DB_CFG+CFG.PAGE.ACTIVE_HANDOFF.SAVE 
+} 
+
+
+// Bottom => Maint
+WINDOW_NAME TMC_MAINT__TRANSFER 
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+}
+WINDOW_NAME TMC_MAINT__PRESSURE 
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+}
+
+WINDOW_NAME TMC_MAINT__LEAKCHECK_TMx
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+}
+
+WINDOW_NAME TMC_MAINT__REAL_TIME
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+	
+	PAGE_TYPE			                  POLLING
+}
+
+WINDOW_NAME TMC_MAINT__DA_TEST
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+	
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+}
+WINDOW_NAME TMC_MAINT__DA_DATALOG
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+	
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+}
+
+
+// Bottom => Part
+WINDOW_NAME TMC_PART__SLOT_VALVE
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint
+}
+
+WINDOW_NAME TMC_PART__MANIFOLD_TEST
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint
+}
+
+WINDOW_NAME TMC_PART__EFEM
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint
+}
+
+WINDOW_NAME TMC_PART__PUMP
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint
+}
+
+WINDOW_NAME TMC_PART__CHILLER
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint
+}
+
+WINDOW_NAME TMC_PART__IO_DNET
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+}
+WINDOW_NAME TMC_PART__IO_SERIAL
+{
+	#CALL_DEFINE                    DEF__FRAME_CLIENT
+
+	CTRL_CHANNEL                    SCR.CLIENT 
+	USER_LEVEL                      Maint  
+}
+
+
+// Popup
+WINDOW_NAME TMC_POPUP__EFEM_ROBOT
+{
+	POPUP                           YES
+	LOW_LEFT_X                      410  
+	LOW_LEFT_Y                      10 
+	WIDTH                           370
+	HEIGHT                          505
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.ROBOT
+	USER_LEVEL                      Maint  
+}
+WINDOW_NAME TMC_POPUP__VAC_ROBOT 
+{
+	POPUP                           YES
+	LOW_LEFT_X                      40  
+	LOW_LEFT_Y                      40 
+	WIDTH                           370 
+	HEIGHT                          505 
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.ROBOT
+	USER_LEVEL                      Maint  
+}
+
+WINDOW_NAME TMC_POPUP__LLx_SLOT_VALVE 
+{
+	POPUP                           YES
+	LOW_LEFT_X                      125  
+	LOW_LEFT_Y                      125 
+	WIDTH                           530
+	HEIGHT                          542 
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.VAL
+	USER_LEVEL                      Maint  
+}
+WINDOW_NAME TMC_POPUP__PMx_SLOT_VALVE 
+{
+	POPUP                           YES
+	LOW_LEFT_X                      125  
+	LOW_LEFT_Y                      25 
+	WIDTH                           530
+	HEIGHT                          542 
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.VAL
+	USER_LEVEL                      Maint  
+}
+
+WINDOW_NAME TMC_POPUP__LP1_RF_MNT 
+{
+	POPUP                           YES
+	LOW_LEFT_X                      10  
+	LOW_LEFT_Y                      10 
+	WIDTH                           530
+	HEIGHT                          542 
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.LPx
+	USER_LEVEL                      Maint  
+}
+WINDOW_NAME TMC_POPUP__LP2_RF_MNT 
+{
+	POPUP                           YES
+	LOW_LEFT_X                      110  
+	LOW_LEFT_Y                      10 
+	WIDTH                           530
+	HEIGHT                          542 
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.LPx
+	USER_LEVEL                      Maint  
+}
+WINDOW_NAME TMC_POPUP__LP3_RF_MNT 
+{
+	POPUP                           YES
+	LOW_LEFT_X                      210  
+	LOW_LEFT_Y                      10 
+	WIDTH                           530
+	HEIGHT                          542 
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.LPx
+	USER_LEVEL                      Maint  
+}
+
+WINDOW_NAME TMC_POPUP__LL1_MNT 
+{
+	POPUP                           YES
+	LOW_LEFT_X                      10  
+	LOW_LEFT_Y                      10 
+	WIDTH                           410 
+	HEIGHT                          402 
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.LL1
+	USER_LEVEL                      Maint  
+}
+WINDOW_NAME TMC_POPUP__LL2_MNT 
+{
+	POPUP                           YES
+	LOW_LEFT_X                      100  
+	LOW_LEFT_Y                      10 
+	WIDTH                           410 
+	HEIGHT                          402
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.LL2
+	USER_LEVEL                      Maint  
+}
+
+WINDOW_NAME TMC_POPUP__LP1_E84_IO-PSK
+{
+	POPUP                           YES
+	LOW_LEFT_X                      50  
+	LOW_LEFT_Y                      30 
+	WIDTH                           360 
+	HEIGHT                          595 
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.LPx
+	USER_LEVEL                      Maint  
+}
+WINDOW_NAME TMC_POPUP__LP2_E84_IO-PSK
+{
+	POPUP                           YES
+	LOW_LEFT_X                      100  
+	LOW_LEFT_Y                      30 
+	WIDTH                           360 
+	HEIGHT                          595 
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.LPx
+	USER_LEVEL                      Maint  
+}
+WINDOW_NAME TMC_POPUP__LP3_E84_IO-PSK
+{
+	POPUP                           YES
+	LOW_LEFT_X                      150  
+	LOW_LEFT_Y                      30 
+	WIDTH                           360 
+	HEIGHT                          595 
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.LPx
+	USER_LEVEL                      Maint  
+}
+
+WINDOW_NAME TMC_POPUP__RF1_MNT 
+{
+	POPUP                           YES
+	LOW_LEFT_X                      110  
+	LOW_LEFT_Y                      410 
+	WIDTH                           397 
+	HEIGHT                          360
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.LPx
+	USER_LEVEL                      Maint  
+}
+WINDOW_NAME TMC_POPUP__RF2_MNT 
+{
+	POPUP                           YES
+	LOW_LEFT_X                      210  
+	LOW_LEFT_Y                      410 
+	WIDTH                           397 
+	HEIGHT                          360
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.LPx
+	USER_LEVEL                      Maint  
+}
+WINDOW_NAME TMC_POPUP__RF3_MNT 
+{
+	POPUP                           YES
+	LOW_LEFT_X                      310  
+	LOW_LEFT_Y                      410 
+	WIDTH                           397 
+	HEIGHT                          360
+
+	CTRL_CHANNEL                    GUI.POPUP.MNT.LPx
+	USER_LEVEL                      Maint  
+}
+
+WINDOW_NAME TMC_POPUP_INITIAL
+{
+	POPUP                           TOP_MOST
+	LOW_LEFT_X                      220  
+	LOW_LEFT_Y                      12
+	WIDTH                           504   // 500+4 
+	HEIGHT                          614   // 584+30
+		
+	SEQ_CTRL_CHANNEL                DB_GUI+sPOPUP.MNT.INITIAL
+	USER_LEVEL                      Operate
+}
+
+WINDOW_NAME POPUP__TMC_PUMP_PFEIFFIER
+{
+	POPUP                           YES
+	LOW_LEFT_X                      100  
+	LOW_LEFT_Y                      150 
+	WIDTH                           470 
+	HEIGHT                          445
+	
+	CTRL_CHANNEL                    GUI.POPUP.PUMP.TMC
+	USER_LEVEL                      Maint  
+}
+
+WINDOW_NAME POPUP__LLx_PUMP_PFEIFFIER
+{
+	POPUP                           YES
+	LOW_LEFT_X                      400  
+	LOW_LEFT_Y                      150 
+	WIDTH                           470 
+	HEIGHT                          445
+	
+	CTRL_CHANNEL                    GUI.POPUP.PUMP.LLx
+	USER_LEVEL                      Maint  
+}

@@ -1,0 +1,10 @@
+#ID=2	4602	LIGHT	PHY_MFC6 - In MFC config page, MFC's use is selected to "YES".
+#ID=1	4601	LIGHT	PHY_MFC6 - MFC Flow Control Aborted !.
+#ID=3	4603	LIGHT	PHY_MFC6 - MFC Flow Control Warning Range Alarm.
+#ID=4	4604	LIGHT	PHY_MFC6 - MFC Flow Control Abort Range Alarm.
+#ID=5	4605	LIGHT	PHY_MFC6 - During Idle, MFC Flow Control Warning Range Alarm.
+#ID=6	4606	LIGHT	PHY_MFC6 - During Idle, MFC Flow Control Abort Range Alarm.
+#ID=7	4607	LIGHT	PHY_MFC6 - System interlock sensor detected !
+#ID=8	4608	LIGHT	PHY_MFC6 - Chamber interlock sensor detected !
+#ID=9	4609	LIGHT	PHY_MFC6 - Gas box interlock sensor detected !
+#ID=10	4610	LIGHT	PHY_MFC6 - ATM.Maint selected!

@@ -1,0 +1,5 @@
+#ID=1	1	LIGHT	IO__CHILLER_AB - Pump Offline !
+#ID=11	11	LIGHT	IO__CHILLER_AB - Channel(1) Fault !
+#ID=12	12	LIGHT	IO__CHILLER_AB - Channel(2) Fault !
+#ID=21	21	LIGHT	IO__CHILLER_AB - Channel(1) Warning !
+#ID=22	22	LIGHT	IO__CHILLER_AB - Channel(2) Warning !

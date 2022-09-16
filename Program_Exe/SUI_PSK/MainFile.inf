@@ -1,0 +1,167 @@
+##SIMULATION_MODE	    
+
+#DEVICE_NAME     DEMO
+#GUI_TYPE        FAB		       // FAB   OFFICE
+
+
+// #TOTAL_ALARM_POPUP_BOX_ENABLE
+#MODULE_WINDOW_HIDE		     // Show (Default)
+
+// #SINGLE_LOCAL               0
+// #SINGLE_LOCAL               1
+// #SINGLE_LOCAL               2
+// #SINGLE_LOCAL               3
+// #SINGLE_LOCAL               4
+// #SINGLE_LOCAL               5
+// #SINGLE_REMOTE              5
+
+#SYSTEM_USER_LEVEL          OEM     // MAINT  
+
+
+//---------------------------------------------------------------------------------------
+// #PAGE_CHECK.LINK_FILE       PAGE_CHECK.inf
+// #ACTIVE.LOG_SIM_PAGE
+// #ACTIVE.LOG_INTERFACE_PART
+
+#ACTIVE.POPUP_PAGE_REDRAW
+
+
+//---------------------------------------------------------------------------------------
+/*
+#SINGLE_WINDOW.LINK_SCT     SINGLE_WIN.sct
+#SINGLE_WINDOW.LINK_CTRL    SINGLE_WIN.ctrl
+*/
+
+
+//---------------------------------------------------------------------------------------
+#PAGE_SIZE   1280_1024		// 1280 * 1024
+
+#EVENT_LEFT_BUTTON_UP_ENABLE
+
+
+//---------------------------------------------------------------------------------------
+#SYSTEM_DEFINE_FILE    SYS_DEF.inf
+
+
+#DEFINE  ##CTC_DIR_ROOT     "D:\WORK_PSK\Program_Exe\CTC-PSK"
+#DEFINE  ##TMC_DIR_ROOT     "D:\WORK_PSK\Program_Exe\TMC-PSK"
+
+#DEFINE  ##PM1_DIR_ROOT     "D:\WORK_PSK\Program_Exe\PM1_METAL-A"
+#DEFINE  ##PM2_DIR_ROOT     "D:\WORK_PSK\Program_Exe\PM2_METAL-B"
+
+#DEFINE  ##PM3_DIR_ROOT     "D:\WORK_PSK\Program_Exe\PM3_STRIP-C"
+#DEFINE  ##PM4_DIR_ROOT     "D:\WORK_PSK\Program_Exe\PM4_STRIP-D"
+
+
+#DEFINE  ##CTC_SCR_FILE     CTC_WIN-PSK.sct
+#DEFINE  ##CTC_SCR_CTRL     CTC_WIN-PSK.ctrl
+
+#DEFINE  ##TMC_SCR_FILE     TMC_WIN-PSK.sct
+#DEFINE  ##TMC_SCR_CTRL     TMC_WIN-PSK.ctrl
+
+#DEFINE  ##PM1_SCT.METAL    PMC_WIN-METAL_A.sct
+#DEFINE  ##PM1_CTL.METAL    PMC_WIN-METAL_A.ctrl
+
+#DEFINE  ##PM2_SCT.METAL    PMC_WIN-METAL_B.sct
+#DEFINE  ##PM2_CTL.METAL    PMC_WIN-METAL_B.ctrl
+
+#DEFINE  ##PM3_SCT.STRIP    PMC_WIN-STRIP_C.sct
+#DEFINE  ##PM3_CTL.STRIP    PMC_WIN-STRIP_C.ctrl
+
+#DEFINE  ##PM4_SCT.STRIP    PMC_WIN-STRIP_D.sct
+#DEFINE  ##PM4_CTL.STRIP    PMC_WIN-STRIP_D.ctrl
+
+#DEFINE  ##NULL_SCR_FILE    WIN-NULL.sct
+#DEFINE  ##NULL_SCR_CTRL    WIN-NULL.ctrl
+
+
+// CTC
+#MAIN_DATA
+{
+#SEQ_NAME              CTC
+
+#SCREEN_FILE           ##CTC_SCR_FILE
+#SCREEN_CTRL	      	 ##CTC_SCR_CTRL
+
+#DIR_SEQ_ROOT          ##CTC_DIR_ROOT
+}
+
+// TMC
+#PM0_DATA
+{
+#SEQ_NAME              TMC
+
+#SCREEN_FILE           ##TMC_SCR_FILE
+#SCREEN_CTRL	         ##TMC_SCR_CTRL
+
+#DIR_SEQ_ROOT          ##TMC_DIR_ROOT
+}
+
+
+// PM1
+#PM1_DATA
+{
+#SEQ_NAME              PM1
+
+#SCREEN_FILE           ##PM1_SCT.METAL
+#SCREEN_CTRL	         ##PM1_CTL.METAL
+
+#DIR_SEQ_ROOT          ##PM1_DIR_ROOT
+}
+
+// PM2
+#PM2_DATA
+{
+#SEQ_NAME              PM2
+
+#SCREEN_FILE           ##PM2_SCT.METAL
+#SCREEN_CTRL	         ##PM2_CTL.METAL
+
+#DIR_SEQ_ROOT          ##PM2_DIR_ROOT
+}
+
+// PM3
+#PM3_DATA
+{
+#SEQ_NAME              PM3
+
+#SCREEN_FILE           ##PM3_SCT.STRIP
+#SCREEN_CTRL	         ##PM3_CTL.STRIP
+
+#DIR_SEQ_ROOT          ##PM3_DIR_ROOT
+}
+
+// PM4
+#PM4_DATA
+{
+#SEQ_NAME              PM4
+
+#SCREEN_FILE           ##PM4_SCT.STRIP
+#SCREEN_CTRL	         ##PM4_CTL.STRIP
+
+#DIR_SEQ_ROOT          ##PM4_DIR_ROOT
+}
+
+/*
+// PM5
+#PM5_DATA
+{
+#SEQ_NAME              PM5
+
+#SCREEN_FILE           ##PMC_SCT.METAL
+#SCREEN_CTRL	         ##PMC_CTL.METAL
+
+#DIR_SEQ_ROOT          ##PM5_DIR_ROOT
+}
+
+// PM6
+#PM6_DATA
+{
+#SEQ_NAME              PM6
+
+#SCREEN_FILE           ##PMC_SCT.METAL
+#SCREEN_CTRL	         ##PMC_CTL.METAL
+
+#DIR_SEQ_ROOT          ##PM6_DIR_ROOT
+}
+*/
