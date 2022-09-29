@@ -62,7 +62,7 @@ int CObj__CHM_IO::__DEFINE__VARIABLE_STD(p_variable)
 	// CFG ...
 	{
 		str_name = "CFG.PROCESS_MANOMETER.INTERLOCK.HIGH.LIMIT.PRESSURE";
-		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "torr", 0, 10, 100, "");
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "torr", 0, 1, 100, "");
 		LINK__VAR_ANALOG_CTRL(aCH__CFG_INTERLOCK_HIGH_LIMIT_PRESSURE, str_name);
 
 		for(i=0; i<_CFG__PROC_GAUGE_SIZE; i++)

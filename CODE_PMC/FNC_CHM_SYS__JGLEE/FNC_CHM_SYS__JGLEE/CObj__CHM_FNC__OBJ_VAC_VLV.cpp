@@ -49,7 +49,7 @@ int CObj__CHM_FNC
 	{
 		if(bActive__VAT_OBJ)
 		{
-			if(pOBJ_CTRL__VAT->Call__OBJECT(_APC_CMMD__OPEN) < 0)			r_flag = -11;
+			if(pOBJ_CTRL__VAT->Call__OBJECT(_APC_CMMD__CLOSE) < 0)			r_flag = -11;
 		}
 	}
 

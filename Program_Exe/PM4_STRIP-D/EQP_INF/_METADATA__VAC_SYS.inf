@@ -44,6 +44,10 @@
 #DEFINE_CONSTANT    CH__DI_APC_VLV_OPEN                 IO+di.APC.Vlv.Open.Check
 #DEFINE_CONSTANT    CH__DI_APC_VLV_STATE                IO+di.APC.Device.Check
 
+#DEFINE_CONSTANT    CH__DI_ATM_SENSOR                   IO+di.CHM.ATM.Sts
+#DEFINE_CONSTANT    CH__DI_VAC_SENSOR                   IO+di.CHM.VAC.Sts
+#DEFINE_CONSTANT    CH__AI_CHM_PRESSURE_TORR            IO+ai.CHM.Pressure.1000_Torr
+
 
 //------------------------------------------------
 #OBJECT_PROPERTY    PHY_DRY

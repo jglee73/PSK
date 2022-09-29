@@ -30,7 +30,10 @@ int CObj__TMP_IO
 	double cur__di_foreline__err_sec = 0;
 	double cur__di_pcw__err_sec = 0;
 
+	int count_error__foreline_vlv_open = 0;
+
 	int loop_count = 0;
+
 
 	while(1)
 	{
@@ -287,6 +290,8 @@ int CObj__TMP_IO
 
 			if(active__foreline_vlv_open)
 			{
+				count_error__foreline_vlv_open = 0;
+
 				if(bActive__DO_TMP_PURGE_VALVE)
 				{
 					dEXT_CH__DO_TMP_PURGE_VALVE->Set__DATA(STR__OPEN);
@@ -306,21 +311,28 @@ int CObj__TMP_IO
 
 					if(cur_pos > 0.1)
 					{
-						// ...
+						count_error__foreline_vlv_open++;
+
+						if(count_error__foreline_vlv_open >= 50)
 						{
-							int alarm_id = ALID__FORELINE_OPEN__VAT_CLOSE;
-							CString alm_msg;
-							CString r_act;
+							// ...
+							{
+								int alarm_id = ALID__FORELINE_OPEN__VAT_CLOSE;
+								CString alm_msg;
+								CString r_act;
 
-							alm_msg.Format("Current VAT-Position is %.1f %%.", cur_pos);
+								alm_msg.Format("Current VAT-Position is %.1f %%.", cur_pos);
 
-							p_alarm->Check__ALARM(alarm_id, r_act);
-							p_alarm->Post__ALARM_With_MESSAGE(alarm_id, alm_msg);
+								p_alarm->Check__ALARM(alarm_id, r_act);
+								p_alarm->Post__ALARM_With_MESSAGE(alarm_id, alm_msg);
+							}
+
+							pOBJ_CTRL__VAT->Call__OBJECT("CLOSE");
 						}
-
-						pOBJ_CTRL__VAT->Call__OBJECT("CLOSE");
 					}
 				}
+
+				// ...
 			}
 		}
 
