@@ -431,7 +431,10 @@ int CObj__TMP_IO::Fnc_Interlock__TMP_ISO(CII_OBJECT__VARIABLE *p_variable,CII_OB
 		
 		if(cur__vat_pos > 0.1)
 		{
-			pOBJ_CTRL__VAT->Call__OBJECT("CLOSE");
+			pOBJ_CTRL__VAT->Abort__OBJECT();
+			pOBJ_CTRL__VAT->Run__OBJECT("CLOSE");
+
+			Sleep(1000);
 		}
 	}
 

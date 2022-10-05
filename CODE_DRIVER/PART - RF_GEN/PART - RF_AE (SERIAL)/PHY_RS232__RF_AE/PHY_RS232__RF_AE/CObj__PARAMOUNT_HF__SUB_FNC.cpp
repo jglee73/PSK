@@ -56,17 +56,17 @@ int CObj__PARAMOUNT_HF
 		{
 			int db_i = 0;
 
-			if(s_data_len > ref_data)		cmmd_len = 3 + s_data_len;
+			if(s_data_len > ref_data)		cmmd_len = 3 + s_data_len; //s_data_len이 7넘나 확인할 것
 			else							cmmd_len = 2 + s_data_len;
 
-			if(s_data_len > ref_data)		s_cmmd[db_i++] = (addr_id << 3) + 0x07;
+			if(s_data_len > ref_data)		s_cmmd[db_i++] = (addr_id << 3) + 0x07; // add_id<<3 : 0x08(address :1 <5bit>)
 			else							s_cmmd[db_i++] = (addr_id << 3) + s_data_len;		
 
 			s_cmmd[db_i++] = cmmd_id;
 
-			if(s_data_len > ref_data)		s_cmmd[db_i++] = 0x0ff & s_data_len;
+			if(s_data_len > ref_data)		s_cmmd[db_i++] = 0x0ff & s_data_len; // PSK_Not_Use -> Just Send Check SUM (this active Caste data len > 6 )
 
-			if(s_data_len > 0)				s_cmmd[db_i++] = 0x0ff & set_data;
+			if(s_data_len > 0)				s_cmmd[db_i++] = 0x0ff & set_data; 
 			if(s_data_len > 1)				s_cmmd[db_i++] = 0x0FF & (set_data >> 8);
 			if(s_data_len > 2)				s_cmmd[db_i++] = 0x0FF & (set_data >> 16);
 			if(s_data_len > 3)				s_cmmd[db_i++] = 0x0FF & (set_data >> 24);
@@ -75,7 +75,7 @@ int CObj__PARAMOUNT_HF
 		}
 
 		// ...
-		int s_flag;
+		int s_flag; 
 		int s_len = cmmd_len + 1;		
 
 		// Send Data ...
@@ -86,9 +86,10 @@ int CObj__PARAMOUNT_HF
 			s_flag = mX_Serial->CHAR__SEND(s_cmmd, s_len);
 		}
 
-		// Receive Length : ACK(1) + Header(1) + Command(1) + ReturnByte(n) + Checksum(1)
+		// Receive Length : ACK(1) + Header(1) + Command(1) + ReturnByte(n) + Checksum(1) // ACK 분할 필요(CSR - Return Byte 에 포함되어있음)
 		int r_flag;
-		int r_len = 4 + r_data_len;
+
+		int r_len = 4 + r_data_len; // int r_len = 4 + r_data_len;(if divided ack) 
 		if(r_data_len > ref_data)			r_len++;
 
 		// Receive Data ...
@@ -96,17 +97,12 @@ int CObj__PARAMOUNT_HF
 			r_flag = mX_Serial->CHAR__RECV(r_data, &r_len, m_Rcv_Time);
 		}
 
-		if(r_len > 0)
-		{
-			dCH__MON_COMM_STS->Set__DATA(STR__ONLINE); 
-		}
-
 		// Send Log ...
 		{
 			CString s_msg;
 			CString s_bff;
 
-			s_msg.Format("s_flag : %1d \n", s_flag);
+			s_msg.Format("s_flag : %1d \n", s_flag); // 0x06 받아야함
 
 			for(int i=0; i<s_len; i++)
 			{
@@ -143,7 +139,12 @@ int CObj__PARAMOUNT_HF
 					unsigned char s_ack[2];
 					s_ack[0] = ACK;
 
-					mX_Serial->CHAR__SEND(s_ack, 1);
+					mX_Serial->CHAR__SEND(s_ack, 1); // Communication 완료 후 Send 전송
+					{
+						CString r_msg;
+						r_msg.Format("ACK_Send : ACK(0x06)");
+						Write__DRV_LOG(r_msg);
+					}
 				}
 
 				// ...
@@ -163,7 +164,6 @@ int CObj__PARAMOUNT_HF
 	}
 	while(++n_cnt <= m_RetryCnt);
 
-	dCH__MON_COMM_STS->Set__DATA(STR__OFFLINE); 
 	return -1;
 }
 

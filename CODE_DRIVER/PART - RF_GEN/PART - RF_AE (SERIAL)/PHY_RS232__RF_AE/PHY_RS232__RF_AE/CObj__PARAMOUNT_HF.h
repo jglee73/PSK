@@ -169,17 +169,22 @@ private:
 	CString sMODE__LOCAL;
 	int  Call__CTRL_MODE(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm, const bool active_remote);
 
-	CString sMODE__ON;
+	//
+	CString sMODE__POWER_SET;
 	CString sMODE__OFF;
 	int  Call__POWER_SET(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm, const bool active_power);
 
+	CString sMODE__POWER_ON;
+	int  Call__POWER_ON(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm);
+
+	//
 	CString sMODE__PROC_SET;
 	int  Call__PROC_SET(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm);
 
 	// ...
 	void _Set_CheckSum(unsigned char *s_cmmd, const int s_len);
 	int  _Recv__Command(const byte addr_id,const byte cmmd_id,const byte s_data_len,const byte r_data_len, unsigned char* r_data,const int set_data = 0);
-	
+
 	CString _Get__CSR_CODE(const byte csr_code);
 
 	// ...

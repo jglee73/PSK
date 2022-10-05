@@ -39,9 +39,15 @@ int CObj__TMP_IO
 
 	int count_error__foreline_vlv_open = 0;
 
+	bool active__tmp_init_check = true;
+
 	int loop_count = 0;
 
-
+	// ...
+	{
+		Sleep(5000);
+	}
+	
 	while(1)
 	{
 		p_variable->Wait__SINGLE_OBJECT(loop_sec);
@@ -73,12 +79,10 @@ int CObj__TMP_IO
 				if(bActive__TMP_DI_NORMAL_SPEED)
 				{
 					if(dEXT_CH__TMP_DI_NORMAL_SPEED->Check__DATA(STR__ON) > 0)			active__normal_speed = true;
-					else																active__normal_speed = false;
 				}
 				if(bActive__TMP_DI_ACCELERATION)
 				{
 					if(dEXT_CH__TMP_DI_ACCELERATION->Check__DATA(STR__ON) > 0)			active__acceleration = true;
-					else																active__acceleration = false;
 				}
 
 				if((active__normal_speed)
@@ -105,12 +109,10 @@ int CObj__TMP_IO
 				if(bActive__TMP_DI_ALARM_STATE)
 				{
 					if(dEXT_CH__TMP_DI_ALARM_STATE->Check__DATA(STR__ON) > 0)			active__alarm_sts = true;
-					else																active__alarm_sts = false;
 				}
 				if(bActive__TMP_DI_WARNING_STATE)
 				{
 					if(dEXT_CH__TMP_DI_WARNING_STATE->Check__DATA(STR__ON) > 0)			active__warning_sts = true;
-					else																active__warning_sts = false;
 				}
 
 				if((active__alarm_sts)
@@ -145,6 +147,19 @@ int CObj__TMP_IO
 		// SPEED CHECK ...
 		if(bActive__TMP_AI_ROT_SPEED_RPM)
 		{
+			if(active__tmp_init_check)
+			{
+				ch_data = sCH__MON_ROT_SPEED_RPM_READ->Get__STRING();
+				double cur__rot_speed = atof(ch_data);
+
+				if(cur__rot_speed > 1000.0)
+				{
+					dCH___MON_SPEED_CHECK_ACTIVE->Set__DATA(STR__ON);
+
+					active__tmp_init_check = false;
+				}
+			}
+
 			if(dCH___MON_SPEED_CHECK_ACTIVE->Check__DATA(STR__ON) > 0)
 			{
 				bool active__speed_error = false;
@@ -364,6 +379,32 @@ int CObj__TMP_IO
 					p_alarm->Check__ALARM(alm_id, r_act);
 					p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
 				}
+
+				// Alarm ...
+				{
+					int alm_id = ALID__TMP_ON_ERROR;
+					CString alm_msg;
+					CString alm_bff;
+					CString r_act;
+
+					if(bActive__TMP_DI_ALARM_STATE)
+					{
+						alm_bff.Format(" * %s <- %s \n",
+									    dEXT_CH__TMP_DI_ALARM_STATE->Get__CHANNEL_NAME(),
+										dEXT_CH__TMP_DI_ALARM_STATE->Get__STRING());
+						alm_msg += alm_bff;
+					}
+					if(bActive__TMP_DI_WARNING_STATE)
+					{
+						alm_bff.Format(" * %s <- %s \n",
+										dEXT_CH__TMP_DI_WARNING_STATE->Get__CHANNEL_NAME(),
+										dEXT_CH__TMP_DI_WARNING_STATE->Get__STRING());
+						alm_msg += alm_bff;
+					}
+
+					p_alarm->Check__ALARM(alm_id, r_act);
+					p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
+				}
 			}
 		}
 
@@ -544,7 +585,8 @@ int CObj__TMP_IO
 								p_alarm->Post__ALARM_With_MESSAGE(alarm_id, alm_msg);
 							}
 
-							pOBJ_CTRL__VAT->Call__OBJECT("CLOSE");
+							pOBJ_CTRL__VAT->Abort__OBJECT();
+							pOBJ_CTRL__VAT->Run__OBJECT("CLOSE");
 						}
 					}
 				}

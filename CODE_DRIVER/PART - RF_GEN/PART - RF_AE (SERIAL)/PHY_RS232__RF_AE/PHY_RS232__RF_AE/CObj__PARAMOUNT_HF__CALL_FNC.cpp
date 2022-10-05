@@ -49,8 +49,6 @@ int  CObj__PARAMOUNT_HF
 	{
 		aCH__PARA_SET_POWER->Get__DATA(ch_data);
 		aoCH__POWER_SET->Set__DATA(ch_data);
-
-		flag = doCH__POWER_MODE->Set__DATA(STR__ON);
 	}
 	else
 	{
@@ -60,14 +58,18 @@ int  CObj__PARAMOUNT_HF
 	}
 	return flag;
 }
+int  CObj__PARAMOUNT_HF
+::Call__POWER_ON(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
+{
+
+	return doCH__POWER_MODE->Set__DATA(STR__ON);
+}
 
 int CObj__PARAMOUNT_HF
 ::Call__PROC_SET(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
 {
 	CString log_msg;
 	int	flag = -1;
-
-mode_sel:
 
 	CString trg_value;
 	aCH__PARA_SET_POWER->Get__DATA(trg_value);
@@ -77,44 +79,25 @@ mode_sel:
 		flag = Call__CTRL_MODE(p_variable, p_alarm, true);		
 		if(flag < 0)
 		{
+			int alm_id = ALID__GEN_CONTROL_MODE_ERROR;
 			CString r_act;
 
-			p_alarm->Popup__ALARM_With_MESSAGE(ALID__GEN_RETRY_OVER_ALARM, "Call__CTRL_MODE", r_act);
-
-			if(r_act.CompareNoCase(ACT__RETRY) == 0)
-			{
-				Write__DRV_LOG("goto_Retry\n");
-				goto mode_sel;
-			}
-			return flag;
+			p_alarm->Check__ALARM(alm_id, r_act);
+			p_alarm->Post__ALARM(alm_id);
+			return -11;
 		}
 	}	
-	else
-	{
-		Write__DRV_LOG("SUB_FNC : Call__MODE_SEL : HOST");
-	}
-
-pwr_on :
 
 	flag = Call__POWER_SET(p_variable, p_alarm, true);
 	if (flag < 0)
 	{
+		int alm_id = ALID__GEN_POWER_SET_ERROR;
 		CString r_act;
 
-		p_alarm->Popup__ALARM_With_MESSAGE(ALID__GEN_RETRY_OVER_ALARM, "Call__POWER_SET", r_act);
-
-		if (r_act.CompareNoCase(ACT__RETRY) == 0)
-		{
-			Write__DRV_LOG("goto_Retry\n");
-			goto pwr_on;
-		}
-		return -1;
-	}
-	else
-	{
-		Write__DRV_LOG("SUB_FNC : Call__POWER_SEL_ON");
+		p_alarm->Check__ALARM(alm_id, r_act);
+		p_alarm->Post__ALARM(alm_id);
+		return -21;
 	}
 
-	Write__DRV_LOG(log_msg);
 	return 1;
 }

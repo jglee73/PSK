@@ -22,15 +22,16 @@ int CObj__PARAMOUNT_HF::__DEFINE__CONTROL_MODE(obj, l_mode)
 
 	// ...
 	{
-		ADD__CTRL_VAR(sMODE__INIT,	   "INIT");
+		ADD__CTRL_VAR(sMODE__INIT, "INIT");
 
-		ADD__CTRL_VAR(sMODE__LOCAL,	   "LOCAL");
-		ADD__CTRL_VAR(sMODE__REMOTE,   "REMOTE");
+		ADD__CTRL_VAR(sMODE__LOCAL,	 "LOCAL");
+		ADD__CTRL_VAR(sMODE__REMOTE, "REMOTE");
 
-		ADD__CTRL_VAR(sMODE__ON,	   "ON");
-		ADD__CTRL_VAR(sMODE__OFF,	   "OFF");
+		ADD__CTRL_VAR(sMODE__POWER_SET, "POWER.SET");
+		ADD__CTRL_VAR(sMODE__POWER_ON,	"POWER.ON");
+		ADD__CTRL_VAR(sMODE__OFF, "OFF");
 
-		ADD__CTRL_VAR(sMODE__PROC_SET, "PROC_SET");
+		ADD__CTRL_VAR(sMODE__PROC_SET, "PROC.SET");
 	}
 	return 1;
 }
@@ -74,7 +75,7 @@ int CObj__PARAMOUNT_HF::__DEFINE__VARIABLE_STD(p_variable)
 	// PARA ...
 	{
 		str_name = "PARA.SET.POWER";
-		STD__ADD_ANALOG_WITH_OPTION(str_name, "Watt", 1, 0, 1500, -1, "L", "");
+		STD__ADD_ANALOG_WITH_OPTION(str_name, "Watt", 1, 0, 3000, -1, "L", "");
 		LINK__VAR_ANALOG_CTRL(aCH__PARA_SET_POWER, str_name);
 
 		//
@@ -277,16 +278,30 @@ int CObj__PARAMOUNT_HF::__DEFINE__ALARM(p_alarm)
 
 	// ...
 	{
-		alarm_id = ALID__GEN_RETRY_OVER_ALARM;
+		alarm_id = ALID__GEN_CONTROL_MODE_ERROR;
 
 		alarm_title  = title;
-		alarm_title += "Generator Communication Retry Over";
+		alarm_title += "Generator Control Mode Error !";
 
-		alarm_msg = "Generator Communication Retry Over";
+		alarm_msg = "Please, check the control mode of generator.";
 
 		l_act.RemoveAll();
-		l_act.Add(ACT__RETRY);
-		l_act.Add(ACT__ABORT);
+		l_act.Add(ACT__CHECK);
+
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
+
+	// ...
+	{
+		alarm_id = ALID__GEN_POWER_SET_ERROR;
+
+		alarm_title  = title;
+		alarm_title += "Generator Power Set Error !";
+
+		alarm_msg = "Please, check the state of generator.";
+
+		l_act.RemoveAll();
+		l_act.Add(ACT__CHECK);
 
 		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
 	}
@@ -304,7 +319,7 @@ int CObj__PARAMOUNT_HF::__DEFINE__VARIABLE_IO(p_io_variable)
 	// AO ...
 	{
 		str_name = "ao.POWER.SET";
-		IO__ADD_ANALOG_WRITE(str_name, "W", 1, 0.0, 1500.0);
+		IO__ADD_ANALOG_WRITE(str_name, "W", 1, 0.0, 3000.0);
 		LINK__IO_VAR_ANALOG_CTRL(aoCH__POWER_SET, str_name);
 	}
 
@@ -483,8 +498,9 @@ int CObj__PARAMOUNT_HF::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_alarm)
 		ELSE_IF__CTRL_MODE(sMODE__LOCAL)				flag = Call__CTRL_MODE(p_variable, p_alarm, false);
 		ELSE_IF__CTRL_MODE(sMODE__REMOTE)				flag = Call__CTRL_MODE(p_variable, p_alarm, true);
 
-		ELSE_IF__CTRL_MODE(sMODE__ON)					flag = Call__POWER_SET(p_variable, p_alarm, true);
+		ELSE_IF__CTRL_MODE(sMODE__POWER_SET)			flag = Call__POWER_SET(p_variable, p_alarm, true);
 		ELSE_IF__CTRL_MODE(sMODE__OFF)					flag = Call__POWER_SET(p_variable, p_alarm, false);
+		ELSE_IF__CTRL_MODE(sMODE__POWER_ON)				flag = Call__POWER_ON(p_variable, p_alarm);
 
 		ELSE_IF__CTRL_MODE(sMODE__PROC_SET)				flag = Call__PROC_SET(p_variable, p_alarm);
 	}
@@ -492,7 +508,6 @@ int CObj__PARAMOUNT_HF::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_alarm)
 	if((flag < 0)||(p_variable->Check__CTRL_ABORT() > 0))
 	{
 		log_msg.Format("%s Aborted (%1d)", mode,flag);
-
 	}
 	else
 	{

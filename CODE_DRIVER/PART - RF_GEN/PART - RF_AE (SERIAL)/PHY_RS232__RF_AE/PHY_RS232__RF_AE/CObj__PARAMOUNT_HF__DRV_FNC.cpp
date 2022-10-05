@@ -37,7 +37,7 @@ int CObj__PARAMOUNT_HF
 	unsigned char r_data[MAX_CHAR] = {0,};
 	CString ch_data;
 
-	byte addr_id = iUNIT__ADDR_ID;
+	byte addr_id = iUNIT__ADDR_ID; // 0x01
 
 
 	if((siCH__CTRL_MODE_HEXA->Check__VARIABLE_NAME(var_name) > 0)
@@ -85,12 +85,12 @@ int CObj__PARAMOUNT_HF
 			return -1;
 		}
 
-		int r_len = _Recv__Command(addr_id,cmmd_id,s_data_len,r_data_len,r_data);		
+		int r_len = _Recv__Command(addr_id,cmmd_id,s_data_len,r_data_len,r_data);	
 		if(r_len >= r_data_len)
 		{
 			if(cmmd_id == _DRV_CMMD__REPORT_ACTIVE_CONTROL_MODE)
 			{
-				byte byte_00 = 0x0ff & r_data[0];
+				byte byte_00 = 0x0ff & r_data[2];
 
 				//
 				CString str_mode = "";
@@ -113,16 +113,16 @@ int CObj__PARAMOUNT_HF
 			}
 			else if(cmmd_id == _DRV_CMMD__REPORT_SETPOINT_REGULATION)
 			{
-				byte byte_00 = 0x0ff & r_data[0];
-				byte byte_01 = 0x0ff & r_data[1];
-				byte byte_02 = 0x0ff & r_data[2];
+				byte byte_00 = 0x0ff & r_data[2]; 
+				byte byte_01 = 0x0ff & r_data[3];
+				byte byte_02 = 0x0ff & r_data[4];
 
-				//
+				// LSB First 0 , 1 (Set Value)
 				int value  = (int) (0x0FF & byte_01);
 				value = value << 8;
 				value += (int) (0x0FF & byte_00);
 
-				ch_data.Format("%1d", value);
+				ch_data.Format("%0.1lf", (double)(value/=10.0));
 				sCH__INFO_POWER_SETPOINT_READ->Set__DATA(ch_data);
 
 				//
@@ -141,20 +141,20 @@ int CObj__PARAMOUNT_HF
 				sCH__INFO_REGULATION_MODE_READ->Set__DATA(str_regulation);
 
 				//
-				read_data.Format("%02X%02X %02X", byte_00,byte_01,byte_02);
+				read_data.Format("%02X%02X%02X", byte_00,byte_01,byte_02);
 			}
 			else if((cmmd_id == _DRV_CMMD__REPORT_FORWARD_POWER)
 			     || (cmmd_id == _DRV_CMMD__REPORT_REFLECTED_POWER)
 				 || (cmmd_id == _DRV_CMMD__REPORT_DELIVERED_POWER))
 			{
-				byte byte_00 = 0x0ff & r_data[0];
-				byte byte_01 = 0x0ff & r_data[1];
+				byte byte_00 = 0x0ff & r_data[2];
+				byte byte_01 = 0x0ff & r_data[3];
 
 				int value  = (int) (0x0FF & byte_01);
 				value = value << 8;
 				value += (int) (0x0FF & byte_00);
 
-				ch_data.Format("%1d", value);
+				ch_data.Format("%0.1lf", (double)(value/=10.0));
 
 					 if(cmmd_id == _DRV_CMMD__REPORT_FORWARD_POWER)			sCH__INFO_FORWARD_POWER_READ->Set__DATA(ch_data);
 				else if(cmmd_id == _DRV_CMMD__REPORT_REFLECTED_POWER)		sCH__INFO_REFLECTED_POWER_READ->Set__DATA(ch_data);
@@ -179,10 +179,10 @@ int CObj__PARAMOUNT_HF
 		int r_len = _Recv__Command(addr_id,cmmd_id,s_data_len,r_data_len,r_data);		
 		if(r_len >= r_data_len)
 		{
-			byte byte_00 = 0x0ff & r_data[0];
-			byte byte_01 = 0x0ff & r_data[1];
-			byte byte_02 = 0x0ff & r_data[2];
-			byte byte_03 = 0x0ff & r_data[3];
+			byte byte_00 = 0x0ff & r_data[2]; // 이거 수정 필요
+			byte byte_01 = 0x0ff & r_data[3];
+			byte byte_02 = 0x0ff & r_data[4];
+			byte byte_03 = 0x0ff & r_data[5];
 
 			// BYTE : 0
 			{
@@ -326,14 +326,15 @@ int CObj__PARAMOUNT_HF
 
 	if(aoCH__POWER_SET->Check__VARIABLE_NAME(var_name) > 0)
 	{
-		byte cmmd_id = _DRV_CMMD__SET_POWER_SETPOINT;
+		byte cmmd_id = _DRV_CMMD__SET_POWER_SETPOINT; 
 		byte s_data_len = 2;
 		byte r_data_len = 1;
+		int value = (int)(set_data *10.0);
 
-		int r_len = _Recv__Command(addr_id,cmmd_id,s_data_len,r_data_len, r_data,(int) set_data);		
+		int r_len = _Recv__Command(addr_id,cmmd_id,s_data_len,r_data_len, r_data, value ); //DATA(0) : A 8 0 0 2, DATA(100) : A 8 64 0 66	
 		if(r_len >= r_data_len)
 		{
-			byte byte_00 = 0x0ff & r_data[0];
+			byte byte_00 = 0x0ff & r_data[2]; // 0인경우, ID부터 가져옴 ID = 0, CMD = 1, CSR = 2
 			if(byte_00 == 0)			return 1;
 
 			ch_data.Format("%02X", byte_00);
@@ -371,8 +372,8 @@ int CObj__PARAMOUNT_HF
 			s_data_len = 0;
 			r_data_len = 1;
 
-				 if(set_data.CompareNoCase(STR__ON)  == 0)				cmmd_id = _DRV_CMMD__SET_RF_ON;
-			else if(set_data.CompareNoCase(STR__OFF) == 0)				cmmd_id = _DRV_CMMD__SET_RF_OFF;
+				 if(set_data.CompareNoCase(STR__ON)  == 0)				cmmd_id = _DRV_CMMD__SET_RF_ON; //(USE) DATA : 8 2 A
+			else if(set_data.CompareNoCase(STR__OFF) == 0)				cmmd_id = _DRV_CMMD__SET_RF_OFF; // (USE) DATA : 8 1 9 
 			else														return -1;
 		}
 		else if(doCH__CTRL_MODE->Check__VARIABLE_NAME(var_name) > 0)
@@ -382,11 +383,11 @@ int CObj__PARAMOUNT_HF
 			s_data_len = 1;
 			r_data_len = 1;
 
-				 if(set_data.CompareNoCase(STR__HOST)   == 0)			set_mode = 2;
-			else if(set_data.CompareNoCase(STR__ANALOG) == 0)			set_mode = 4;
-			else if(set_data.CompareNoCase(STR__DIAGNOSTIC) == 0)		set_mode = 8;
-			else if(set_data.CompareNoCase(STR__DEVICENET)  == 0)		set_mode = 16;
-			else if(set_data.CompareNoCase(STR__ETHERCET32) == 0)		set_mode = 32;
+				 if(set_data.CompareNoCase(STR__HOST)   == 0)			set_mode = 2; // Host Mode (USE) DATA : 9 E 2 5
+			else if(set_data.CompareNoCase(STR__ANALOG) == 0)			set_mode = 4; // User Mode (USE) DATA : 9 E 4 3
+			else if(set_data.CompareNoCase(STR__DIAGNOSTIC) == 0)		set_mode = 8; // NA PSK
+			else if(set_data.CompareNoCase(STR__DEVICENET)  == 0)		set_mode = 16; // NA PSK
+			else if(set_data.CompareNoCase(STR__ETHERCET32) == 0)		set_mode = 32; // NA PSK
 			else														return -1;
 		}
 		else if(doCH__REGULATION_MODE->Check__VARIABLE_NAME(var_name) > 0)
@@ -395,10 +396,10 @@ int CObj__PARAMOUNT_HF
 			s_data_len = 1;
 			r_data_len = 1;
 
-				 if(set_data.CompareNoCase(STR__FORWARD)  == 0)			set_mode = 6;
-			else if(set_data.CompareNoCase(STR__LOAD)     == 0)			set_mode = 7;
-			else if(set_data.CompareNoCase(STR__EXTERNAL) == 0)			set_mode = 8;
-			else if(set_data.CompareNoCase(STR__VA_LIMIT) == 0)			set_mode = 9;
+				 if(set_data.CompareNoCase(STR__FORWARD)  == 0)			set_mode = 6; // NA PSK
+			else if(set_data.CompareNoCase(STR__LOAD)     == 0)			set_mode = 7; // NA PSK
+			else if(set_data.CompareNoCase(STR__EXTERNAL) == 0)			set_mode = 8; // NA PSK
+			else if(set_data.CompareNoCase(STR__VA_LIMIT) == 0)			set_mode = 9; // NA PSK
 			else														return -1;
 		}
 		else
@@ -409,7 +410,7 @@ int CObj__PARAMOUNT_HF
 		int r_len = _Recv__Command(addr_id,cmmd_id,s_data_len,r_data_len, r_data,set_mode);		
 		if(r_len >= r_data_len)
 		{
-			byte byte_00 = 0x0ff & r_data[0];
+			byte byte_00 = 0x0ff & r_data[2]; // 2 : CSR
 			if(byte_00 == 0)			return 1;
 
 			ch_data.Format("%02X", byte_00);
@@ -417,6 +418,8 @@ int CObj__PARAMOUNT_HF
 
 			ch_data = _Get__CSR_CODE(byte_00);
 			sCH__INFO_CSR_MSG->Set__DATA(ch_data);
+			if(byte_00 == 2) return 1; // Already RF Power ON (Not Superpsotion) - Error Skip
+
 		}
 		return -1;
 	}
