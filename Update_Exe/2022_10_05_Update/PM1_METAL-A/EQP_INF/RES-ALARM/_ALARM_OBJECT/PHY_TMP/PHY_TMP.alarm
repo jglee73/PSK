@@ -1,0 +1,12 @@
+#ID=1	1	LIGHT	PHY_TMP - TMP Offline !
+#ID=4	4	LIGHT	PHY_TMP - Forline Pressure Unstable Alarm !
+#ID=5	5	LIGHT	PHY_TMP - PCW Unstable Alarm !
+#ID=2	2	LIGHT	PHY_TMP - The state of TMP is error !
+#ID=3	3	LIGHT	PHY_TMP - TMP를 On 할 수 없습니다 !
+#ID=6	6	LIGHT	PHY_TMP - The state of TMP is alarm !
+#ID=7	7	LIGHT	PHY_TMP - The state of TMP is warning !
+#ID=9	9	LIGHT	PHY_TMP - Foreline Valve Interlock (Not Open) !
+#ID=10	10	LIGHT	PHY_TMP - Foreline Valve Interlock (Not Open) !
+#ID=11	11	LIGHT	PHY_TMP - High-Limit Speed Error !
+#ID=12	12	LIGHT	PHY_TMP - Low-Limit Speed Error !
+#ID=13	13	LIGHT	PHY_TMP - High-Limit Temperature Error !
