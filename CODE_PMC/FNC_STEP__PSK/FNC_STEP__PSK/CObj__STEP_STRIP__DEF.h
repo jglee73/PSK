@@ -43,7 +43,7 @@
 #define  _LFC_CMD__CLOSE				"CLOSE"
 #define  _LFC_CMD__DUMP					"DUMP"
 
-#define  _RF_CMD__SET_POWER				"SET_POWER"
+#define  _RF_CMD__PROC_SET				"PROC_SET"
 #define  _RF_CMD__OFF					"OFF"
 
 #define  _MAT_CMD__PROC_CTRL			"PROC.CTRL"

@@ -68,16 +68,21 @@ int  CObj__CHM_STD
 		return -2;
 	}
 
-	Fnc__LOG("Dry Pump ON !!");
-	if(pPUMP__OBJ_CTRL->Call__OBJECT("PUMP_ON") < 0)
+	if(sEXT_CH__MON_PUMP_RUN_STS->Check__DATA(STR__ON) < 0)	
 	{
-		return -3;
+		Fnc__LOG("Dry Pump ON !!");
+		
+		if(pPUMP__OBJ_CTRL->Call__OBJECT("PUMP_ON") < 0)
+		{
+			return -3;
+		}
 	}
 
 	// CHECK : EXHAUST PRESSURE ...
 	if(bActive__TMC_CHM__EXHAUST_PRESSURE)
 	{
 		SCX__ASYNC_TIMER_CTRL x_timer;
+
 		x_timer->START__COUNT_UP(99999);
 
 		while(1)
@@ -120,28 +125,6 @@ int  CObj__CHM_STD
 					p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
 				}
 				return -302;
-			}
-		}
-	}
-	else
-	{
-		SCX__ASYNC_TIMER_CTRL x_timer;
-		x_timer->START__COUNT_UP(99999);
-
-		// Time Delay ...
-		while(1)
-		{
-			Sleep(10);
-
-			if(p_variable->Check__CTRL_ABORT() > 0)
-			{
-				return -301;
-			}
-
-			double cfg__timeout = aCH__CFG_EXHAUST_PUMP_TIMEOUT->Get__VALUE();
-			if(x_timer->Get__CURRENT_TIME() > cfg__timeout)
-			{
-				break;
 			}
 		}
 	}
@@ -199,7 +182,7 @@ int  CObj__CHM_STD
 			diEXT_CH__VAC_SENSOR->Set__DATA(sDATA__VAC_OFF);
 		}
 
-		if(cur__press <= cfg__press)
+		if(cur__press > cfg__press) // 220930 : "<="부분 이상으로 사용 시 Skip으로 Fast로 바로 넘어가는 문제 있음
 		{
 			CII__VAR_ANALOG_CTRL *pch__gauge_pressure = aiEXT_CH__CHM_PRESSURE_TORR.Get__PTR();
 			CII__VAR_ANALOG_CTRL *pch__cfg_pressyre   = aCH__CFG_SOFT_PUMP_PRESSURE_TORR.Get__PTR();

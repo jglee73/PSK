@@ -1,0 +1,64 @@
+
+============================================================================
+1. PM내 APC 관련 High Limit Chamber Pressure 관련 Config 항목 추가함.
+  -. PM A & B & C & D 공통 입니다.
+
+
+============================================================================
+2. Turbo Pump 관련 Interlock 체크 요청
+
+# Setpint Interlock
+
+01. TMP.Vac Valve <- Close
+  1) 조건 : APC.Valve Close
+-> 완료
+
+02. TMP.Vac Valve <- Open
+  1) 조건 : Slow.Vac Valve
+  2) 조건 : Fast.Vac Valve
+-> 완료
+
+03. Slow.Vac Valve <- Open
+  1) 조건 : TMP.Vac Valve Close
+-> 완료
+   
+04. Fast.Vac Valve <- Open
+  1) 조건 : TMP.Vac Valve Close
+-> 완료
+   
+05. APC.Valve <- Open
+  1) 조건 : TMP.Vac Valve Open
+  2) 조건 : Speed가 Low/High Speed 영역 내에 있었야 함
+  3) 조건 : TMP 상태가 Normal 이어야 함
+-> 완료
+
+06. TMP.Ctrl <- Stop
+  1) 조건 : APC.Valve Close
+-> 완료
+
+07. TMP.Ctrl <- Start
+  1) 조건 : ForeLine Pressure가 1000 mtorr (Config) 이하
+  2) 조건 : TMP.Vac Valve Open
+  3) 조건 : Slow.Vac & Fast.Vac Valve 모두 Close
+-> 완료
+
+# Monitoring Interlock
+
+01. 조건 ( Or )
+  1) Foreline Pressure가 1000 mtorr 이상 
+  2) Dry Pump가 Off
+  3) Dry Pump가 Alarm 발생시
+  4) Dry Pump가 통신 Fail 상태인 경우
+  5) Slow/Fast.Vac Valve가 Open 상태인 경우
+  6) TMP 온도가 120도 (Config 설정)이상일 경우
+    -> APC.Valve Close
+    -> TMP.Vac Valve Close (Forline Valve)
+-> 완료
+
+02. 조건 ( And )
+  1) TMP.Vac Valve Open
+  2) MFC Flow 상태 
+    -> TMP N2 Valve Open
+-> 완료
+
+ 

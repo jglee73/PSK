@@ -729,6 +729,21 @@ int CObj__VAT_IO::__DEFINE__ALARM(p_alarm)
 
 		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
 	}
+	// ...
+	{
+		alarm_id = ALID__OPEN_INTERLOCK_TMP_LINE_NOT_READY;
+		iLIST_ALID__VAT.Add(alarm_id);
+
+		alarm_title  = title;
+		alarm_title += "Open Interlock (TMP line not ready) !";
+
+		alarm_msg = "\"Open\" 명령을 수행 할 수 없습니다. \n";
+
+		l_act.RemoveAll();
+		l_act.Add(ACT__CLEAR);
+
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
 
 	return 1;
 }
@@ -1087,6 +1102,21 @@ int CObj__VAT_IO::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		}
 	}
 
+	// LINK_INTERLOCK ...
+	{
+		def_name = "CH__DI_TMP_LINE_ACTIVE";
+		p_ext_obj_create->Get__DEF_CONST_DATA(def_name, ch_name);
+
+		bool def_check = x_utility.Check__Link(ch_name);
+		bActive__DI_TMP_LINE_ACTIVE = def_check;
+
+		if(def_check)
+		{
+			p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(ch_name, obj_name,var_name);
+			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__DI_TMP_LINE_ACTIVE, obj_name,var_name);
+		}
+	}
+
 	// ...
 	{
 		SCX__SEQ_INFO x_seq_info;
@@ -1181,79 +1211,112 @@ int CObj__VAT_IO::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 	}
 	else if(mode.CompareNoCase(sMODE__CLOSE) != 0)
 	{
-		bool active__high_limit = false;
-		CString err_msg;
-		CString err_bff;
-
-		if(dCH__CFG_HIGH_LIMIT_ATM_SENSOR_APPLY->Check__DATA(STR__YES) > 0)
+		if(flag > 0)
 		{
-			if(bActive__DI_ATM_SENSOR)
+			bool active__high_limit = false;
+			CString err_msg;
+			CString err_bff;
+
+			if(dCH__CFG_HIGH_LIMIT_ATM_SENSOR_APPLY->Check__DATA(STR__YES) > 0)
 			{
-				if(dEXT_CH__DI_ATM_SENSOR->Check__DATA(STR__ON) > 0)
+				if(bActive__DI_ATM_SENSOR)
 				{
-					active__high_limit = true;
+					if(dEXT_CH__DI_ATM_SENSOR->Check__DATA(STR__ON) > 0)
+					{
+						active__high_limit = true;
 
-					err_bff.Format("ATM Sensor가 감지된 상태입니다. \n");
-					err_msg += err_bff;
+						err_bff.Format("ATM Sensor가 감지된 상태입니다. \n");
+						err_msg += err_bff;
 
-					err_bff.Format(" * %s <- %s \n", 
-									dEXT_CH__DI_ATM_SENSOR->Get__CHANNEL_NAME(),
-									dEXT_CH__DI_ATM_SENSOR->Get__STRING());
-					err_msg += err_bff;
+						err_bff.Format(" * %s <- %s \n", 
+										dEXT_CH__DI_ATM_SENSOR->Get__CHANNEL_NAME(),
+										dEXT_CH__DI_ATM_SENSOR->Get__STRING());
+						err_msg += err_bff;
+					}
+				}			
+			}
+
+			if(dCH__CFG_HIGH_LIMIT_VAC_SENSOR_APPLY->Check__DATA(STR__YES) > 0)
+			{
+				if(bActive__DI_VAC_SENSOR)
+				{
+					if(dEXT_CH__DI_VAC_SENSOR->Check__DATA(STR__ON) < 0)
+					{
+						active__high_limit = true;
+
+						err_bff.Format("VAC Sensor가 감지되지 않고 있습니다. \n");
+						err_msg += err_bff;
+
+						err_bff.Format(" * %s <- %s \n", 
+										dEXT_CH__DI_VAC_SENSOR->Get__CHANNEL_NAME(),
+										dEXT_CH__DI_VAC_SENSOR->Get__STRING());
+						err_msg += err_bff;
+					}
 				}
-			}			
-		}
+			}
 
-		if(dCH__CFG_HIGH_LIMIT_VAC_SENSOR_APPLY->Check__DATA(STR__YES) > 0)
-		{
-			if(bActive__DI_VAC_SENSOR)
+			if(dCH__CFG_HIGH_LIMIT_CHM_PRESSURE_APPLY->Check__DATA(STR__YES) > 0)
 			{
-				if(dEXT_CH__DI_VAC_SENSOR->Check__DATA(STR__ON) < 0)
+				if(bActive__AI_CHM_PRESSURE_TORR)
 				{
-					active__high_limit = true;
+					double cfg__high_limit   = aCH__CFG_HIGH_LIMIT_CHM_PRESSURE_TORR->Get__VALUE();
+					double cur__chm_pressure = aEXT_CH__AI_CHM_PRESSURE_TORR->Get__VALUE();
 
-					err_bff.Format("VAC Sensor가 감지되지 않고 있습니다. \n");
-					err_msg += err_bff;
+					if(cur__chm_pressure >= cfg__high_limit)
+					{
+						active__high_limit = true;
 
-					err_bff.Format(" * %s <- %s \n", 
-									dEXT_CH__DI_VAC_SENSOR->Get__CHANNEL_NAME(),
-									dEXT_CH__DI_VAC_SENSOR->Get__STRING());
-					err_msg += err_bff;
+						err_bff.Format("현재 Chamber 압력이 %.3f torr 입니다.\n", cur__chm_pressure);
+						err_msg += err_bff;
+
+						err_bff.Format("Config에 설정된 high-limit pressure 는 %.3f torr 입니다.\n", cfg__high_limit);
+						err_msg += err_bff;
+					}
+				}
+			}
+
+			if(active__high_limit)
+			{
+				flag = -1;
+
+				// ...
+				{
+					int alarm_id = ALID__OPEN_INTERLOCK_OVER_PRESSURE_ACT;
+					CString r_act;
+
+					p_alarm->Check__ALARM(alarm_id, r_act);
+					p_alarm->Post__ALARM_With_MESSAGE(alarm_id, err_msg);
 				}
 			}
 		}
 
-		if(dCH__CFG_HIGH_LIMIT_CHM_PRESSURE_APPLY->Check__DATA(STR__YES) > 0)
+		if(flag > 0)
 		{
-			if(bActive__AI_CHM_PRESSURE_TORR)
+			if(bActive__DI_TMP_LINE_ACTIVE)
 			{
-				double cfg__high_limit   = aCH__CFG_HIGH_LIMIT_CHM_PRESSURE_TORR->Get__VALUE();
-				double cur__chm_pressure = aEXT_CH__AI_CHM_PRESSURE_TORR->Get__VALUE();
-
-				if(cur__chm_pressure >= cfg__high_limit)
+				if(dEXT_CH__DI_TMP_LINE_ACTIVE->Check__DATA(STR__ON) < 0)
 				{
-					active__high_limit = true;
+					// ...
+					{
+						int alarm_id = ALID__OPEN_INTERLOCK_TMP_LINE_NOT_READY;
+						CString err_msg;
+						CString err_bff;
+						CString r_act;
 
-					err_bff.Format("현재 Chamber 압력이 %.3f torr 입니다.\n", cur__chm_pressure);
-					err_msg += err_bff;
+						err_bff.Format("TMP Line이 Ready 상태가 아닙니다. \n");
+						err_msg += err_bff;
 
-					err_bff.Format("Config에 설정된 high-limit pressure 는 %.3f torr 입니다.\n", cfg__high_limit);
-					err_msg += err_bff;
+						err_bff.Format(" * %s <- %s \n", 
+										dEXT_CH__DI_TMP_LINE_ACTIVE->Get__CHANNEL_NAME(),
+										dEXT_CH__DI_TMP_LINE_ACTIVE->Get__STRING());
+						err_msg += err_bff;
+
+						p_alarm->Check__ALARM(alarm_id, r_act);
+						p_alarm->Post__ALARM_With_MESSAGE(alarm_id, err_msg);
+					}
+
+					flag = -1;
 				}
-			}
-		}
-
-		if(active__high_limit)
-		{
-			flag = -1;
-
-			// ...
-			{
-				int alarm_id = ALID__OPEN_INTERLOCK_OVER_PRESSURE_ACT;
-				CString r_act;
-
-				p_alarm->Check__ALARM(alarm_id, r_act);
-				p_alarm->Post__ALARM_With_MESSAGE(alarm_id, err_msg);
 			}
 		}
 	}

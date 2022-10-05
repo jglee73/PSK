@@ -270,7 +270,7 @@ int CObj__STEP_STRIP
 		CString obj_mode;
 		double set_power = atof(rcp__rf_top_power);
 
-		if(set_power >= 0.001)			obj_mode = _RF_CMD__SET_POWER;
+		if(set_power >= 0.001)			obj_mode = _RF_CMD__PROC_SET;
 		else							obj_mode = _RF_CMD__OFF;
 
 		if(active__rfx_delay_off)

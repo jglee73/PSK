@@ -833,9 +833,6 @@ int CObj__CHM_STD::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 	DECLARE__EXT_CTRL(p_variable);
 
 	// ...
-	int flag = -1;
-
-	// ...
 	{
 		CString log_msg;
 		xLOG_CTRL->WRITE__LOG("------------------------------>");
@@ -845,8 +842,18 @@ int CObj__CHM_STD::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 					   p_ext_mode_ctrl->Get__UPPER_OBJECT_NAME());
 
 		Fnc__LOG(log_msg);
-		Fnc__MSG(log_msg);
 	}
+
+	// ...
+	{
+		CString obj_msg;
+
+		obj_msg.Format("Start  [%s] ...",  mode);
+		Fnc__MSG(obj_msg);
+	}
+
+	// ...
+	int flag = -1;
 
 	// ...
 	{
@@ -892,7 +899,7 @@ int CObj__CHM_STD::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 	if((flag < 0)||(p_variable->Check__CTRL_ABORT() > 0))
 	{
 		CString log_msg;
-		log_msg.Format("Aborted (%1d) ... : [%s]", flag,mode);
+		log_msg.Format("[%s] Aborted (%1d) ...", mode, flag);
 
 		Fnc__LOG(log_msg);
 		Fnc__MSG(log_msg);
@@ -900,7 +907,7 @@ int CObj__CHM_STD::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 	else
 	{
 		CString log_msg;
-		log_msg.Format("Completed ... : [%s]", mode);
+		log_msg.Format("[%s] Completed ...", mode);
 
 		Fnc__LOG(log_msg);
 		Fnc__MSG(log_msg);

@@ -273,3 +273,76 @@
 #DEFINE_CONSTANT    DATA__IO_RF_NAME.2                  RF.BIAS
 #DEFINE_CONSTANT    CH__IO_RF_ON_STATUS.2               PHY_RF_BIAS+MON.IO.POWER.STATE
 
+
+//------------------------------------------------
+#OBJECT_PROPERTY    PHY_CHM_IO
+
+#DEFINE_CONSTANT    OBJ__DB_INF                         DB_INF
+#DEFINE_CONSTANT    OBJ__DB_SYS                         DB_SYS
+
+#DEFINE_CONSTANT    CH__DI_VAC_SNS                      IO+di.CHM.VAC.Sts
+#DEFINE_CONSTANT    CH__DI_ATM_SNS                      IO+di.CHM.ATM.Sts
+
+#DEFINE_CONSTANT    CH__DI_SLOT_VLV_OPEN                IO+di.PM.Slot.Vlv.Open
+#DEFINE_CONSTANT    CH__DI_SLOT_VLV_CLOSE               IO+di.PM.Slot.Vlv.Close
+
+#DEFINE_CONSTANT    CH.DO_CHM_CHECK_VLV 	              NULL
+
+#DEFINE_CONSTANT    DATA.PRC_GAUGE_SIZE     	          2
+#DEFINE_CONSTANT    CH.DO_PRC_GAUGE_VLV.1	              IO+do.Bara.Protect.10_Torr.Vlv
+#DEFINE_CONSTANT    CH.AI_PRC_GAUGE_TORR.1              NULL
+#DEFINE_CONSTANT    CH.AI_PRC_GAUGE_mTORR.1             IO+ai.CHM.Pressure.10_mTorr
+#DEFINE_CONSTANT    CH.DO_PRC_GAUGE_VLV.2	              IO+do.Bara.Protect.01_Torr.Vlv
+#DEFINE_CONSTANT    CH.AI_PRC_GAUGE_TORR.2              NULL
+#DEFINE_CONSTANT    CH.AI_PRC_GAUGE_mTORR.2             IO+ai.APC.Pressure.mTorr
+
+#DEFINE_CONSTANT    CH__AI_CHM_GAUGE_TORR               IO+ai.CHM.Pressure.1000_Torr
+
+#DEFINE_CONSTANT    CH__AI_FORELINE_GAUGE_TORR          NULL
+#DEFINE_CONSTANT    CH__AI_FORELINE_GAUGE_mTORR         IO+ai.Pump.Line.Pressure_mTorr
+
+#DEFINE_CONSTANT    CH__RF_TOTAL_ON_STATE               DB_INF+RF.ON.STS
+#DEFINE_CONSTANT    DATA.RF_SIZE						            2
+#DEFINE_CONSTANT    CH__RF_ON_STATE.1                   PHY_RF_SRC+MON.IO.POWER.STATE
+#DEFINE_CONSTANT    CH__RF_ON_STATE.2                   PHY_RF_BIAS+MON.IO.POWER.STATE
+
+#DEFINE_CONSTANT    CH__MFC_TOTAL_FLOW_SET              DB_INF+MFC.TOTAL.FLOW_SET
+#DEFINE_CONSTANT    DATA.MFC_SIZE					              ##MFC_SIZE
+#DEFINE_CONSTANT    CH__MFC_FLOW_SET.1                  PHY_MFC1+MON.MFC.SET.FLOW
+#DEFINE_CONSTANT    CH__MFC_FLOW_SET.2                  PHY_MFC2+MON.MFC.SET.FLOW
+#DEFINE_CONSTANT    CH__MFC_FLOW_SET.3                  PHY_MFC3+MON.MFC.SET.FLOW
+#DEFINE_CONSTANT    CH__MFC_FLOW_SET.4                  PHY_MFC4+MON.MFC.SET.FLOW
+#DEFINE_CONSTANT    CH__MFC_FLOW_SET.5                  PHY_MFC5+MON.MFC.SET.FLOW
+#DEFINE_CONSTANT    CH__MFC_FLOW_SET.6                  PHY_MFC6+MON.MFC.SET.FLOW
+#DEFINE_CONSTANT    CH__MFC_FLOW_SET.7                  PHY_MFC7+MON.MFC.SET.FLOW
+#DEFINE_CONSTANT    CH__MFC_FLOW_SET.8                  PHY_MFC8+MON.MFC.SET.FLOW
+#DEFINE_CONSTANT    CH__MFC_FLOW_SET.9                  PHY_MFC9+MON.MFC.SET.FLOW
+
+
+//------------------------------------------------
+#OBJECT_PROPERTY    PHY_LIFT_PIN
+
+#DEFINE_CONSTANT    CH__LIFT_PIN_STATE                  DB_INF+LIFT_PIN.STATUS
+
+#DEFINE_CONSTANT    CH__ESC_CHUCK_STATE                 PHY_ESC+MON.CHUCK_STATUS
+
+#DEFINE_CONSTANT    DATA__ESC_CH_SIZE					  		    1
+#DEFINE_CONSTANT    CH__ESC_AI_VOLTAGE.1					  		PHY_IO__ESC+si.ESC.VOLTAGE
+
+#DEFINE_CONSTANT    DATA__PIN_CTRL_TYPE                 IO   // IO OBJECT
+
+#DEFINE_CONSTANT    CH__DO_PIN_UP                       IO+do.ESC.Pin.Up
+#DEFINE_CONSTANT    CH__DO_PIN_DOWN                     IO+do.ESC.Pin.Down
+#DEFINE_CONSTANT    CH__DO_PIN_MIDDLE                   IO+do.ESC.Pin.Middle
+
+#DEFINE_CONSTANT    CH__DO_TRANSFER_PIN_UP              IO+do.ESC.Pin.Up
+#DEFINE_CONSTANT    CH__DO_TRANSFER_PIN_DOWN            IO+do.ESC.Pin.Down
+#DEFINE_CONSTANT    CH__DO_MIDDLE_PIN_UP                IO+do.ESC.Pin.Middle
+#DEFINE_CONSTANT    CH__DO_MIDDLE_PIN_DOWN              NULL
+
+#DEFINE_CONSTANT    DATA__DI_PIN_SENSOR                 YES
+#DEFINE_CONSTANT    CH__DI_PIN_UP                       IO+di.Pin.Up
+#DEFINE_CONSTANT    CH__DI_PIN_MIDDLE                   IO+di.Pin.Middle
+#DEFINE_CONSTANT    CH__DI_PIN_DOWN                     IO+di.Pin.Down
+
+#DEFINE_CONSTANT    DATA__PIN_SIZE                      0

@@ -111,6 +111,13 @@ int CObj__DB_INF::__DEFINE__VARIABLE_STD(p_variable)
 		LINK__VAR_STRING_CTRL(xCH__RF_ON_STS, str_name);
 
 		//
+		str_name = "MFC.TOTAL.FLOW_SET";
+		STD__ADD_STRING(str_name);
+
+		str_name = "MFC.TOTAL.FLOW_READ";
+		STD__ADD_STRING(str_name);
+
+		//
 		str_name = "CHM.STATE.REPORT_TO_CTC";
 		STD__ADD_STRING(str_name);
 		LINK__VAR_STRING_CTRL(xCH__CHM_STAGE_REPORT_TO_CTC, str_name);

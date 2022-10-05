@@ -785,6 +785,15 @@ int  CObj__LBx_CHM_SLOT
 	return 1;
 }
 int  CObj__LBx_CHM_SLOT
+::Check__FR_VLV__OPEN(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
+{
+	if(doEXT_CH__FAST_PUMP_VLV__SET->Check__DATA(STR__IO_Open) > 0)			return 1;
+
+	if(Check__FR_VALVE_OPEN(p_variable,p_alarm, false) > 0)					return 11;
+
+	return -1;
+}
+int  CObj__LBx_CHM_SLOT
 ::Check__PUMP_VLV__OPEN(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
 {
 	if(doEXT_CH__SOFT_PUMP_VLV__SET->Check__DATA(STR__IO_Open) > 0)			return 1;

@@ -1417,10 +1417,18 @@ int CObj__LBx_CHM_SLOT::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(def_data, obj_name, var_name);
 		LINK__EXT_VAR_ANALOG_CTRL(aiEXT_CH__LBx__PRESSURE_TORR, obj_name,var_name);
 
+		//
 		def_name = "CH__EXHAUST_PRESSURE";
 		p_ext_obj_create->Get__DEF_CONST_DATA(def_name,def_data);
-		p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(def_data, obj_name, var_name);
-		LINK__EXT_VAR_ANALOG_CTRL(aiEXT_CH__LBx__EXHAUST_PRESSURE, obj_name,var_name);
+
+		def_check = x_utility.Check__Link(def_data);
+		bActive__LBx__EXHAUST_PRESSURE = def_check;
+
+		if(def_check)
+		{
+			p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(def_data, obj_name, var_name);
+			LINK__EXT_VAR_ANALOG_CTRL(aiEXT_CH__LBx__EXHAUST_PRESSURE, obj_name,var_name);
+		}
 
 		//
 		def_name = "DATA.ATM_SNS.VIRTUAL_TYPE";
@@ -1482,7 +1490,10 @@ int CObj__LBx_CHM_SLOT::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 
 		if(iActive__SIM_MODE > 0)
 		{
-			aiEXT_CH__LBx__EXHAUST_PRESSURE->Set__VALUE(0.01);
+			if(bActive__LBx__EXHAUST_PRESSURE)
+			{
+				aiEXT_CH__LBx__EXHAUST_PRESSURE->Set__VALUE(0.01);
+			}
 
 			for(i=0; i<iData__LID_SIZE; i++)
 			{
@@ -1515,10 +1526,17 @@ int CObj__LBx_CHM_SLOT::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 					    p_ext_mode_ctrl->Get__UPPER_OBJECT_NAME());
 
 		xLOG_CTRL->WRITE__LOG(log_msg);
-
-		Fnc__MSG(log_msg);
 	}
 
+	// ...
+	{
+		CString obj_msg;
+
+		obj_msg.Format("Start  [%s] (%1d) ...",  mode, para__slot_id);
+		Fnc__MSG(obj_msg);
+	}
+
+	// ...
 	int flag = -1;
 
 	// ...
@@ -1715,7 +1733,7 @@ int CObj__LBx_CHM_SLOT::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 	{
 		CString log_msg;
 
-		log_msg.Format("Aborted ... :  [%s]",mode);
+		log_msg.Format("[%s] Aborted ...", mode);
 		Fnc__MSG(log_msg);
 
 		xLOG_CTRL->WRITE__LOG(log_msg);
@@ -1724,7 +1742,7 @@ int CObj__LBx_CHM_SLOT::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 	{
 		CString log_msg;
 
-		log_msg.Format("Completed ... :  [%s]",mode);
+		log_msg.Format("[%s] Completed ...", mode);
 		Fnc__MSG(log_msg);
 
 		xLOG_CTRL->WRITE__LOG(log_msg);

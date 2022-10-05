@@ -86,62 +86,116 @@ int  CObj__LBx_CHM_SLOT
 LOOP_RETRY:
 
 	// ...
-	double trg_timeout = 9999.0;
-	CString var_data;
-	CString sLog;
-
-	double  cur__press;
-	double  cfg__press;
-
-	double  cfg__vac_press;
-	double  cfg__fast_press;
-
-	double  cfg__soft_pump_stable;
-
-	SCX__TIMER_CTRL xTimer;
-	xTimer->REGISTER__ABORT_OBJECT(sObject_Name);
+	CString ch_data;
 
 	// ...
-	Fnc__LOG("Vent Valve All Close !!");
-	if(Fnc__VENT_ALL_VLV__CLOSE(p_alarm) < 0)
 	{
-		return -11;
+		Fnc__LOG("Vent Valve All Close !!");
+	
+		if(Fnc__VENT_ALL_VLV__CLOSE(p_alarm) < 0)		return -11;
 	}
 
-	Fnc__LOG("Gas Valve All Close !!");
-	if(_Fnc__OBJ_GAS__ALL_CLOSE() < 0)
+	// ...
 	{
-		return -12;
+		Fnc__LOG("Gas Valve All Close !!");
+	
+		if(_Fnc__OBJ_GAS__ALL_CLOSE() < 0)				return -12;
 	}
 
-	Fnc__LOG("Pump Valve All Close !!");
-	if(Fnc__PUMP_ALL_VLV__CLOSE(p_variable, p_alarm) < 0)
+	if(sEXT_CH__MON_PUMP_RUN_STS->Check__DATA(STR__ON) < 0)
 	{
-		return -13;
+		// ...
+		{
+			Fnc__LOG("Pump Valve All Close !!");
+		
+			if(Fnc__PUMP_ALL_VLV__CLOSE(p_variable, p_alarm) < 0)		return -131;
+		}
+
+		// ...
+		{
+			Fnc__LOG("Dry Pump ON !!");
+		
+			if(pPUMP__OBJ_CTRL->Call__OBJECT("PUMP_ON") < 0)			return -132;
+		}
+	}
+	else
+	{
+		bool active__vac_check = true;
+
+		double cur__press = aiEXT_CH__LBx__PRESSURE_TORR->Get__VALUE();
+		double cfg__vac_press = aCH__CFG_VAC_PRESSURE_TORR->Get__VALUE();
+
+		if(cur__press > cfg__vac_press)										active__vac_check = false;
+		if(diEXT_CH__LBx__ATM_SNS->Check__DATA(sDATA__ATM_OFF) < 0)			active__vac_check = false;
+		if(diEXT_CH__LBx__VAC_SNS->Check__DATA(sDATA__VAC_ON)  < 0)			active__vac_check = false;
+
+		if(active__vac_check)
+		{
+			Fnc__PUMP_FAST_VLV__OPEN(p_variable, p_alarm);
+
+			if(bActive__OBJ_VAT)
+			{
+				Fnc__LOG("APC Valve Open !");
+				_Fnc__OBJ_VAT__OPEN();
+			}
+
+			// ...
+			{
+				CString log_msg;
+				CString log_bff;
+
+				log_msg = "Already, VAC-State ... (1) \n";
+
+				log_bff.Format(" * Current pressure <- %.3f (torr) \n", cur__press);
+				log_msg += log_bff;
+				
+				log_bff.Format(" * Config vac-pressure  <- %.3f (torr) \n", cfg__vac_press);
+				log_msg += log_bff;
+
+				log_bff.Format(" * %s <- %s \n", 
+								diEXT_CH__LBx__ATM_SNS->Get__CHANNEL_NAME(),
+								diEXT_CH__LBx__ATM_SNS->Get__STRING());
+				log_msg += log_bff;
+
+				log_bff.Format(" * %s <- %s \n", 
+								diEXT_CH__LBx__VAC_SNS->Get__CHANNEL_NAME(),
+								diEXT_CH__LBx__VAC_SNS->Get__STRING());
+				log_msg += log_bff;
+				
+				Fnc__LOG(log_msg);
+			}
+			return 1;
+		}	
 	}
 
-	Fnc__LOG("Dry Pump ON !!");
-	if(pPUMP__OBJ_CTRL->Call__OBJECT("PUMP_ON") < 0)
+	// ...
 	{
-		return -14;
+		Fnc__LOG("Pump Valve All Close !!");
+	
+		if(Fnc__PUMP_ALL_VLV__CLOSE(p_variable, p_alarm) < 0)			return -13;
 	}
-
-	Fnc__LOG("APC Valve Open !!");
-	if(_Fnc__OBJ_VAT__OPEN() < 0)
+	
+	if(bActive__OBJ_VAT) 
 	{
-		return -15;
-	}
+		Fnc__LOG("APC Valve Open !!");
 
+		if(_Fnc__OBJ_VAT__OPEN() < 0)			return -15;
+	}
+	
 	// CHECK : EXHAUST PRESSURE ...
+	if(bActive__LBx__EXHAUST_PRESSURE)
 	{
 		SCX__ASYNC_TIMER_CTRL x_timer;
+
 		x_timer->START__COUNT_UP(99999);
 
 		while(1)
 		{
 			Sleep(10);
 
-			cur__press = aiEXT_CH__LBx__EXHAUST_PRESSURE->Get__VALUE();
+			// ...
+			double cur__press = aiEXT_CH__LBx__EXHAUST_PRESSURE->Get__VALUE();
+
 			double cfg__press = aCH__CFG_EXHAUST_PUMP_PRESSURE_TORR->Get__VALUE();
 			if(cur__press <= cfg__press)		break;
 
@@ -164,10 +218,12 @@ LOOP_RETRY:
 									aiEXT_CH__LBx__EXHAUST_PRESSURE->Get__CHANNEL_NAME(),
 									aiEXT_CH__LBx__EXHAUST_PRESSURE->Get__VALUE());
 					alm_msg += alm_bff;
+
 					alm_bff.Format(" * %s <- %.3f torr \n",
 									aCH__CFG_EXHAUST_PUMP_PRESSURE_TORR->Get__CHANNEL_NAME(),
 									aCH__CFG_EXHAUST_PUMP_PRESSURE_TORR->Get__VALUE());
 					alm_msg += alm_bff;			
+					
 					alm_bff.Format(" * %s <- %.0f sec \n",
 									aCH__CFG_EXHAUST_PUMP_TIMEOUT->Get__CHANNEL_NAME(),
 									aCH__CFG_EXHAUST_PUMP_TIMEOUT->Get__VALUE());
@@ -181,40 +237,54 @@ LOOP_RETRY:
 		}
 	}
 
-	// ...
-	aiEXT_CH__LBx__PRESSURE_TORR->Get__DATA(var_data);
-	cur__press = atof(var_data);
-
-	aCH__CFG_VAC_PRESSURE_TORR->Get__DATA(var_data);
-	cfg__press = atof(var_data);
-	cfg__vac_press = cfg__press;
-
-	aCH__CFG_FAST_PUMP_PRESSURE_TORR->Get__DATA(var_data);
-	cfg__fast_press = atof(var_data);
-
-	sLog.Format("1. Get.. Pressure : current [%f] / vac config [%f] !!", cur__press, cfg__press);
-	Fnc__LOG(sLog);
-
-	if((cur__press <= cfg__press)
-	&& (dCH__PRESSURE_STATUS->Check__DATA(STR__IO_VAC) > 0))
+	// Pressure Check ...
 	{
-		Fnc__PUMP_FAST_VLV__OPEN(p_variable, p_alarm);
+		bool active__vac_check = true;
 
-		Fnc__LOG("APC Valve Open !");
-		_Fnc__OBJ_VAT__OPEN();
+		double cur__press = aiEXT_CH__LBx__PRESSURE_TORR->Get__VALUE();
+		double cfg__vac_press = aCH__CFG_VAC_PRESSURE_TORR->Get__VALUE();
 
-		sLog.Format("Already Pump Status.. Current Prs[%f]/[%f], VAC_Sts[%s]", cur__press, cfg__press, "VAC");
-		Fnc__LOG(sLog);
-		return 1;
-	}	
+		if(cur__press > cfg__vac_press)										active__vac_check = false;
+		if(diEXT_CH__LBx__ATM_SNS->Check__DATA(sDATA__ATM_OFF) < 0)			active__vac_check = false;
+		if(diEXT_CH__LBx__VAC_SNS->Check__DATA(sDATA__VAC_ON)  < 0)			active__vac_check = false;
 
-	if((cur__press > cfg__vac_press)
-	&& (cur__press < cfg__fast_press))
-	{
-		xI_ASYNC_TIMER->START__COUNT_UP(trg_timeout);	// Start...
+		if(active__vac_check)
+		{
+			Fnc__PUMP_FAST_VLV__OPEN(p_variable, p_alarm);
 
-		Fnc__LOG("Start Fast Pumping...");
-		goto START_FAST_PUMP;
+			if(bActive__OBJ_VAT)
+			{
+				Fnc__LOG("APC Valve Open !");
+				_Fnc__OBJ_VAT__OPEN();
+			}
+
+			// ...
+			{
+				CString log_msg;
+				CString log_bff;
+
+				log_msg = "Already, VAC-State ... (2) \n";
+
+				log_bff.Format(" * Current pressure <- %.3f (torr) \n", cur__press);
+				log_msg += log_bff;
+
+				log_bff.Format(" * Config vac-pressure  <- %.3f (torr) \n", cfg__vac_press);
+				log_msg += log_bff;
+
+				log_bff.Format(" * %s <- %s \n", 
+								diEXT_CH__LBx__ATM_SNS->Get__CHANNEL_NAME(),
+								diEXT_CH__LBx__ATM_SNS->Get__STRING());
+				log_msg += log_bff;
+
+				log_bff.Format(" * %s <- %s \n", 
+								diEXT_CH__LBx__VAC_SNS->Get__CHANNEL_NAME(),
+								diEXT_CH__LBx__VAC_SNS->Get__STRING());
+				log_msg += log_bff;
+
+				Fnc__LOG(log_msg);
+			}
+			return 1;
+		}
 	}
 
 	if(iActive__SIM_MODE > 0)
@@ -223,102 +293,175 @@ LOOP_RETRY:
 		diEXT_CH__LBx__VAC_SNS->Set__DATA(sDATA__VAC_OFF);
 	}
 
-	// Soft Pumping -----
-	Fnc__LOG("Soft Pump Valve Open !!");
-
-	if(dCH__CFG_USE_SOFT_PUMP_VALVE->Check__DATA(STR__NO) > 0)
+	// Check : Current Pressure ...
 	{
-		Fnc__PUMP_FAST_VLV__OPEN(p_variable, p_alarm);
-	}
-	else
-	{
-		Fnc__PUMP_SOFT_VLV__OPEN(p_variable, p_alarm);
-	}
+		double cur__press = aiEXT_CH__LBx__PRESSURE_TORR->Get__VALUE();	
 
-	xI_ASYNC_TIMER->START__COUNT_UP(trg_timeout);	// Start...
+		double cfg__vac_press  = aCH__CFG_VAC_PRESSURE_TORR->Get__VALUE();
+		double cfg__fast_press = aCH__CFG_FAST_PUMP_PRESSURE_TORR->Get__VALUE();
 
-	// Time Delay
-	{
-		SCX__TIMER_CTRL x_timer_ctrl;
-		double delay_time;
-
-		aCH__CFG_SOFT_PUMP_DELAY_TIME->Get__DATA(var_data);
-		delay_time = atof(var_data);
-
-		if(x_timer_ctrl->WAIT(delay_time) < 0)
+		// ...
 		{
-			return -1;
+			CString log_msg;
+			CString log_bff;
+
+			log_msg = "Current pressure state ... \n";
+
+			log_bff.Format(" * Current pressure <- %.3f (torr) \n", cur__press);
+			log_msg += log_bff;
+
+			log_bff.Format(" * Config fast-pressure  <- %.3f (torr) \n", cfg__fast_press);
+			log_msg += log_bff;
+
+			log_bff.Format(" * Config vac-pressure  <- %.3f (torr) \n", cfg__vac_press);
+			log_msg += log_bff;
+
+			log_bff.Format(" * %s <- %s \n", 
+							diEXT_CH__LBx__ATM_SNS->Get__CHANNEL_NAME(),
+							diEXT_CH__LBx__ATM_SNS->Get__STRING());
+			log_msg += log_bff;
+
+			log_bff.Format(" * %s <- %s \n", 
+							diEXT_CH__LBx__VAC_SNS->Get__CHANNEL_NAME(),
+							diEXT_CH__LBx__VAC_SNS->Get__STRING());
+			log_msg += log_bff;
+
+			Fnc__LOG(log_msg);
+		}
+
+		if(cur__press < cfg__fast_press)
+		{
+			goto LOOP__FAST_PUMP;
 		}
 	}
 
-	// ...
-	aiEXT_CH__LBx__PRESSURE_TORR->Get__DATA(var_data);
-	cur__press = atof(var_data);
+	// Check : Soft Pumping ...
+	{
+		Fnc__LOG("Soft-Pumping start ...");
 
-	aCH__CFG_FAST_PUMP_PRESSURE_TORR->Get__DATA(var_data);
-	cfg__press = atof(var_data);
+		if(dCH__CFG_USE_SOFT_PUMP_VALVE->Check__DATA(STR__NO) > 0)
+		{
+			Fnc__PUMP_FAST_VLV__OPEN(p_variable, p_alarm);
+		}
+		else
+		{
+			Fnc__PUMP_SOFT_VLV__OPEN(p_variable, p_alarm);
+		}
 
-	sLog.Format("2. Get.. Pressure : current [%f] / fast config [%f] !!", cur__press, cfg__press);
-	Fnc__LOG(sLog);
+		// Time Delay ...
+		{
+			SCX__TIMER_CTRL x_timer_ctrl;
+			x_timer_ctrl->REGISTER__ABORT_OBJECT(sObject_Name);
 
-	if(cur__press > cfg__press)
-	{	
-		double cfg_timeout;
+			double delay_time = aCH__CFG_SOFT_PUMP_DELAY_TIME->Get__VALUE();
+			if(x_timer_ctrl->WAIT(delay_time) < 0)
+			{
+				return -1;
+			}
+		}
 
 		if(iActive__SIM_MODE > 0)
 		{
-			CString str_sim_data;
-			SCX__TIMER_CTRL xSim_timer;
+			SCX__TIMER_CTRL x_sim_timer;
+			x_sim_timer->REGISTER__ABORT_OBJECT(sObject_Name);
 
-			xSim_timer->REGISTER__ABORT_OBJECT(sObject_Name);
-			aEXT_CH__CFG_SIM_LLx_SLOW_PUMP_TIME->Get__DATA(str_sim_data);
-
-			if(xSim_timer->WAIT(atof(str_sim_data)) < 0)
+			double cfg__sim_sec = aEXT_CH__CFG_SIM_LLx_SLOW_PUMP_TIME->Get__VALUE();
+			if(x_sim_timer->WAIT(cfg__sim_sec) < 0)
 			{
 				return -1;
 			}
 
-			aiEXT_CH__LBx__PRESSURE_TORR->Set__VALUE(cfg__press-0.01);
+			double cfg__fast_press = aCH__CFG_FAST_PUMP_PRESSURE_TORR->Get__VALUE();
+			aiEXT_CH__LBx__PRESSURE_TORR->Set__VALUE(cfg__fast_press - 0.01);
 		}
+
+		// ...
+		xI_ASYNC_TIMER->START__COUNT_UP(99999);
 
 		while(1)
 		{	
-			Sleep(90);
+			double cur__press = aiEXT_CH__LBx__PRESSURE_TORR->Get__VALUE();
+			double cfg__fast_press = aCH__CFG_FAST_PUMP_PRESSURE_TORR->Get__VALUE();
 
-			// ...
-			aiEXT_CH__LBx__PRESSURE_TORR->Get__DATA(var_data);
-			cur__press = atof(var_data);
-
-			aCH__CFG_FAST_PUMP_PRESSURE_TORR->Get__DATA(var_data);
-			cfg__press = atof(var_data);
-
-			if((cur__press < cfg__press)
-				&& (dCH__PRESSURE_STATUS->Check__DATA(STR__IO_VAC) < 0))		// Vacuum 상태가 아니면...
+			// Pressure Check ...
 			{
-				sLog.Format("Complete... current [%f] < fast config [%f] and not VAC Sts!!", cur__press, cfg__press);
-				Fnc__LOG(sLog);
-				break;
+				bool active__vac_check = true;
+
+				if(cur__press > cfg__fast_press)									active__vac_check = false;
+				if(diEXT_CH__LBx__ATM_SNS->Check__DATA(sDATA__ATM_OFF) < 0)			active__vac_check = false;
+
+				if(active__vac_check)
+				{
+					double cfg__vac_press = aCH__CFG_VAC_PRESSURE_TORR->Get__VALUE();
+
+					// ...
+					{
+						CString log_msg;
+						CString log_bff;
+
+						log_msg = "Soft-Pumping Complete ! \n";
+
+						log_bff.Format(" * Current pressure <- %.3f (torr) \n", cur__press);
+						log_msg += log_bff;
+
+						log_bff.Format(" * Config fast-pressure <- %.3f (torr) \n", cfg__fast_press);
+						log_msg += log_bff;
+
+						log_bff.Format(" * Config vac-pressure <- %.3f (torr) \n", cfg__vac_press);
+						log_msg += log_bff;
+
+						log_bff.Format(" * %s <- %s \n", 
+										diEXT_CH__LBx__ATM_SNS->Get__CHANNEL_NAME(),
+										diEXT_CH__LBx__ATM_SNS->Get__STRING());
+						log_msg += log_bff;
+
+						log_bff.Format(" * %s <- %s \n", 
+										diEXT_CH__LBx__VAC_SNS->Get__CHANNEL_NAME(),
+										diEXT_CH__LBx__VAC_SNS->Get__STRING());
+						log_msg += log_bff;
+
+						Fnc__LOG(log_msg);
+					}
+					break;
+				}
 			}
+
+			if((cur__press < cfg__fast_press)
+			&& (diEXT_CH__LBx__ATM_SNS->Check__DATA(sDATA__ATM_OFF) > 0))
+			{
+			}
+
+			Sleep(90);
 
 			if(p_variable->Check__CTRL_ABORT() > 0)
 			{
 				return -11;
 			}
 
-			aCH__CFG_SOFT_PUMP_TIMEOUT->Get__DATA(var_data);
-			cfg_timeout = atof(var_data);
+			// ...
+			double cfg__soft_timeout = aCH__CFG_SOFT_PUMP_TIMEOUT->Get__VALUE();
 
-			if(xI_ASYNC_TIMER->Get__CURRENT_TIME() >= cfg_timeout)
+			if(xI_ASYNC_TIMER->Get__CURRENT_TIME() >= cfg__soft_timeout)
 			{
-				int alarm_id = ALID__SOFT_PUMPING__TIMEOUT;
-				CString alarm_msg;
+				int alm_id = ALID__SOFT_PUMPING__TIMEOUT;
+				CString alm_msg;
+				CString alm_bff;
 				CString r_act;
 
-				alarm_msg.Format("The current pressure is (%.3f), The fast pump config pressure is %.3f.\n",
-					cur__press, cfg__press);
-				Fnc__LOG(alarm_msg);
+				// ...
+				{
+					alm_msg.Format(" The current pressure is %.3f (torr). \n", cur__press);
 
-				p_alarm->Popup__ALARM_With_MESSAGE(alarm_id,alarm_msg,r_act);
+					alm_bff.Format(" The config fast-pressure is %.3f (torr) \n", cfg__fast_press);
+					alm_msg += alm_bff;
+
+					alm_bff.Format(" The config soft-timeout is %.0f (sec) \n", cfg__soft_timeout);
+					alm_msg += alm_bff;
+
+					Fnc__LOG(alm_msg);
+				}
+
+				p_alarm->Popup__ALARM_With_MESSAGE(alm_id, alm_msg, r_act);
 
 				if(r_act.CompareNoCase(ACT__RETRY) == 0)
 				{
@@ -327,23 +470,34 @@ LOOP_RETRY:
 				return -12;
 			}
 		}
+
+		// Stable.Time ...
+		{
+			double cfg__stable_sec = aCH__CFG_SOFT_PUMP_COMPLETE_STABLE_TIME->Get__VALUE();
+
+			// ...
+			{
+				CString log_msg;
+
+				log_msg.Format("Soft-Pumping stable-time <- %.0f (sec) !", cfg__stable_sec);
+				Fnc__LOG(log_msg);
+
+				log_msg = "Soft-Pumping stable time starting ...";
+				Fnc__MSG(log_msg);
+			}
+
+			SCX__TIMER_CTRL x_timer_ctrl;
+			x_timer_ctrl->REGISTER__ABORT_OBJECT(sObject_Name);
+
+			if(x_timer_ctrl->WAIT(cfg__stable_sec) < 0)
+			{
+				return -21;
+			}
+		}
 	}
 
-	// ...
-	aCH__CFG_SOFT_PUMP_COMPLETE_STABLE_TIME->Get__DATA(var_data);
-	cfg__soft_pump_stable = atof(var_data);
 
-	var_data.Format("Soft Pump Complete and Stable time:%.f sec !!", cfg__soft_pump_stable);
-	Fnc__LOG(var_data);
-
-	Fnc__MSG("Soft Pump stable time Starting...");
-	if(xTimer->WAIT(cfg__soft_pump_stable) < 0)
-	{
-		return OBJ_ABORT;
-	}
-
-
-START_FAST_PUMP:
+LOOP__FAST_PUMP:
 
 	if(iActive__SIM_MODE > 0)
 	{
@@ -351,107 +505,134 @@ START_FAST_PUMP:
 		diEXT_CH__LBx__VAC_SNS->Set__DATA(sDATA__VAC_ON);
 	}
 
-	// ...
-	Fnc__LOG("Soft Pump Valve Close !!");
-	Fnc__PUMP_SOFT_VLV__CLOSE(p_variable, p_alarm);
-
-	// Fast Pumping -----
-	Fnc__PUMP_FAST_VLV__OPEN(p_variable, p_alarm);
-
-	xI_ASYNC_TIMER->START__COUNT_UP(trg_timeout);	// Start...
-
-	// ...
-	aiEXT_CH__LBx__PRESSURE_TORR->Get__DATA(var_data);
-	cur__press = atof(var_data);
-
-	aCH__CFG_VAC_PRESSURE_TORR->Get__DATA(var_data);
-	cfg__press = atof(var_data);
-
-	sLog.Format("3. Get.. Pressure : current [%f] / vac config [%f] !!", cur__press, cfg__press);
-	Fnc__LOG(sLog);
-
-	if((cur__press > cfg__press)
-	|| (dCH__PRESSURE_STATUS->Check__DATA(STR__IO_VAC) < 0))
+	// SR Valve Close & FR Valve Open
 	{
-		double trg_timeout = 9999.0;	
-		double cfg_timeout;
+		// ...
+		{
+			CString log_msg;
+		
+			log_msg = "SR Valve Close & FR Valve Open !";
+			Fnc__LOG(log_msg);
+		}
+
+		Fnc__PUMP_SOFT_VLV__CLOSE(p_variable, p_alarm);
+		Fnc__PUMP_FAST_VLV__OPEN(p_variable, p_alarm);
+	}
+
+	// Check : VAC-Pressure ...
+	{
+		xI_ASYNC_TIMER->START__COUNT_UP(99999);
 
 		if(iActive__SIM_MODE > 0)
 		{
-			CString str_sim_data;
-			SCX__TIMER_CTRL xSim_timer;
-
-			xSim_timer->REGISTER__ABORT_OBJECT(sObject_Name);
-			aEXT_CH__CFG_SIM_LLx_FAST_PUMP_TIME->Get__DATA(str_sim_data);
-
-			if(xSim_timer->WAIT(atof(str_sim_data)) < 0)
+			SCX__TIMER_CTRL x_sim_timer;
+			x_sim_timer->REGISTER__ABORT_OBJECT(sObject_Name);
+			
+			double cfg__sim_sec = aEXT_CH__CFG_SIM_LLx_FAST_PUMP_TIME->Get__VALUE();
+			if(x_sim_timer->WAIT(cfg__sim_sec) < 0)
 			{
 				return -1;
 			}
 
-			aiEXT_CH__LBx__PRESSURE_TORR->Set__VALUE(cfg__press-0.01);			
+			double cfg__vac_press = aCH__CFG_VAC_PRESSURE_TORR->Get__VALUE();
+			aiEXT_CH__LBx__PRESSURE_TORR->Set__VALUE(cfg__vac_press - 0.01);			
 		}
 
 		while(1)
-		{	
-			Sleep(90);
+		{
+			double cur__press = aiEXT_CH__LBx__PRESSURE_TORR->Get__VALUE();
+			double cfg__vac_press = aCH__CFG_VAC_PRESSURE_TORR->Get__VALUE();
 
-			aiEXT_CH__LBx__PRESSURE_TORR->Get__DATA(var_data);
-			cur__press = atof(var_data);
-
-			aCH__CFG_VAC_PRESSURE_TORR->Get__DATA(var_data);
-			cfg__press = atof(var_data);
-
-			if((cur__press < cfg__press)
-			&& (dCH__PRESSURE_STATUS->Check__DATA(STR__IO_VAC) > 0))
+			// Pressure Check ...
 			{
-				sLog.Format("Complete... current [%f] < vac config [%f] and VAC Sts !!", cur__press,cfg__press);
-				Fnc__LOG(sLog);
-				break;
+				bool active__vac_check = true;
+		
+				if(cur__press > cfg__vac_press)										active__vac_check = false;
+				if(diEXT_CH__LBx__ATM_SNS->Check__DATA(sDATA__ATM_OFF) < 0)			active__vac_check = false;
+				if(diEXT_CH__LBx__VAC_SNS->Check__DATA(sDATA__VAC_ON)  < 0)			active__vac_check = false;
+
+				if(active__vac_check)
+				{
+					// ...
+					{
+						CString log_msg;
+						CString log_bff;
+
+						log_msg = "Fast-Pumping Complete ! \n";
+
+						log_bff.Format(" * Current pressure <- %.3f (torr) \n", cur__press);
+						log_msg += log_bff;
+
+						log_bff.Format(" * Config vac-pressure <- %.3f (torr) \n", cfg__vac_press);
+						log_msg += log_bff;
+
+						log_bff.Format(" * %s <- %s \n", 
+										diEXT_CH__LBx__ATM_SNS->Get__CHANNEL_NAME(),
+										diEXT_CH__LBx__ATM_SNS->Get__STRING());
+						log_msg += log_bff;
+
+						log_bff.Format(" * %s <- %s \n", 
+										diEXT_CH__LBx__VAC_SNS->Get__CHANNEL_NAME(),
+										diEXT_CH__LBx__VAC_SNS->Get__STRING());
+						log_msg += log_bff;
+
+						Fnc__LOG(log_msg);
+					}
+					break;
+				}
 			}
+
+			Sleep(90);
 
 			if(p_variable->Check__CTRL_ABORT() > 0)
 			{
-				return -21;
+				return -31;
 			}
 
-			// ...
-			aCH__CFG_FAST_PUMP_TIMEOUT->Get__DATA(var_data);
-			cfg_timeout = atof(var_data);
+			// Timeout Check ...
+			double cfg__fast_timeout = aCH__CFG_FAST_PUMP_TIMEOUT->Get__VALUE();
 
-			if(xI_ASYNC_TIMER->Get__CURRENT_TIME() >= cfg_timeout)
+			if(xI_ASYNC_TIMER->Get__CURRENT_TIME() >= cfg__fast_timeout)
 			{
-				int alarm_id = ALID__FAST_PUMPING__TIMEOUT;
-				CString alarm_msg;
-				CString str_sns;
+				int alm_id = ALID__FAST_PUMPING__TIMEOUT;
+				CString alm_msg;
+				CString alm_bff;
 				CString r_act;
 
-				alarm_msg.Format("The current pressure is (%.3f), The vac config pressure is %.3f.\n",
-									cur__press, cfg__press);
+				// ...
+				{
+					alm_bff.Format(" The config fast-timeout is %.0f (sec). \n", cfg__fast_timeout);
+					alm_msg += alm_bff;
+					alm_msg += "\n";
 
-				alarm_msg += "Sensor State ... \n";
-				str_sns.Format("  * %s <- %s \n", 
-								diEXT_CH__LBx__ATM_SNS->Get__CHANNEL_NAME(),
-								diEXT_CH__LBx__ATM_SNS->Get__STRING());
-				alarm_msg += str_sns;
-				str_sns.Format("  * %s <- %s \n",
-								diEXT_CH__LBx__VAC_SNS->Get__CHANNEL_NAME(),
-								diEXT_CH__LBx__VAC_SNS->Get__STRING());
-				alarm_msg += str_sns;
+					alm_bff.Format(" The current pressure is %.3f (torr). \n", cur__press);
+					alm_msg += alm_bff;
+		
+					alm_bff.Format(" The config vac-pressure is %.3f (torr). \n", cfg__vac_press);
+					alm_msg += alm_bff;
 
-				dCH__PRESSURE_STATUS->Get__DATA(var_data);
-				str_sns.Format("Pressure Status is %s.\n", var_data);
-				alarm_msg += str_sns;
+					alm_msg += " Sensor State ... \n";
 
-				Fnc__LOG(alarm_msg);
+					alm_bff.Format("   * %s <- %s \n", 
+									diEXT_CH__LBx__ATM_SNS->Get__CHANNEL_NAME(),
+									diEXT_CH__LBx__ATM_SNS->Get__STRING());
+					alm_msg += alm_bff;
+				
+					alm_bff.Format("   * %s <- %s \n",
+									diEXT_CH__LBx__VAC_SNS->Get__CHANNEL_NAME(),
+									diEXT_CH__LBx__VAC_SNS->Get__STRING());
+					alm_msg += alm_bff;
 
-				p_alarm->Popup__ALARM_With_MESSAGE(alarm_id,alarm_msg,r_act);
+					Fnc__LOG(alm_msg);
+				}
+
+				p_alarm->Popup__ALARM_With_MESSAGE(alm_id, alm_msg, r_act);
 
 				if(r_act.CompareNoCase(ACT__RETRY) == 0)
 				{
 					goto LOOP_RETRY;
 				}
-				return -22;
+				return -32;
 			}
 		}
 	}
@@ -626,11 +807,9 @@ LOOP_RETRY:
 	double  cur__press;
 	double  cfg__press;
 
-	aiEXT_CH__LBx__PRESSURE_TORR->Get__DATA(var_data);
-	cur__press = atof(var_data);
-
-	aCH__CFG_ATM_PRESSURE_TORR->Get__DATA(var_data);
-	cfg__press = atof(var_data);
+	// ...
+	cur__press = aiEXT_CH__LBx__PRESSURE_TORR->Get__VALUE();
+	cfg__press = aCH__CFG_ATM_PRESSURE_TORR->Get__VALUE();
 
 	sLog.Format("1. Get.. Pressure : current [%f] / vac config [%f] !!", cur__press, cfg__press);
 	Fnc__LOG(sLog);
@@ -657,8 +836,11 @@ LOOP_RETRY:
 		return -2;
 	}
 
-	Fnc__LOG("APC Valve Close !!");
-	_Fnc__OBJ_VAT__CLOSE();
+	if(bActive__OBJ_VAT)
+	{
+		Fnc__LOG("APC Valve Close !!");
+		_Fnc__OBJ_VAT__CLOSE();
+	}
 
 	// Soft Venting ...
 	{

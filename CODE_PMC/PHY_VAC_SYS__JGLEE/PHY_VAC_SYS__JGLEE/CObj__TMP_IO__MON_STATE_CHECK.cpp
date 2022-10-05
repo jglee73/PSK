@@ -16,7 +16,8 @@ int CObj__TMP_IO
 		dCH__MON_PUMP_ON_SNS->Set__DATA(STR__OFF);
 		dCH__MON_ERROR_ON_SNS->Set__DATA(STR__OFF);
 
-		aCH__MON_PUMP_RPM_VALUE->Set__DATA("0");
+		sCH__MON_ROT_SPEED_RPM_READ->Set__DATA("?");
+		sCH__MON_PUMP_TEMPERATURE_READ->Set__DATA("?");
 	}
 
 	if(iActive__SIM_MODE > 0)
@@ -27,6 +28,12 @@ int CObj__TMP_IO
 
 	// ...
 	double loop_sec = 0.1;
+
+	double cur__high_speed__err_sec = 0;
+	double cur__low_speed__err_sec  = 0;
+
+	double cur__high_temperature__err_sec = 0;
+
 	double cur__di_foreline__err_sec = 0;
 	double cur__di_pcw__err_sec = 0;
 
@@ -122,42 +129,241 @@ int CObj__TMP_IO
 				}
 			}
 
-			if(bActive__TMP_AI_ROT_RPM)
+			if(bActive__TMP_AI_ROT_SPEED_RPM)
 			{
-				aEXT_CH__TMP_AI_ROT_RPM->Get__DATA(ch_data);
-				aCH__MON_PUMP_RPM_VALUE->Set__DATA(ch_data);
+				aEXT_CH__TMP_AI_ROT_SPEED_RPM->Get__DATA(ch_data);
+				sCH__MON_ROT_SPEED_RPM_READ->Set__DATA(ch_data);
 			}				
+
+			if(bActive__TMP_AI_TEMPERATURE)
+			{
+				aEXT_CH__TMP_AI_TEMPERATURE->Get__DATA(ch_data);
+				sCH__MON_PUMP_TEMPERATURE_READ->Set__DATA(ch_data);
+			}
 		}
 
+		// SPEED CHECK ...
+		if(bActive__TMP_AI_ROT_SPEED_RPM)
+		{
+			if(dCH___MON_SPEED_CHECK_ACTIVE->Check__DATA(STR__ON) > 0)
+			{
+				bool active__speed_error = false;
+
+				ch_data = sCH__MON_ROT_SPEED_RPM_READ->Get__STRING();
+				double cur__rot_speed = atof(ch_data);
+
+				double cfg__high_speed = aCH__CFG_HIGH_LIMIT_SPEED_RPM->Get__VALUE();
+				double cfg__low_speed  = aCH__CFG_LOW_LIMIT_SPEED_RPM->Get__VALUE();
+
+				double cfg__err_sec = aCH__CFG_SPEED_ERR_CHECK_SEC->Get__VALUE();
+
+				if(cur__rot_speed > cfg__high_speed)
+				{
+					cur__high_speed__err_sec += loop_sec;
+
+					if(cur__high_speed__err_sec >= cfg__err_sec)
+					{
+						active__speed_error = true;
+
+						// ...
+						{
+							int alm_id = ALID__HIGH_LIMIT_SPEED_RPM;
+							CString alm_msg;
+							CString alm_bff;
+							CString r_act;
+				
+							alm_msg.Format(" The current speed is %.0f (rpm). \n", cur__rot_speed);
+							alm_bff.Format(" The config high-limit speed is %.0f (rpm). \n", cfg__high_speed);
+							alm_msg += alm_bff;
+							alm_msg += "\n";
+		
+							alm_bff.Format(" The config error check time is %.1f (sec). \n", cfg__err_sec);
+							alm_msg += alm_bff;
+			
+							p_alarm->Check__ALARM(alm_id, r_act);
+							p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
+						}
+					}
+				}
+				else
+				{
+					cur__high_speed__err_sec = 0;	
+				}
+
+				if(cur__rot_speed < cfg__low_speed)
+				{
+					cur__low_speed__err_sec += loop_sec;
+
+					if(cur__low_speed__err_sec >= cfg__err_sec)
+					{
+						active__speed_error = true;
+
+						// ...
+						{
+							int alm_id = ALID__LOW_LIMIT_SPEED_RPM;
+							CString alm_msg;
+							CString alm_bff;
+							CString r_act;
+
+							alm_msg.Format(" The current speed is %.0f (rpm). \n", cur__rot_speed);
+							alm_bff.Format(" The config low-limit speed is %.0f (rpm). \n", cfg__low_speed);
+							alm_msg += alm_bff;
+							alm_msg += "\n";
+		
+							alm_bff.Format(" The config error check time is %.1f (sec). \n", cfg__err_sec);
+							alm_msg += alm_bff;
+
+							p_alarm->Check__ALARM(alm_id, r_act);
+							p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
+						}
+					}
+				}
+				else
+				{
+					cur__low_speed__err_sec = 0;	
+				}
+
+				if((cur__rot_speed < cfg__high_speed) && (cur__rot_speed > cfg__low_speed))
+				{
+					dCH__MON_ROT_SPEED_ERROR_ACTIVE->Set__DATA(STR__OFF);
+
+					dCH___MON_SPEED_STABLE_ACTIVE->Set__DATA(STR__ON);
+					dCH___MON_SPEED_ABORT_ACTIVE->Set__DATA(STR__OFF);
+				}
+				else if(active__speed_error)
+				{
+					dCH__MON_ROT_SPEED_ERROR_ACTIVE->Set__DATA(STR__ON);
+
+					dCH___MON_SPEED_STABLE_ACTIVE->Set__DATA(STR__OFF);
+					dCH___MON_SPEED_ABORT_ACTIVE->Set__DATA(STR__ON);
+				}
+				else
+				{
+					dCH__MON_ROT_SPEED_ERROR_ACTIVE->Set__DATA(STR__IDLE);	
+
+					dCH___MON_SPEED_STABLE_ACTIVE->Set__DATA(STR__OFF);
+					dCH___MON_SPEED_ABORT_ACTIVE->Set__DATA(STR__OFF);
+				}
+			}
+			else
+			{
+				dCH__MON_ROT_SPEED_ERROR_ACTIVE->Set__DATA(STR__IDLE);
+			}
+		}
+		else
+		{
+			dCH__MON_ROT_SPEED_ERROR_ACTIVE->Set__DATA(STR__IDLE);
+		}
+
+		// TEMPERATURE CHECK ...
+		if(bActive__TMP_AI_TEMPERATURE)
+		{
+			bool active__temperature_error = false;
+
+			ch_data = sCH__MON_PUMP_TEMPERATURE_READ->Get__STRING();
+			double cur__pmp_temp = atof(ch_data);
+
+			double cfg__high_temp = aCH__CFG_HIGH_LIMIT_TEMPERATURE->Get__VALUE();
+			double cfg__err_sec = aCH__CFG_TEMPERATURE_ERR_CHECK_SEC->Get__VALUE();
+
+			if(cur__pmp_temp > cfg__high_temp)
+			{
+				cur__high_temperature__err_sec += loop_sec;
+
+				if(cur__high_temperature__err_sec >= cfg__err_sec)
+				{
+					active__temperature_error = true;
+
+					// ...
+					{
+						int alm_id = ALID__HIGH_LIMIT_TEMPERATURE;
+						CString alm_msg;
+						CString alm_bff;
+						CString r_act;
+
+						alm_msg.Format(" The current temperature is %.0f (C). \n", cur__pmp_temp);
+						alm_bff.Format(" The config high-limit temperature is %.0f (C). \n", cfg__high_temp);
+						alm_msg += alm_bff;
+						alm_msg += "\n";
+
+						alm_bff.Format(" The config error check time is %.1f (sec). \n", cfg__err_sec);
+						alm_msg += alm_bff;
+
+						p_alarm->Check__ALARM(alm_id, r_act);
+						p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
+					}
+				}
+
+				if(active__temperature_error)			dCH__MON_MOTOR_TEMPERATURE_ERROR_ACTIVE->Set__DATA(STR__ON);
+				else									dCH__MON_MOTOR_TEMPERATURE_ERROR_ACTIVE->Set__DATA(STR__OFF);
+			}
+			else
+			{
+				cur__high_temperature__err_sec = 0;
+			}
+		}
+		else
+		{
+			dCH__MON_MOTOR_TEMPERATURE_ERROR_ACTIVE->Set__DATA(STR__IDLE);
+		}
+
+		// Error.Check ...
+		if((dCH__MON_ROT_SPEED_ERROR_ACTIVE->Check__DATA(STR__ON) > 0)
+		|| (dCH__MON_MOTOR_TEMPERATURE_ERROR_ACTIVE->Check__DATA(STR__ON) > 0)
+		|| (sCH__MON_COMM_STATE->Check__DATA(STR__ONLINE) < 0))
+		{
+			dCH__MON_ERROR_ON_SNS->Set__DATA(STR__ON);
+		}
 
 		// PUMP ERROR ...
 		if(dCH__MON_ERROR_ON_SNS->Check__DATA(STR__ON) > 0)
 		{
-			CString alm_msg;
-			CString alm_bff;
-			CString r_act;
+			Fnc_Interlock__TMP_ISO(p_variable,p_alarm);
 
 			// ...
 			{
-				alm_bff.Format(" * %s <- %s \n", 
-								sCH__MON_ERROR_STATE->Get__CHANNEL_NAME(),
-								sCH__MON_ERROR_STATE->Get__STRING());
-				alm_msg += alm_bff;
-			}
+				CString alm_msg;
+				CString alm_bff;
+				CString r_act;
 
-			if(sCH__MON_ERROR_STATE->Check__DATA(STR__ALARM) > 0)
-			{
-				int alm_id = ALID__PUMP_ALARM_STATE;
+				// ...
+				{
+					alm_bff.Format(" * %s <- %s \n", 
+									sCH__MON_ERROR_STATE->Get__CHANNEL_NAME(),
+									sCH__MON_ERROR_STATE->Get__STRING());
+					alm_msg += alm_bff;
+				}
 
-				p_alarm->Check__ALARM(alm_id, r_act);
-				p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
-			}
-			else if(sCH__MON_ERROR_STATE->Check__DATA(STR__WARNING) > 0)
-			{
-				int alm_id = ALID__PUMP_WARNING_STATE;
+				if(sCH__MON_ERROR_STATE->Check__DATA(STR__ALARM) > 0)
+				{
+					int alm_id = ALID__PUMP_ALARM_STATE;
 
-				p_alarm->Check__ALARM(alm_id, r_act);
-				p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
+					p_alarm->Check__ALARM(alm_id, r_act);
+					p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
+				}
+				else if(sCH__MON_ERROR_STATE->Check__DATA(STR__WARNING) > 0)
+				{
+					int alm_id = ALID__PUMP_WARNING_STATE;
+
+					p_alarm->Check__ALARM(alm_id, r_act);
+					p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
+				}
+				
+				if(sCH__MON_COMM_STATE->Check__DATA(STR__ONLINE) < 0)
+				{
+					int alm_id = ALID__TMP_OFFLINE;
+
+					if(bActive__TMP_DI_COMM_STATE)
+					{
+						alm_bff.Format(" * %s <- %s \n",
+										dEXT_CH__TMP_DI_COMM_STATE->Get__CHANNEL_NAME(),
+										dEXT_CH__TMP_DI_COMM_STATE->Get__STRING());
+						alm_msg += alm_bff;
+					}
+
+					p_alarm->Check__ALARM(alm_id, r_act);
+					p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
+				}
 			}
 		}
 
@@ -183,7 +389,7 @@ int CObj__TMP_IO
 				{
 					cur__di_foreline__err_sec = 0.0;
 
-					if(dCH__MON_PUMP_ON_SNS->Check__DATA(STR__ON) > 0)
+					// ...
 					{
 						int alm_id = ALID__FORLINE_PRESSURE_UNSTABLE_ALARM;
 						CString alm_msg;
@@ -207,9 +413,9 @@ int CObj__TMP_IO
 
 						p_alarm->Check__ALARM(alm_id, r_act);
 						p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
-
-						Call__OFF(p_variable, p_alarm, false);
 					}
+
+					Fnc_Interlock__TMP_ISO(p_variable,p_alarm);
 				}
 			}
 			else
@@ -240,7 +446,7 @@ int CObj__TMP_IO
 				{
 					cur__di_pcw__err_sec = 0.0;
 
-					if(dCH__MON_PUMP_ON_SNS->Check__DATA(STR__ON) > 0)
+					// ...
 					{
 						int alm_id = ALID__PCW_UNSTABLE_ALARM;
 						CString alm_msg;
@@ -264,9 +470,9 @@ int CObj__TMP_IO
 
 						p_alarm->Check__ALARM(alm_id, r_act);
 						p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
-
-						Call__OFF(p_variable, p_alarm, false);
 					}
+
+					Fnc_Interlock__TMP_OFF(p_variable,p_alarm);
 				}
 			}
 			else
@@ -276,7 +482,6 @@ int CObj__TMP_IO
 		}
 
 		// TMP Exhaust Valve Close ...
-		if(bActive__FORELINE_VLV_CHECK)
 		{
 			bool active__foreline_vlv_open = false;
 
@@ -292,9 +497,21 @@ int CObj__TMP_IO
 			{
 				count_error__foreline_vlv_open = 0;
 
+				// ...
+				bool active__n2_purge_vlv_open = true;
+
+				if(bActive__REF_MFC_TOTAL_FLOW)
+				{
+					double ref__mfc_total_flow = aEXT_CH__REF_MFC_TOTAL_FLOW->Get__VALUE();
+
+					if(ref__mfc_total_flow > 0.0)			active__n2_purge_vlv_open = true;
+					else									active__n2_purge_vlv_open = false;
+				}
+
 				if(bActive__DO_TMP_PURGE_VALVE)
 				{
-					dEXT_CH__DO_TMP_PURGE_VALVE->Set__DATA(STR__OPEN);
+					if(active__n2_purge_vlv_open)			dEXT_CH__DO_TMP_PURGE_VALVE->Set__DATA(STR__OPEN);
+					else									dEXT_CH__DO_TMP_PURGE_VALVE->Set__DATA(STR__CLOSE);
 				}
 			}
 			else
@@ -309,15 +526,15 @@ int CObj__TMP_IO
 					ch_data = sEXT_CH__VAT_MON_POSITION->Get__STRING();
 					double cur_pos = atof(ch_data);
 
-					if(cur_pos > 0.1)
+					if(cur_pos > 0.0)
 					{
 						count_error__foreline_vlv_open++;
 
-						if(count_error__foreline_vlv_open >= 50)
+						if(count_error__foreline_vlv_open >= 10)
 						{
 							// ...
 							{
-								int alarm_id = ALID__FORELINE_OPEN__VAT_CLOSE;
+								int alarm_id = ALID__FORELINE_NOT_OPEN__VAT_CLOSE;
 								CString alm_msg;
 								CString r_act;
 
@@ -336,7 +553,13 @@ int CObj__TMP_IO
 			}
 		}
 
-		// ...
+		// TMP.LINE CHECK ...
+		{
+			int r_flag = Check__TMP_LINE_READY(p_variable, p_alarm);
+
+			if(r_flag > 0)			dCH___MON_TMP_LINE_NOT_READY_ACTIVE->Set__DATA(STR__ON);
+			else					dCH___MON_TMP_LINE_NOT_READY_ACTIVE->Set__DATA(STR__OFF);
+		}
 	}
 }
 

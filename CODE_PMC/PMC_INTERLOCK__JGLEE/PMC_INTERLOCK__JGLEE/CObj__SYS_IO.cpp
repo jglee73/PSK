@@ -122,7 +122,7 @@ int CObj__SYS_IO::__DEFINE__ALARM(p_alarm)
 		alarm_id = ALID__VAC_Foreline_Valve__OPEN;
 
 		// 
-		alm_title = "Setpoint Interlock : VAC-Foreline Valve -> Open";
+		alm_title = "Setpoint Interlock : VAC-Foreline Valve <- Open";
 
 		// 
 		alm_msg  = "Interlock Condition \n";	
@@ -131,6 +131,26 @@ int CObj__SYS_IO::__DEFINE__ALARM(p_alarm)
 		alm_msg += "2. When VAC-switch is not \"ON\", APC's valve position is close. \n";
 		alm_msg += "3. Vacuum fast valve is close. \n";
 		alm_msg += "4. Vacuum slow valve is close. \n";
+
+		//
+		l_act.RemoveAll();
+		l_act.Add("CHECK");
+
+		//
+		ADD__ALARM_EX(alarm_id, alm_title,alm_msg, l_act);
+	}
+
+	// ...
+	{
+		alarm_id = ALID__VAC_Foreline_Valve__CLOSE;
+
+		// 
+		alm_title = "Setpoint Interlock : VAC-Foreline Valve <- Close";
+
+		// 
+		alm_msg  = "Interlock Condition \n";	
+
+		alm_msg += "1. APC's valve position is close. \n";
 
 		//
 		l_act.RemoveAll();

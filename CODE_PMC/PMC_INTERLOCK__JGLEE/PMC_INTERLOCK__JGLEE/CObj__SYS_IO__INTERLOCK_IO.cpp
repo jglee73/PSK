@@ -7,8 +7,11 @@
 
 
 //-------------------------------------------------------------------------
-// 1. Foreline Valve <- Open
+// 1.1 Foreline Valve <- Open
 INTERLOCK_REGISTER(CObj__SYS_IO, Fnc_SetPoint__VAC_Foreline_Vlv_Open);
+
+// 1.2 Foreline Valve <- Close
+INTERLOCK_REGISTER(CObj__SYS_IO, Fnc_SetPoint__VAC_Foreline_Vlv_Close);
 
 // 2. Fast Valve <- Open
 INTERLOCK_REGISTER(CObj__SYS_IO, Fnc_SetPoint__VAC_Fast_Vlv_Open);
@@ -26,15 +29,17 @@ int  CObj__SYS_IO
 	CString var_name;
 	CString var_data;
 
-	// 1. Foreline Valve <- Open
+	// 1. Foreline Valve <- Open, Close
 	if(bActive__DO_ROUGH_FORELINE_VLV)
 	{
 		ch_name = sCH_Name__DO_ROUGH_FORELINE_VLV;
 		_Macro__Get_Channel_To_Obj_Variable(ch_name, obj_name,var_name);
 
 		var_data = STR__Open;
-
 		p_interlock->REGISTER__VARIABLE_NAME(obj_name,var_name,var_data, Fnc_SetPoint__VAC_Foreline_Vlv_Open);
+
+		var_data = STR__Close;
+		p_interlock->REGISTER__VARIABLE_NAME(obj_name,var_name,var_data, Fnc_SetPoint__VAC_Foreline_Vlv_Close);
 	}
 
 	// 2. Fast Valve <- Open
@@ -43,7 +48,6 @@ int  CObj__SYS_IO
 		_Macro__Get_Channel_To_Obj_Variable(ch_name, obj_name,var_name);
 
 		var_data = STR__Open;
-
 		p_interlock->REGISTER__VARIABLE_NAME(obj_name,var_name,var_data, Fnc_SetPoint__VAC_Fast_Vlv_Open);
 	}
 
@@ -54,7 +58,6 @@ int  CObj__SYS_IO
 		_Macro__Get_Channel_To_Obj_Variable(ch_name, obj_name,var_name);
 
 		var_data = STR__Open;
-
 		p_interlock->REGISTER__VARIABLE_NAME(obj_name,var_name,var_data, Fnc_SetPoint__VAC_Slow_Vlv_Open);
 	}
 
@@ -65,7 +68,7 @@ int  CObj__SYS_IO
 //--------------------------------------------------------
 //	Interlock Function
 
-// 1. Foreline Valve -> Open
+// 1.1 Foreline Valve <- Open
 int CObj__SYS_IO::
 IFnc_SetPoint__VAC_Foreline_Vlv_Open()
 {
@@ -118,6 +121,65 @@ SetPoint__VAC_Foreline_Vlv_Open(CString &err_msg)
 		{
 			err_msg = "Vacuum slow-valve is not closed. \n";
 			return -13;
+		}
+	}
+
+	return 1;
+}
+
+// 1.2 Foreline Valve <- Close
+int CObj__SYS_IO::
+IFnc_SetPoint__VAC_Foreline_Vlv_Close()
+{
+	CString err_msg;
+
+	if(Check__Interlock_Use(ALID__VAC_Foreline_Valve__CLOSE) < 0)
+	{
+		return 1;
+	}
+
+	if(SetPoint__VAC_Foreline_Vlv_Close(err_msg) > 0)
+	{
+		return 1;
+	}
+
+	// ...
+	{
+		int	alarm_id = ALID__VAC_Foreline_Valve__CLOSE;
+
+		Post_Alarm(alarm_id, err_msg);
+	}
+	return -1;
+}
+
+int CObj__SYS_IO::
+SetPoint__VAC_Foreline_Vlv_Close(CString &err_msg)
+{
+	// Interlock.Pass ...
+	{
+		if(doEXT_CH__DO_ROUGH_FAST_VLV->Check__DATA(STR__Close) < 0)
+		{
+			return 1;
+		}
+
+		if(bActive__DO_ROUGH_SOFT_VLV)
+		{
+			if(doEXT_CH__DO_ROUGH_SOFT_VLV->Check__DATA(STR__Close) < 0)
+			{
+				return 1;
+			}
+		}
+	}
+
+	// APC.VLV_POS ...
+	{
+		CString ch_data = sEXT_CH__APC_VLV_CUR_POS->Get__STRING();
+		double cur__vlv_pos = atof(ch_data);
+
+		if(cur__vlv_pos > 0.0)
+		{
+			err_msg = "APC's current valve position is not closed ! \n"; 
+			return -11;
 		}
 	}
 

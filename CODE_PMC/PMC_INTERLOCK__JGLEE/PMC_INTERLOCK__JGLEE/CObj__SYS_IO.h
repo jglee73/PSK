@@ -73,15 +73,19 @@ private:
 public:
 	// SetPoint Interlock .....
 
-	// 1. VAC-Foreline Valve -> Open
+	// 1.1 VAC-Foreline Valve <- Open
 	int IFnc_SetPoint__VAC_Foreline_Vlv_Open();
 	int SetPoint__VAC_Foreline_Vlv_Open(CString &err_msg);
 
-	// 2. VAC-Fast Valve -> Open
+	// 1.2 VAC-Foreline Valve <- Close
+	int IFnc_SetPoint__VAC_Foreline_Vlv_Close();
+	int SetPoint__VAC_Foreline_Vlv_Close(CString &err_msg);
+
+	// 2. VAC-Fast Valve <- Open
 	int IFnc_SetPoint__VAC_Fast_Vlv_Open();
 	int SetPoint__VAC_Fast_Vlv_Open(CString &err_msg);
 
-	// 3. VAC-Slow Valve -> Open
+	// 3. VAC-Slow Valve <- Open
 	int IFnc_SetPoint__VAC_Slow_Vlv_Open();
 	int SetPoint__VAC_Slow_Vlv_Open(CString &err_msg);
 	//

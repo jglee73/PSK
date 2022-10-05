@@ -48,6 +48,8 @@
 #DEFINE_CONSTANT    CH__DI_VAC_SENSOR                   IO+di.CHM.VAC.Sts
 #DEFINE_CONSTANT    CH__AI_CHM_PRESSURE_TORR            IO+ai.CHM.Pressure.1000_Torr
 
+#DEFINE_CONSTANT    CH__DI_TMP_LINE_ACTIVE              NULL
+
 
 //------------------------------------------------
 #OBJECT_PROPERTY    PHY_DRY

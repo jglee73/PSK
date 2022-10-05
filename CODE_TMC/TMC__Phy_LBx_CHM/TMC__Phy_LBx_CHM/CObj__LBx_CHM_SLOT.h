@@ -24,15 +24,16 @@ private:
 	//-------------------------------------------------------------------------
 	// INTERNAL PROPERTY
 
-	// ...
+	// OBJ ...
 	CX__VAR_STRING_CTRL  sCH__MSG;
 	CX__VAR_STRING_CTRL  sCH__OBJ_STATUS;
 
+	// MON.STS ...
 	CX__VAR_STRING_CTRL  sCH__PUMP_VLV_OPEN_FLAG;
 	CX__VAR_STRING_CTRL  sCH__PRESSURE_CTRL_FLAG;
 	CX__VAR_STRING_CTRL  sCH__OUTPROC_ACTIVE_FLAG;
 
-	//.....
+	// PARA ...
 	CX__VAR_ANALOG_CTRL  aCH__PARA_SLOT_ID;
 
 	CX__VAR_ANALOG_CTRL  aCH__PARA_PREHEAT_TIME;
@@ -273,6 +274,8 @@ private:
 
 	// GAUGE OBJECT ...
 	CX__VAR_ANALOG_CTRL  aiEXT_CH__LBx__PRESSURE_TORR;
+
+	bool bActive__LBx__EXHAUST_PRESSURE;
 	CX__VAR_ANALOG_CTRL  aiEXT_CH__LBx__EXHAUST_PRESSURE;
 
 	CX__VAR_DIGITAL_CTRL dEXT_CH__PHY_TM__PRESS_STS;
@@ -455,6 +458,7 @@ private:
 	int  Check__VENT_ALL_VLV__CLOSE(CII_OBJECT__ALARM* p_alarm);
 	int  Check__PUMP_ALL_VLV__CLOSE(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm);
 
+	int  Check__FR_VLV__OPEN(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm);
 	int  Check__PUMP_VLV__OPEN(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm);
 	void Update__PUMP_VLV_STS(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm);
 
