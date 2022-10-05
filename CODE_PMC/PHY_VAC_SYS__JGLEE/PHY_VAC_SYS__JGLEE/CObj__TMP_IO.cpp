@@ -255,6 +255,23 @@ int CObj__TMP_IO::__DEFINE__ALARM(p_alarm)
 
 	// ...
 	{
+		alarm_id = ALID__TMP_ERROR_DETECTED;
+		iLIST_ALID__PART.Add(alarm_id);
+
+		alarm_title  = title;
+		alarm_title += "TMP Error가 감지 되었습니다 !";
+
+		alarm_msg += "Please, check the state of TMP (IO) ! \n";
+		alarm_msg += "Now, Turbo pump line will be isolated.";
+
+		l_act.RemoveAll();
+		l_act.Add(ACT__CHECK);
+
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
+
+	// ...
+	{
 		alarm_id = ALID__FORLINE_PRESSURE_UNSTABLE_ALARM;
 		iLIST_ALID__PART.Add(alarm_id);
 

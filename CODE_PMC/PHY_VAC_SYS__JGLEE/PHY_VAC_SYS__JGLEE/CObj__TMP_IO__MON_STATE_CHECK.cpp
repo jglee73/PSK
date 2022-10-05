@@ -120,14 +120,10 @@ int CObj__TMP_IO
 				{
 						 if(active__alarm_sts)			sCH__MON_ERROR_STATE->Set__DATA(STR__ALARM);
 					else if(active__warning_sts)		sCH__MON_ERROR_STATE->Set__DATA(STR__WARNING);
-
-					dCH__MON_ERROR_ON_SNS->Set__DATA(STR__ON);
 				}
 				else
 				{
 					sCH__MON_ERROR_STATE->Set__DATA(STR__OK);
-
-					dCH__MON_ERROR_ON_SNS->Set__DATA(STR__OFF);
 				}
 			}
 
@@ -273,8 +269,6 @@ int CObj__TMP_IO
 		// TEMPERATURE CHECK ...
 		if(bActive__TMP_AI_TEMPERATURE)
 		{
-			bool active__temperature_error = false;
-
 			ch_data = sCH__MON_PUMP_TEMPERATURE_READ->Get__STRING();
 			double cur__pmp_temp = atof(ch_data);
 
@@ -287,7 +281,8 @@ int CObj__TMP_IO
 
 				if(cur__high_temperature__err_sec >= cfg__err_sec)
 				{
-					active__temperature_error = true;
+					cur__high_temperature__err_sec>= cfg__err_sec;
+					dCH__MON_MOTOR_TEMPERATURE_ERROR_ACTIVE->Set__DATA(STR__ON);
 
 					// ...
 					{
@@ -308,13 +303,11 @@ int CObj__TMP_IO
 						p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
 					}
 				}
-
-				if(active__temperature_error)			dCH__MON_MOTOR_TEMPERATURE_ERROR_ACTIVE->Set__DATA(STR__ON);
-				else									dCH__MON_MOTOR_TEMPERATURE_ERROR_ACTIVE->Set__DATA(STR__OFF);
 			}
 			else
 			{
 				cur__high_temperature__err_sec = 0;
+				dCH__MON_MOTOR_TEMPERATURE_ERROR_ACTIVE->Set__DATA(STR__OFF);
 			}
 		}
 		else
@@ -325,9 +318,14 @@ int CObj__TMP_IO
 		// Error.Check ...
 		if((dCH__MON_ROT_SPEED_ERROR_ACTIVE->Check__DATA(STR__ON) > 0)
 		|| (dCH__MON_MOTOR_TEMPERATURE_ERROR_ACTIVE->Check__DATA(STR__ON) > 0)
-		|| (sCH__MON_COMM_STATE->Check__DATA(STR__ONLINE) < 0))
+		|| (sCH__MON_COMM_STATE->Check__DATA(STR__ONLINE) < 0)
+		|| (sCH__MON_ERROR_STATE->Check__DATA(STR__OK) < 0))
 		{
 			dCH__MON_ERROR_ON_SNS->Set__DATA(STR__ON);
+		}
+		else
+		{
+			dCH__MON_ERROR_ON_SNS->Set__DATA(STR__OFF);
 		}
 
 		// PUMP ERROR ...
@@ -382,7 +380,7 @@ int CObj__TMP_IO
 
 				// Alarm ...
 				{
-					int alm_id = ALID__TMP_ON_ERROR;
+					int alm_id = ALID__TMP_ERROR_DETECTED;
 					CString alm_msg;
 					CString alm_bff;
 					CString r_act;
