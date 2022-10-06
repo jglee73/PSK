@@ -1227,7 +1227,7 @@ LOOP_RETRY:
 int  CObj__LBx_CHM_SLOT
 ::Call__DV_OPEN(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm, const int slot_id)
 {
-	if(Check__PRESSURE_ATM_TO_DV_OPEN(p_alarm,ALID__DV_OPEN__NOT_ATM_ERROR) < 0)
+	if(Check__PRESSURE_ATM_TO_DV_OPEN(p_variable, p_alarm, ALID__DV_OPEN__NOT_ATM_ERROR) < 0)
 	{
 		return -1;
 	}
@@ -1455,7 +1455,7 @@ LOOP_RETRY:
 
 // SLIT VLV OPEN -----
 int  CObj__LBx_CHM_SLOT
-::Call__SV_OPEN(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm, const int slot_id)
+::Call__SV_OPEN(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm, const int slot_id)
 {
 	int atm_mode = -1;
 
@@ -1474,7 +1474,7 @@ int  CObj__LBx_CHM_SLOT
 	}
 	else
 	{
-		if(Check__PRESSURE_VAC(p_alarm) < 0)
+		if(Check__PRESSURE_VAC(p_variable, p_alarm) < 0)
 		{
 			return -1;
 		}

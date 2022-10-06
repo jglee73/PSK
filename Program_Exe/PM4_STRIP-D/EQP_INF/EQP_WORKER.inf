@@ -98,4 +98,4 @@
 
 ===========================================================================
 #OBJECT_INTERLOCK   PMC_INTERLOCK__JGLEE       MFC.IO               INTERLOCK_MFC
-// #OBJECT_INTERLOCK   PMC_INTERLOCK__JGLEE 		   SYS.IO               INTERLOCK_SYS
+#OBJECT_INTERLOCK   PMC_INTERLOCK__JGLEE 		   SYS.IO               INTERLOCK_SYS

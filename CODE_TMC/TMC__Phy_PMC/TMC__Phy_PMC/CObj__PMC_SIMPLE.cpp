@@ -611,14 +611,14 @@ int CObj__PMC_SIMPLE::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 
 	// PHY_TM : TMÀÇ Pressure Status (ATM, VAC, BTW)
 	{
-		str_name.Format("VAR__PHY_TM_PRESS_STS");
+		str_name = "VAR__PHY_TM_PRESS_STS";
 		p_ext_obj_create->Get__DEF_CONST_DATA(str_name,def_data);
 		p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(def_data, obj_name, var_name);
 		LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__PHY_TM__PRESS_STS, obj_name,var_name);
 	}
 	// PHY_TM : TMÀÇ Pressure torr
 	{
-		str_name.Format("VAR__PHY_TM_PRESS_TORR");
+		str_name = "VAR__PHY_TM_PRESS_TORR";
 		p_ext_obj_create->Get__DEF_CONST_DATA(str_name,def_data);
 		p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(def_data, obj_name, var_name);
 		LINK__EXT_VAR_ANALOG_CTRL(aEXT_CH__PHY_TM__PRESS_TORR, obj_name,var_name);
@@ -632,12 +632,21 @@ int CObj__PMC_SIMPLE::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		if(def_data.CompareNoCase("OBJECT") == 0)			iDATA__PMx_SLOT_VLV_CTRL_TYPE = _DEF__PMx_SLOT_VLV_TYPE__OBJ;
 		else												iDATA__PMx_SLOT_VLV_CTRL_TYPE = _DEF__PMx_SLOT_VLV_TYPE__IO;
 
+		// ...
+		def_name = "LINK_OBJ.PMx_HANDOFF";
+		p_ext_obj_create->Get__DEF_CONST_DATA(def_name, obj_name);
+
+		for(i=0; i<iPM_LIMIT; i++)
+		{
+			int id = i + 1;
+
+			var_name.Format("PM%1d.OBJ.STATUS", id);
+			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__PMx_SLOT_VLV__OBJ_STATUS_X[i], obj_name,var_name);
+		}
+
 		if(iDATA__PMx_SLOT_VLV_CTRL_TYPE == _DEF__PMx_SLOT_VLV_TYPE__OBJ)
 		{
-			def_name = "LINK_OBJ.PMx_SLOT_VLV";
-			p_ext_obj_create->Get__DEF_CONST_DATA(def_name, obj_name);
-
-			pOBJ_CTRL__PMx_SLOT_VLV = p_ext_obj_create->Create__OBJECT_CTRL(obj_name);
+			pOBJ_CTRL__PMx_HANDOFF = p_ext_obj_create->Create__OBJECT_CTRL(obj_name);
 
 			// ...
 			{
@@ -655,14 +664,6 @@ int CObj__PMC_SIMPLE::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 				var_name = "PARA.PMx.ID";
 				LINK__EXT_VAR_ANALOG_CTRL(aEXT_CH__PARA_PMC_ID, obj_name,var_name);
 			}
-		}
-
-		for(i=0; i<iPM_LIMIT; i++)
-		{
-			int id = i + 1;
-
-			var_name.Format("PM%1d.OBJ.STATUS", id);
-			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__PMx_SLOT_VLV__OBJ_STATUS_X[i], obj_name,var_name);
 		}
 	}
 

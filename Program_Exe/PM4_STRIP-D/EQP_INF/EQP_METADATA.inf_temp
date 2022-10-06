@@ -169,6 +169,21 @@
    #DEFINE_CONSTANT     CH__DO_VLV_OUT.5                   IO+do.PV6 
    #DEFINE_CONSTANT     CH__DO_VLV_PURGE.5                 NULL 
 
+#OBJECT_PROPERTY     INTERLOCK_SYS 
+
+   #DEFINE_CONSTANT     CH__DO_VENT_FAST_VLV               IO+do.PV1 
+   #DEFINE_CONSTANT     CH__DO_VENT_SOFT_VLV               NULL 
+   #DEFINE_CONSTANT     CH__DO_ROUGH_FORELINE_VLV          NULL 
+   #DEFINE_CONSTANT     CH__DO_ROUGH_FAST_VLV              IO+do.Soft.Vac.Vlv 
+   #DEFINE_CONSTANT     CH__DO_ROUGH_SOFT_VLV              NULL 
+   #DEFINE_CONSTANT     CH__APC_VLV_CUR_POS                PHY_VAT+MON.POSITION 
+   #DEFINE_CONSTANT     CH__IO_VAC_SNS                     IO+di.CHM.VAC.Sts 
+   #DEFINE_CONSTANT     DATA__VAC_SNS.ACTIVE_STATE         On 
+   #DEFINE_CONSTANT     CH__IO_ATM_SNS                     IO+di.CHM.ATM.Sts 
+   #DEFINE_CONSTANT     DATA__ATM_SNS.ACTIVE_STATE         On 
+   #DEFINE_CONSTANT     CH__DRY_PUMP_POWER_SNS             PHY_DRY+MON.PUMP.POWER.SNS 
+   #DEFINE_CONSTANT     CH__DRY_PUMP_VAC_SNS               PHY_DRY+MON.VAC.ON.SNS 
+
 #OBJECT_PROPERTY     FNC_GAS_VLV_CTRL 
 
    #DEFINE_CONSTANT     OBJ__DB_INF                        DB_INF 
@@ -375,6 +390,10 @@
    #DEFINE_CONSTANT     CH__DI_APC_VLV_CLOSE               IO+di.APC.Vlv.Close.Check 
    #DEFINE_CONSTANT     CH__DI_APC_VLV_OPEN                IO+di.APC.Vlv.Open.Check 
    #DEFINE_CONSTANT     CH__DI_APC_VLV_STATE               IO+di.APC.Device.Check 
+   #DEFINE_CONSTANT     CH__DI_ATM_SENSOR                  IO+di.CHM.ATM.Sts 
+   #DEFINE_CONSTANT     CH__DI_VAC_SENSOR                  IO+di.CHM.VAC.Sts 
+   #DEFINE_CONSTANT     CH__AI_CHM_PRESSURE_TORR           IO+ai.CHM.Pressure.1000_Torr 
+   #DEFINE_CONSTANT     CH__DI_TMP_LINE_ACTIVE             NULL 
 
 #OBJECT_PROPERTY     PHY_DRY 
 
@@ -384,13 +403,14 @@
    #DEFINE_CONSTANT     PUMP_MODE.OFF                      PUMP.STOP 
    #DEFINE_CONSTANT     CH__DI_PUMP_POWER_SNS              PHY_IO__PUMP+MON.STATE.PUMP_RUNNING 
    #DEFINE_CONSTANT     CH__DI_PUMP_VAC_SNS                NULL 
-   #DEFINE_CONSTANT     CH__AI_PUMP_PRESSURE_TORR          IO+ai.Pump.Line.Pressure 
+   #DEFINE_CONSTANT     CH__AI_PUMP_PRESSURE_TORR          NULL 
    #DEFINE_CONSTANT     CH__AI_PUMP_PRESSURE_MTORR         NULL 
 
 #OBJECT_PROPERTY     PHY_RF_TOP 
 
    #DEFINE_CONSTANT     OBJ__DB_SYS                        DB_SYS 
    #DEFINE_CONSTANT     DATA.RF_FREQUENCY.ACTIVE           NO 
+   #DEFINE_CONSTANT     CH__DO_RF_POWER_CONNECTOR          NULL 
    #DEFINE_CONSTANT     OBJ__IO_RF                         NULL 
    #DEFINE_CONSTANT     CH__RF_DO_POWER_CTRL               NULL 
    #DEFINE_CONSTANT     CH__RF_AO_SET_POWER                IO+ao.RF1.Power.Set 
@@ -680,6 +700,48 @@
    #DEFINE_CONSTANT     DATA__IO_RF_NAME.1                 RF.TOP 
    #DEFINE_CONSTANT     CH__IO_RF_ON_STATUS.1              PHY_RF_TOP+MON.IO.POWER.STATE 
 
+#OBJECT_PROPERTY     PHY_CHM_IO 
+
+   #DEFINE_CONSTANT     OBJ__DB_INF                        DB_INF 
+   #DEFINE_CONSTANT     OBJ__DB_SYS                        DB_SYS 
+   #DEFINE_CONSTANT     CH__DI_VAC_SNS                     IO+di.CHM.VAC.Sts 
+   #DEFINE_CONSTANT     CH__DI_ATM_SNS                     IO+di.CHM.ATM.Sts 
+   #DEFINE_CONSTANT     CH__DI_SLOT_VLV_OPEN               IO+di.PM.Slot.Vlv.Open 
+   #DEFINE_CONSTANT     CH__DI_SLOT_VLV_CLOSE              IO+di.PM.Slot.Vlv.Close 
+   #DEFINE_CONSTANT     CH.DO_CHM_CHECK_VLV                NULL 
+   #DEFINE_CONSTANT     DATA.PRC_GAUGE_SIZE                1 
+   #DEFINE_CONSTANT     CH.DO_PRC_GAUGE_VLV.1              IO+do.Bara.Protect.10_Torr.Vlv 
+   #DEFINE_CONSTANT     CH.AI_PRC_GAUGE_TORR.1             IO+ai.APC.Pressure 
+   #DEFINE_CONSTANT     CH.AI_PRC_GAUGE_MTORR.1            NULL 
+   #DEFINE_CONSTANT     CH__AI_CHM_GAUGE_TORR              IO+ai.CHM.Pressure.1000_Torr 
+   #DEFINE_CONSTANT     CH__AI_FORELINE_GAUGE_TORR         NULL 
+   #DEFINE_CONSTANT     CH__AI_FORELINE_GAUGE_MTORR        NULL 
+   #DEFINE_CONSTANT     CH__RF_TOTAL_ON_STATE              DB_INF+RF.ON.STS 
+   #DEFINE_CONSTANT     DATA.RF_SIZE                       1 
+   #DEFINE_CONSTANT     CH__RF_ON_STATE.1                  PHY_RF_TOP+MON.IO.POWER.STATE 
+   #DEFINE_CONSTANT     CH__MFC_TOTAL_FLOW_SET             DB_INF+MFC.TOTAL.FLOW_SET 
+   #DEFINE_CONSTANT     DATA.MFC_SIZE                      5 
+   #DEFINE_CONSTANT     CH__MFC_FLOW_SET.1                 PHY_MFC1+MON.MFC.SET.FLOW 
+   #DEFINE_CONSTANT     CH__MFC_FLOW_SET.2                 PHY_MFC2+MON.MFC.SET.FLOW 
+   #DEFINE_CONSTANT     CH__MFC_FLOW_SET.3                 PHY_MFC3+MON.MFC.SET.FLOW 
+   #DEFINE_CONSTANT     CH__MFC_FLOW_SET.4                 PHY_MFC4+MON.MFC.SET.FLOW 
+   #DEFINE_CONSTANT     CH__MFC_FLOW_SET.5                 PHY_MFC5+MON.MFC.SET.FLOW 
+
+#OBJECT_PROPERTY     PHY_LIFT_PIN 
+
+   #DEFINE_CONSTANT     CH__LIFT_PIN_STATE                 DB_INF+LIFT_PIN.STATUS 
+   #DEFINE_CONSTANT     CH__ESC_CHUCK_STATE                NULL 
+   #DEFINE_CONSTANT     DATA__ESC_CH_SIZE                  0 
+   #DEFINE_CONSTANT     DATA__PIN_CTRL_TYPE                OBJECT 
+   #DEFINE_CONSTANT     LINK__OBJ_NAME                     PHY_IO__LIFT_PIN 
+   #DEFINE_CONSTANT     OBJ_MODE.INIT                      INIT 
+   #DEFINE_CONSTANT     OBJ_MODE.UP                        PIN.UP 
+   #DEFINE_CONSTANT     OBJ_MODE.DOWN                      PIN.DOWN 
+   #DEFINE_CONSTANT     OBJ_MODE.MIDDLE                    PIN.MIDDLE 
+   #DEFINE_CONSTANT     DATA__DI_PIN_SENSOR                NO 
+   #DEFINE_CONSTANT     DATA__PIN_SIZE                     1 
+   #DEFINE_CONSTANT     CH__AI_PIN_POS.1                   IO+ai.Pin_Pos.Displacement 
+
 #OBJECT_PROPERTY     PAGE_PROCESS 
 
    #FNC_MODE     MANUAL_PROCESS                     MNT_PROCESS   MANUAL_PROCESS 
@@ -816,41 +878,6 @@
    #DEFINE_CONSTANT     OBJ.MFC3                           PHY_MFC3 
    #DEFINE_CONSTANT     OBJ.MFC4                           PHY_MFC4 
    #DEFINE_CONSTANT     OBJ.MFC5                           PHY_MFC5 
-
-#OBJECT_PROPERTY     PHY_CHM_IO 
-
-   #DEFINE_CONSTANT     OBJ__DB_INF                        DB_INF 
-   #DEFINE_CONSTANT     OBJ__DB_SYS                        DB_SYS 
-   #DEFINE_CONSTANT     CH__DI_VAC_SNS                     IO+di.CHM.VAC.Sts 
-   #DEFINE_CONSTANT     CH__DI_ATM_SNS                     IO+di.CHM.ATM.Sts 
-   #DEFINE_CONSTANT     CH__DI_SLOT_VLV_OPEN               IO+di.PM.Slot.Vlv.Open 
-   #DEFINE_CONSTANT     CH__DI_SLOT_VLV_CLOSE              IO+di.PM.Slot.Vlv.Close 
-   #DEFINE_CONSTANT     CH.DO_CHM_CHECK_VLV                NULL 
-   #DEFINE_CONSTANT     DATA.PRC_GAUGE_SIZE                1 
-   #DEFINE_CONSTANT     CH.DO_PRC_GAUGE_VLV.1              IO+do.Bara.Protect.10_Torr.Vlv 
-   #DEFINE_CONSTANT     CH.AI_PRC_GAUGE_TORR.1             IO+ai.CHM.Pressure.10_Torr 
-   #DEFINE_CONSTANT     CH.AI_PRC_GAUGE_MTORR.1            NULL 
-   #DEFINE_CONSTANT     CH__AI_CHM_GAUGE_TORR              IO+ai.CHM.Pressure.1000_Torr 
-   #DEFINE_CONSTANT     CH__AI_FORELINE_GAUGE_TORR         IO+ai.Pump.Line.Pressure 
-   #DEFINE_CONSTANT     CH__AI_FORELINE_GAUGE_MTORR        NULL 
-   #DEFINE_CONSTANT     CH__RF_TOTAL_ON_STATE              DB_INF+RF.ON.STS 
-   #DEFINE_CONSTANT     DATA.RF_SIZE                       1 
-   #DEFINE_CONSTANT     CH__RF_ON_STATE.1                  PHY_RF_TOP+MON.IO.POWER.STATE 
-
-#OBJECT_PROPERTY     PHY_LIFT_PIN 
-
-   #DEFINE_CONSTANT     CH__LIFT_PIN_STATE                 DB_INF+LIFT_PIN.STATUS 
-   #DEFINE_CONSTANT     CH__ESC_CHUCK_STATE                NULL 
-   #DEFINE_CONSTANT     DATA__ESC_CH_SIZE                  0 
-   #DEFINE_CONSTANT     DATA__PIN_CTRL_TYPE                OBJECT 
-   #DEFINE_CONSTANT     LINK__OBJ_NAME                     PHY_IO__LIFT_PIN 
-   #DEFINE_CONSTANT     OBJ_MODE.INIT                      INIT 
-   #DEFINE_CONSTANT     OBJ_MODE.UP                        PIN.UP 
-   #DEFINE_CONSTANT     OBJ_MODE.DOWN                      PIN.DOWN 
-   #DEFINE_CONSTANT     OBJ_MODE.MIDDLE                    PIN.MIDDLE 
-   #DEFINE_CONSTANT     DATA__DI_PIN_SENSOR                NO 
-   #DEFINE_CONSTANT     DATA__PIN_SIZE                     1 
-   #DEFINE_CONSTANT     CH__AI_PIN_POS.1                   IO+ai.Pin_Pos.Displacement 
 
 #OBJECT_PROPERTY     PHY_IO__LIFT_PIN 
 

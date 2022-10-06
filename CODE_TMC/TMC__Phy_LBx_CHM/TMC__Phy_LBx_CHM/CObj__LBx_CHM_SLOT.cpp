@@ -1541,6 +1541,11 @@ int CObj__LBx_CHM_SLOT::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 
 	// ...
 	{
+		Update__PRESSURE_STS(p_variable,p_alarm);
+	}
+
+	// ...
+	{
 		IF__CTRL_MODE(sMODE__INIT)
 		{
 			flag = Call__INIT(p_variable,p_alarm);
@@ -1703,6 +1708,11 @@ int CObj__LBx_CHM_SLOT::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 		{
 			flag = Call__TIME_TEST(p_variable,p_alarm);
 		}
+	}
+
+	// ...
+	{
+		Update__PRESSURE_STS(p_variable,p_alarm);
 	}
 
 	if(iActive__SIM_MODE > 0)

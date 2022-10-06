@@ -15,3 +15,5 @@
 #ID=21	5121	LIGHT	PHY_VAT - "VAT,Enable Sensor Error" occurred !
 #ID=22	5122	LIGHT	PHY_VAT - "VAT,Ready Error" occurred !
 #ID=25	5125	LIGHT	PHY_VAT - Open Interlock !
+#ID=26	5126	LIGHT	PHY_VAT - High limit chamber pressure Interlock !
+#ID=27	5127	LIGHT	PHY_VAT - Open Interlock (TMP line not ready) !

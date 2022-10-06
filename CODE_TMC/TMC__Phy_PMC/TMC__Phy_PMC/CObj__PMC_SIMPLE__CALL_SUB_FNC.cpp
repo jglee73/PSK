@@ -348,7 +348,7 @@ int  CObj__PMC_SIMPLE
 			}
 			else
 			{
-				int r_flag = pOBJ_CTRL__PMx_SLOT_VLV->Call__OBJECT(sMODE__PMx_SLOT_VLV__CLOSE);
+				int r_flag = pOBJ_CTRL__PMx_HANDOFF->Call__OBJECT(sMODE__PMx_SLOT_VLV__CLOSE);
 				if(r_flag < 0)			return -101;
 			}
 			
@@ -380,7 +380,7 @@ int  CObj__PMC_SIMPLE
 			}
 			else
 			{
-				int r_flag = pOBJ_CTRL__PMx_SLOT_VLV->Call__OBJECT(sMODE__PMx_SLOT_VLV__CLOSE);
+				int r_flag = pOBJ_CTRL__PMx_HANDOFF->Call__OBJECT(sMODE__PMx_SLOT_VLV__CLOSE);
 				if(r_flag < 0)			return -101;
 			}
 		}
@@ -513,7 +513,7 @@ int  CObj__PMC_SIMPLE
 			}
 			else
 			{
-				int r_flag = pOBJ_CTRL__PMx_SLOT_VLV->Call__OBJECT(sMODE__PMx_SLOT_VLV__OPEN);
+				int r_flag = pOBJ_CTRL__PMx_HANDOFF->Call__OBJECT(sMODE__PMx_SLOT_VLV__OPEN);
 				if(r_flag < 0)			return -101;
 			}
 
@@ -548,7 +548,7 @@ int  CObj__PMC_SIMPLE
 			}
 			else
 			{
-				int r_flag = pOBJ_CTRL__PMx_SLOT_VLV->Call__OBJECT(sMODE__PMx_SLOT_VLV__OPEN);
+				int r_flag = pOBJ_CTRL__PMx_HANDOFF->Call__OBJECT(sMODE__PMx_SLOT_VLV__OPEN);
 				if(r_flag < 0)			return -101;
 			}
 		}

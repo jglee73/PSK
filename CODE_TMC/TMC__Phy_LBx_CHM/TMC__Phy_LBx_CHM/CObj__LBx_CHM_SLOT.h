@@ -447,12 +447,12 @@ private:
 	bool Set__SLOT_SV_CLOSE();
 
 	// ...
-	int  Check__PRESSURE_ATM(CII_OBJECT__ALARM* p_alarm,const int alarm_id);
-	int  Check__PRESSURE_ATM_TO_DV_OPEN(CII_OBJECT__ALARM* p_alarm,const int alarm_id);
+	int  Check__PRESSURE_ATM(CII_OBJECT__ALARM* p_alarm, const int alarm_id);
+	int  Check__PRESSURE_ATM_TO_DV_OPEN(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm, const int alarm_id);
 
-	int  Check__PRESSURE_VAC(CII_OBJECT__ALARM* p_alarm);
+	int  Check__PRESSURE_VAC(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm);
 
-	int  Check__LLx_LID__CLOSE(CII_OBJECT__ALARM* p_alarm,const CString& act_name);
+	int  Check__LLx_LID__CLOSE(CII_OBJECT__ALARM* p_alarm, const CString& act_name);
 	int  Check__TRANSFER_VLV__CLOSE(CII_OBJECT__ALARM* p_alarm,	const CString& act_name);
 
 	int  Check__VENT_ALL_VLV__CLOSE(CII_OBJECT__ALARM* p_alarm);
@@ -497,6 +497,7 @@ private:
 	void Mon__IO_MONITOR(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm);
 	void Fnc__INTERLOCK(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm);
 
+	void Update__PRESSURE_STS(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm);
 	void Update__SV_STS(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm);
 	void Update__DV_STS(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm);
 	void Update__LIFT_PIN_STS(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm);

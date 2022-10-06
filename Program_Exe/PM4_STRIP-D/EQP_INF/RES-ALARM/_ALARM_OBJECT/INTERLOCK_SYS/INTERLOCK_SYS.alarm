@@ -1,0 +1,6 @@
+#ID=1	1	LIGHT	Setpoint Interlock : VAC-Foreline Valve <- Open
+#ID=2	2	LIGHT	Setpoint Interlock : VAC-Foreline Valve <- Close
+#ID=3	3	LIGHT	Setpoint Interlock : VAC-Fast Valve <- Open
+#ID=4	4	LIGHT	Setpoint Interlock : VAC-Slow Valve <- Open
+#ID=5	5	LIGHT	Setpoint Interlock : VENT-Fast Valve <- Open
+#ID=6	6	LIGHT	Setpoint Interlock : VENT-Soft Valve <- Open

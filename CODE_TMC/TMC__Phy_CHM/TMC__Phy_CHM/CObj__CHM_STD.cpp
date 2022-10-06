@@ -184,11 +184,11 @@ int CObj__CHM_STD::__DEFINE__VARIABLE_STD(p_variable)
 
 		// 
 		str_name = "CFG.aVAC.LOWER.TOLERANCE";
-		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mtorr", 0, 0, 50, "");
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mtorr", 0, 0, 500, "");
 		LINK__VAR_ANALOG_CTRL(aCH__CFG_VAC_LOWER_TOLERANCE,str_name);
 
 		str_name = "CFG.aVAC.UPPER.TOLERANCE";
-		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mtorr", 0, 0, 50, "");
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mtorr", 0, 0, 500, "");
 		LINK__VAR_ANALOG_CTRL(aCH__CFG_VAC_UPPER_TOLERANCE,str_name);
 
 		//
@@ -778,7 +778,7 @@ int CObj__CHM_STD::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 			}
 			// GAUGE.mTORR ...
 			{
-				str_name.Format("CH.AI_CHM_GAUGE_mTORR.%1d", id);
+				def_name.Format("CH.AI_CHM_GAUGE_mTORR.%1d", id);
 				p_ext_obj_create->Get__DEF_CONST_DATA(def_name, def_data);
 				
 				def_check = x_utility.Check__Link(def_data);

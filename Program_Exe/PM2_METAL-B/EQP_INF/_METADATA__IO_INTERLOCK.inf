@@ -248,9 +248,13 @@
 //------------------------------------------------
 #OBJECT_PROPERTY    INTERLOCK_SYS
 
+#DEFINE_CONSTANT    CH__DO_VENT_FAST_VLV                IO+do.PV12_1
+#DEFINE_CONSTANT    CH__DO_VENT_SOFT_VLV                IO+do.PV12_2
+
 #DEFINE_CONSTANT    CH__DO_ROUGH_FORELINE_VLV           IO+do.TMP.Vac.Vlv
 #DEFINE_CONSTANT    CH__DO_ROUGH_FAST_VLV               IO+do.Fast.Vac.Vlv
 #DEFINE_CONSTANT    CH__DO_ROUGH_SOFT_VLV               IO+do.Soft.Vac.Vlv
+
 #DEFINE_CONSTANT    CH__APC_VLV_CUR_POS                 PHY_VAT+MON.POSITION
 
 #DEFINE_CONSTANT    CH__IO_VAC_SNS                      IO+di.CHM.VAC.Sts
@@ -258,4 +262,7 @@
 
 #DEFINE_CONSTANT    CH__IO_ATM_SNS                      IO+di.CHM.ATM.Sts
 #DEFINE_CONSTANT    DATA__ATM_SNS.ACTIVE_STATE          On
+
+#DEFINE_CONSTANT    CH__DRY_PUMP_POWER_SNS              PHY_DRY+MON.PUMP.POWER.SNS
+#DEFINE_CONSTANT    CH__DRY_PUMP_VAC_SNS                PHY_DRY+MON.VAC.ON.SNS
 

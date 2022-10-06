@@ -92,67 +92,7 @@ void CObj__LBx_CHM_SLOT
 			}
 		}
 
-		// ...
-		{
-			double cur_press;
-			double ref_atm_press;
-			double ref_vac_press;
-			double ref_vac_upper_tole_press;
-			double tolerance_atm_press;
-
-			double atm_range_min;
-			double atm_range_max;
-
-			double ref_vac_max;
-
-			// Get Pressure Value
-			aCH__PRESSURE_TORR->Get__DATA(var__data);
-			cur_press = atof(var__data);
-
-			aCH__CFG_ATM_PRESSURE_TORR->Get__DATA(var__data);
-			ref_atm_press = atof(var__data);
-
-			// Get Atm Tolerance...
-			aCH__CFG_ATM_PRESS_STS_TOLERANCE->Get__DATA(var__data);
-			tolerance_atm_press = atof(var__data);
-
-			atm_range_min = ref_atm_press - tolerance_atm_press;
-			atm_range_max = ref_atm_press + tolerance_atm_press;
-
-			// 1. VAC
-			aCH__CFG_VAC_PRESSURE_TORR->Get__DATA(var__data);
-			ref_vac_press = atof(var__data);
-
-			// 2. VAC
-			aCH__CFG_VAC_UPPER_TOLERANCE->Get__DATA(var__data);
-			ref_vac_upper_tole_press = atof(var__data)*0.001;	// mtorr
-			ref_vac_max = ref_vac_press + ref_vac_upper_tole_press;
-
-			// 3.
-			int vac_sns = -1;
-			int atm_sns = -1;
-
-			if(diEXT_CH__LBx__ATM_SNS->Check__DATA(sDATA__ATM_ON) > 0)		atm_sns = 1;
-			if(diEXT_CH__LBx__VAC_SNS->Check__DATA(sDATA__VAC_ON) > 0)		vac_sns = 1;
-
-			if((atm_range_min <= cur_press)
-			&& (atm_sns > 0)
-			&& (vac_sns < 0))
-			{
-				dCH__PRESSURE_STATUS->Set__DATA("ATM");
-			}
-			else if((cur_press > 0)					// 0.0 이면 Gauge Offline 가능성 큼.. 
-				 && (cur_press <= ref_vac_max)
-				 && (atm_sns < 0)
-				 && (vac_sns > 0))
-			{
-				dCH__PRESSURE_STATUS->Set__DATA("VAC");
-			}
-			else
-			{
-				dCH__PRESSURE_STATUS->Set__DATA("BTW");
-			}
-		}
+		Update__PRESSURE_STS(p_variable,  p_alarm);
 
 		// ...
 		{
@@ -181,6 +121,70 @@ void CObj__LBx_CHM_SLOT
 		// INTERLOCK CHECK ...
 		Fnc__INTERLOCK(p_variable, p_alarm);
 	}	
+}
+
+void CObj__LBx_CHM_SLOT
+::Update__PRESSURE_STS(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm)
+{
+	double cur_press;
+	double ref_atm_press;
+	double ref_vac_press;
+	double ref_vac_upper_tole_press;
+	double tolerance_atm_press;
+
+	double atm_range_min;
+	double atm_range_max;
+
+	double ref_vac_max;
+	
+	CString var__data;
+
+	// Get Pressure Value
+	aCH__PRESSURE_TORR->Get__DATA(var__data);
+	cur_press = atof(var__data);
+
+	aCH__CFG_ATM_PRESSURE_TORR->Get__DATA(var__data);
+	ref_atm_press = atof(var__data);
+
+	// Get Atm Tolerance...
+	aCH__CFG_ATM_PRESS_STS_TOLERANCE->Get__DATA(var__data);
+	tolerance_atm_press = atof(var__data);
+
+	atm_range_min = ref_atm_press - tolerance_atm_press;
+	atm_range_max = ref_atm_press + tolerance_atm_press;
+
+	// 1. VAC
+	aCH__CFG_VAC_PRESSURE_TORR->Get__DATA(var__data);
+	ref_vac_press = atof(var__data);
+
+	// 2. VAC
+	aCH__CFG_VAC_UPPER_TOLERANCE->Get__DATA(var__data);
+	ref_vac_upper_tole_press = atof(var__data)*0.001;	// mtorr
+	ref_vac_max = ref_vac_press + ref_vac_upper_tole_press;
+
+	// 3.
+	int vac_sns = -1;
+	int atm_sns = -1;
+
+	if(diEXT_CH__LBx__ATM_SNS->Check__DATA(sDATA__ATM_ON) > 0)		atm_sns = 1;
+	if(diEXT_CH__LBx__VAC_SNS->Check__DATA(sDATA__VAC_ON) > 0)		vac_sns = 1;
+
+	if((atm_range_min <= cur_press)
+	&& (atm_sns > 0)
+	&& (vac_sns < 0))
+	{
+		dCH__PRESSURE_STATUS->Set__DATA("ATM");
+	}
+	else if((cur_press <= ref_vac_max)
+		 && (atm_sns < 0)
+		 && (vac_sns > 0))
+	{
+		dCH__PRESSURE_STATUS->Set__DATA("VAC");
+	}
+	else
+	{
+		dCH__PRESSURE_STATUS->Set__DATA("BTW");
+	}
 }
 
 void CObj__LBx_CHM_SLOT

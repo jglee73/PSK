@@ -105,5 +105,14 @@ void CObj__STP_SERIAL
 		}
 
 		// ...
+		{
+			CString cur__tmp_sts = sCH__INFO_PUMP_OP_MODE->Get__STRING();
+
+			if(cur__tmp_sts.CompareNoCase(STR__Normal) == 0)				dCH__MON_ACTIVE_NORMAL_STATE->Set__DATA(STR__ON);
+			else															dCH__MON_ACTIVE_NORMAL_STATE->Set__DATA(STR__OFF);
+	
+			if(cur__tmp_sts.CompareNoCase(STR__Acceleration) == 0)			dCH__MON_ACTIVE_ACCELERATION_STATE->Set__DATA(STR__ON);
+			else															dCH__MON_ACTIVE_ACCELERATION_STATE->Set__DATA(STR__OFF);
+		}
 	}	
 }

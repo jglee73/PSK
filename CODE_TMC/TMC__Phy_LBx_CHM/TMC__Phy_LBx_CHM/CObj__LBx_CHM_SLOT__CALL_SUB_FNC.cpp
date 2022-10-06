@@ -308,7 +308,7 @@ bool CObj__LBx_CHM_SLOT::Set__SLOT_SV_CLOSE()
 
 
 int  CObj__LBx_CHM_SLOT
-::Check__PRESSURE_ATM_TO_DV_OPEN(CII_OBJECT__ALARM* p_alarm,const int alarm_id)
+::Check__PRESSURE_ATM_TO_DV_OPEN(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm, const int alarm_id)
 {
 LOOP_RETRY:
 
@@ -322,144 +322,184 @@ LOOP_RETRY:
 	}
 
 	// ...
-	double  cur_press;
-	double  ref_press;
-	CString var_data;
-	CString var_prs_sts;
-	CString str_log;
-	CString str_TM_prss_sts;
+	int count__error_check = 0;
 
-	aiEXT_CH__LBx__PRESSURE_TORR->Get__DATA(var_data);
-	cur_press = atof(var_data);
-
-	aEXT_CH__CFG_REF_ATM_PRESSURE->Get__DATA(var_data);
-	ref_press = atof(var_data);
-
-	dCH__PRESSURE_STATUS->Get__DATA(var_prs_sts);
-
-	// ...
+	while(1)
 	{
-		str_log.Format("Check Prs ATM: Reference Prs:%f, Current Prs:%f, Prs Sts:%s", 
-						ref_press, 
-						cur_press, 
-						var_prs_sts);
+		double cur_press = aiEXT_CH__LBx__PRESSURE_TORR->Get__VALUE();
+		double ref_press = aEXT_CH__CFG_REF_ATM_PRESSURE->Get__VALUE();
 
-		Fnc__LOG(str_log);
-	}
+		CString cur__ll_press_sts = dCH__PRESSURE_STATUS->Get__STRING();
 
-	if((cur_press < ref_press)
-	|| (var_prs_sts.CompareNoCase(STR__IO_ATM) != 0))
-	{
-		CString alarm_msg;
-		CString alarm_bff;
-		CString r_act;
+		// ...
+		{
+			CString log_msg;
+			CString log_bff;
 
-		alarm_msg.Format("1. The pressure of %s is %s Sts.\n",
-							m_sLBx__MODULE_NAME, var_prs_sts);
+			log_msg = "Pressure State ... \n";
 
-		alarm_bff.Format("2. The pressure of %s is %.3f and The config pressure is %.3f.\n",
-							m_sLBx__MODULE_NAME, cur_press, ref_press);
-		alarm_msg += alarm_bff;
+			log_bff.Format(" * Current pressure <- %.3f (torr) \n", cur_press);
+			log_msg += log_bff;
+			log_bff.Format(" * Ref.pressure <- %.3f (torr) \n", ref_press);
+			log_msg += log_bff;
+			log_bff.Format(" * Pressure.State <- [%s] \n", cur__ll_press_sts);
+			log_msg += log_bff;
 
-		alarm_bff.Format("The %s's pressure must be more than %.3f and ATM Sts..\n",
-							m_sLBx__MODULE_NAME, ref_press);
-		alarm_msg += alarm_bff;
-
-		p_alarm->Popup__ALARM_With_MESSAGE(alarm_id,alarm_msg,r_act);
-
-		if(r_act.CompareNoCase("RETRY") == 0)
-		{	
-			goto LOOP_RETRY;
+			Fnc__LOG(log_msg);
 		}
-		return -1;
+
+		if((cur_press >= ref_press)
+		&& (cur__ll_press_sts.CompareNoCase(STR__IO_ATM) == 0))
+		{
+			return 1;
+		}
+		else
+		{
+			count__error_check++;
+
+			if(count__error_check > 30)
+			{
+				CString alarm_msg;
+				CString alarm_bff;
+				CString r_act;
+
+				alarm_msg.Format("1. The pressure of %s is %s \n",
+								  m_sLBx__MODULE_NAME, 
+								  cur__ll_press_sts);
+
+				alarm_bff.Format("2. The pressure of %s is %.3f and the config pressure is %.3f.\n",
+								  m_sLBx__MODULE_NAME, 
+								  cur_press, 
+								  ref_press);
+				alarm_msg += alarm_bff;
+
+				alarm_bff.Format("The %s's pressure must be more than %.3f and ATM State \n",
+								 m_sLBx__MODULE_NAME, 
+								 ref_press);
+				alarm_msg += alarm_bff;
+
+				p_alarm->Popup__ALARM_With_MESSAGE(alarm_id,alarm_msg,r_act);
+
+				if(r_act.CompareNoCase("RETRY") == 0)
+				{	
+					goto LOOP_RETRY;
+				}
+				return -1;
+			}
+		}
+
+		Sleep(90);
+
+		if(p_variable->Check__CTRL_ABORT() > 0)
+		{
+			return -11;
+		}
 	}
 
-	return 1;
+	return 11;
 }
 
 int  CObj__LBx_CHM_SLOT
-::Check__PRESSURE_VAC(CII_OBJECT__ALARM* p_alarm)
+::Check__PRESSURE_VAC(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
 {
 LOOP_RETRY:
 
-	// ...
-	double  cur_press;
-	double  ref_press;
-	CString var_data;
-	CString var_prs_sts;
-	CString str_log;
-	CString str_TM_prss_sts;
-
-	// ...
-	{
-		aiEXT_CH__LBx__PRESSURE_TORR->Get__DATA(var_data);
-		cur_press = atof(var_data);
-
-		aEXT_CH__CFG_REF_VAC_PRESSURE->Get__DATA(var_data);
-		ref_press = atof(var_data);
-	}
-
-	// 1. Already Sns Check..    SV TM OPEN  && SV TM DOWN check, already SV OPEN  4 sensor check 
 	if(Is__ALL_SV_OPEN())
 	{
-		str_log.Format("Already... SV TM OPEN sts.. %s Slot Valve.", m_sLBx__MODULE_NAME);
+		CString log_msg;
 
-		Fnc__LOG(str_log);
+		log_msg.Format("Already, the SV of %s is open !", m_sLBx__MODULE_NAME);
+
+		Fnc__LOG(log_msg);
 		return 1;
 	}
 
 	// ...
+	int count__error_check = 0;
+
+	while(1)
 	{
-		dCH__PRESSURE_STATUS->Get__DATA(var_prs_sts);
-		dEXT_CH__PHY_TM__PRESS_STS->Get__DATA(str_TM_prss_sts);
-	}
+		double cur_press = aiEXT_CH__LBx__PRESSURE_TORR->Get__VALUE();
+		double ref_press = aEXT_CH__CFG_REF_VAC_PRESSURE->Get__VALUE();
 
-	// ...
-	{
-		str_log.Format("Check Prs VAC: Reference Prs:%f, Current Prs:%f, Prs Sts:%s, TM_PRS_STS:%s", 
-						ref_press, 
-						cur_press, 
-						var_prs_sts, 
-						str_TM_prss_sts);
+		CString cur__ll_press_sts = dCH__PRESSURE_STATUS->Get__STRING();
+		CString cur__tm_press_sts = dEXT_CH__PHY_TM__PRESS_STS->Get__STRING();
 
-		Fnc__LOG(str_log);
-	}
+		// ...
+		{
+			CString log_msg;
+			CString log_bff;
 
-	if((cur_press > ref_press)
-	|| (var_prs_sts.CompareNoCase(STR__IO_VAC)     != 0)
-	|| (str_TM_prss_sts.CompareNoCase(STR__IO_VAC) != 0))
-	{
-		int alarm_id = ALID__SV_OPEN__NOT_VAC_ERROR;
+			log_msg = "Pressure Check ... \n";
 
-		CString alarm_msg;
-		CString alarm_bff;
-		CString r_act;
+			log_bff.Format(" * Current Pressure <- %.3f (torr) \n", cur_press);
+			log_msg += log_bff;
+			log_bff.Format(" * Ref-Pressure <- %.3f (torr) \n", ref_press);
+			log_msg += log_bff;
+			log_bff.Format(" * LLx Pressure State <- [%s] \n", cur__ll_press_sts);
+			log_msg += log_bff;
+			log_bff.Format(" * TMx Pressure State <- [%s] \n", cur__tm_press_sts);
+			log_msg += log_bff;
 
-		alarm_msg.Format("1. The pressure of %s is %s Sts.\n",
-							m_sLBx__MODULE_NAME, var_prs_sts);
-
-		alarm_bff.Format("2. The pressure of TM is %s\n",
-							str_TM_prss_sts);
-		alarm_msg += alarm_bff;
-
-		alarm_bff.Format("3. The pressure of %s is %.3f and The config pressure is %.3f.\n",
-							m_sLBx__MODULE_NAME, cur_press, ref_press);
-		alarm_msg += alarm_bff;
-
-		alarm_bff.Format("The %s's pressure must be less than %.3f and VAC Sts..\n",
-							m_sLBx__MODULE_NAME, ref_press);
-		alarm_msg += alarm_bff;
-
-		p_alarm->Popup__ALARM_With_MESSAGE(alarm_id,alarm_msg,r_act);
-
-		if(r_act.CompareNoCase("RETRY") == 0)
-		{	
-			goto LOOP_RETRY;
+			Fnc__LOG(log_msg);
 		}
-		return -1;
+
+		if((cur_press <= ref_press)
+		&& (cur__ll_press_sts.CompareNoCase(STR__IO_VAC) == 0)
+		&& (cur__tm_press_sts.CompareNoCase(STR__IO_VAC) == 0))
+		{
+			return 1;
+		}
+		else
+		{
+			count__error_check++;
+
+			if(count__error_check > 30)
+			{
+				int alarm_id = ALID__SV_OPEN__NOT_VAC_ERROR;
+
+				CString alarm_msg;
+				CString alarm_bff;
+				CString r_act;
+
+				alarm_msg.Format("1. The pressure of %s is %s \n",
+								 m_sLBx__MODULE_NAME, 
+								 cur__ll_press_sts);
+
+				alarm_bff.Format("2. The pressure of TM is %s \n",
+								 cur__tm_press_sts);
+				alarm_msg += alarm_bff;
+
+				alarm_bff.Format("3. The pressure of %s is %.3f and the config pressure is %.3f.\n",
+								 m_sLBx__MODULE_NAME, 
+								 cur_press, 
+								 ref_press);
+				alarm_msg += alarm_bff;
+
+				alarm_bff.Format("The %s's pressure must be less than %.3f (torr) and VAC state.. \n",
+								 m_sLBx__MODULE_NAME, 
+								 ref_press);
+				alarm_msg += alarm_bff;
+	
+				p_alarm->Popup__ALARM_With_MESSAGE(alarm_id,alarm_msg,r_act);
+
+				if(r_act.CompareNoCase("RETRY") == 0)
+				{	
+					goto LOOP_RETRY;
+				}
+				return -1;
+			}
+		}
+
+		Sleep(90);
+
+		if(p_variable->Check__CTRL_ABORT() > 0)	
+		{
+			return -11;
+		}
 	}
 
-	return 1;
+	return 11;
 }
 
 int  CObj__LBx_CHM_SLOT

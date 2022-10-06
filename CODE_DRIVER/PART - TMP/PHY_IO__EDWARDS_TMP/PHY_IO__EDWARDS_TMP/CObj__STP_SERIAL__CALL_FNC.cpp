@@ -71,6 +71,8 @@ ACT_RETRY:
 		if(iActive__SIM_MODE > 0)
 		{
 			sCH__INFO_PUMP_OP_MODE->Set__DATA(STR__Acceleration);
+
+			Sleep(5000);
 		}
 
 		sCH__INFO_PUMP_OP_MODE->Link__UPPER_OBJECT_ABORT(sObject_Name);
@@ -158,8 +160,16 @@ Call__AUTO_STOP(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm)
 
 		if(iActive__SIM_MODE > 0)
 		{
-			Sleep(2000);
+			double cur_speed = aCH__PARA_TARGET_SPEED_RPM->Get__VALUE();
+			cur_speed = cur_speed * 0.5;
+			
+			aCH__PARA_TARGET_SPEED_RPM->Set__VALUE(cur_speed);
+			sCH__INFO_PUMP_OP_MODE->Set__DATA(STR__Deceleration);
+
+			Sleep(5000);
+			
 			aCH__PARA_TARGET_SPEED_RPM->Set__DATA("0");
+			sCH__INFO_PUMP_OP_MODE->Set__DATA(STR__Levitation);
 		}
 
 		int state = sCH__MON_PUMP_STS->When__DATA(STR__OFF, 2.0);
@@ -233,8 +243,16 @@ Call__AUTO_STOP_NO_WAIT(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_al
 
 		if(iActive__SIM_MODE > 0)
 		{
+			double cur_speed = aCH__PARA_TARGET_SPEED_RPM->Get__VALUE();
+			cur_speed = cur_speed * 0.5;
+
+			aCH__PARA_TARGET_SPEED_RPM->Set__VALUE(cur_speed);
+			sCH__INFO_PUMP_OP_MODE->Set__DATA(STR__Deceleration);
+
 			Sleep(2000);
+
 			aCH__PARA_TARGET_SPEED_RPM->Set__DATA("0");
+			sCH__INFO_PUMP_OP_MODE->Set__DATA(STR__Levitation);
 		}
 
 		int state = sCH__MON_PUMP_STS->When__DATA(STR__OFF, 2.0);
