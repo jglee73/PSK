@@ -1429,11 +1429,6 @@ int CObj__CHM_FNC::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 	// ...
 	{
 		sCH__PARA_XFER_BALLAST_WAIT_SKIP_FLAG->Set__DATA("");
-
-		if(bActive__OBJ_CTRL__TURBO_PUMP)
-		{			
-			dEXT_CH__TURBO_PUMP__ACTIVE_INTERLOCK_SKIP_FORELINE_VAC->Set__DATA(STR__OFF);
-		}
 	}
 
 	if((flag < 0)||(p_variable->Check__CTRL_ABORT() > 0))

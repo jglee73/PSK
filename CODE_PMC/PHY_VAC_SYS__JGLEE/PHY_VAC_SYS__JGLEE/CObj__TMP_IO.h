@@ -210,6 +210,7 @@ private:
 
 	int Fnc_Interlock__TMP_OFF(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 	int Fnc_Interlock__TMP_ISO(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
+	int Fnc_Interlock__APC_CLOSE(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 
 	int Update__TMP_LINE_READY(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 	int Check__TMP_LINE_READY(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);

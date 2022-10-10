@@ -283,6 +283,17 @@ int CObj__VAT_IO::__DEFINE__VARIABLE_STD(p_variable)
 		LINK__VAR_STRING_CTRL(sCH__MON_PROC_PRESSURE_ABORT_CHECK_TIME, str_name);
 	}
 
+	// CFG : TIMEOUT ...
+	{
+		str_name = "CFG.TIMEOUT.OPEN";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 0, 10, 60, "");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_TIMEOUT_OPEN, str_name);
+
+		str_name = "CFG.TIMEOUT.CLOSE";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 0, 10, 60, "");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_TIMEOUT_CLOSE, str_name);
+	}
+
 	// CFG : SYSTEM ...
 	{
 		str_name = "CFG.USE";
@@ -1331,6 +1342,7 @@ int CObj__VAT_IO::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 							p_alarm->Check__ALARM(alarm_id, r_act);
 							p_alarm->Post__ALARM_With_MESSAGE(alarm_id, err_msg);
 						}
+						break;
 					}
 
 					Sleep(90);

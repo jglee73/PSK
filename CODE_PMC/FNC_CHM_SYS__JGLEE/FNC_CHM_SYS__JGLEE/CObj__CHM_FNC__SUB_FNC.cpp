@@ -144,6 +144,16 @@ int CObj__CHM_FNC::Check__LOW_VAC_PUMP()
 int CObj__CHM_FNC
 ::Fnc__LOW_VAC_PUMP(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm, const int high_vac_flag,const int purge_flag)
 {
+	if(bActive__OBJ_CTRL__TURBO_PUMP)		dEXT_CH__TURBO_PUMP__ACTIVE_INTERLOCK_SKIP_FORELINE_VAC->Set__DATA(STR__ON);
+
+	int r_flag = _Fnc__LOW_VAC_PUMP(p_variable,p_alarm, high_vac_flag,purge_flag);
+
+	if(bActive__OBJ_CTRL__TURBO_PUMP)		dEXT_CH__TURBO_PUMP__ACTIVE_INTERLOCK_SKIP_FORELINE_VAC->Set__DATA(STR__OFF);
+	return r_flag;
+}
+int CObj__CHM_FNC
+::_Fnc__LOW_VAC_PUMP(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm, const int high_vac_flag,const int purge_flag)
+{
 LOOP_RETRY:
 
 	CString ch_data;
@@ -233,6 +243,8 @@ LOOP_RETRY:
 		// ...
 		{
 			log_msg = "ESC <- Pump_Ready";
+
+			sCH__OBJ_MSG->Set__DATA(log_msg);
 			xLOG_CTRL->WRITE__LOG(log_msg);
 		}
 
@@ -247,6 +259,8 @@ LOOP_RETRY:
 		// ...
 		{
 			log_msg = "GAS-Valve <- Proc_Ready";
+
+			sCH__OBJ_MSG->Set__DATA(log_msg);
 			xLOG_CTRL->WRITE__LOG(log_msg);
 		}
 
@@ -261,6 +275,8 @@ LOOP_RETRY:
 		// ...
 		{
 			log_msg = "VAC-Valve <- All_Close";
+
+			sCH__OBJ_MSG->Set__DATA(log_msg);
 			xLOG_CTRL->WRITE__LOG(log_msg);
 		}
 		
@@ -276,6 +292,8 @@ LOOP_RETRY:
 		// ...
 		{
 			log_msg = "Dry_Pump On Check";
+
+			sCH__OBJ_MSG->Set__DATA(log_msg);
 			xLOG_CTRL->WRITE__LOG(log_msg);
 		}
 
@@ -300,6 +318,8 @@ LOOP_RETRY:
 		// ...
 		{
 			log_msg = "Soft_Pumping : Started ...";
+
+			sCH__OBJ_MSG->Set__DATA(log_msg);
 			xLOG_CTRL->WRITE__LOG(log_msg);
 		}
 
@@ -331,10 +351,10 @@ LOOP_RETRY:
 		// ...
 		{
 			log_msg = "ATM_Sensor.Off Checking ...";
+
+			sCH__OBJ_MSG->Set__DATA(log_msg);
 			xLOG_CTRL->WRITE__LOG(log_msg);
 		}
-
-		sCH__OBJ_MSG->Set__DATA("ATM_Sensor.Off Checking ...");
 
 		// ...
 		SCX__ASYNC_TIMER_CTRL x_asyc_timer;
@@ -399,6 +419,9 @@ LOOP_RETRY:
 
 	// Soft-OverPumping.Timeout ...
 	{
+		sCH__OBJ_MSG->Set__DATA("Soft-OverPumping");
+
+		// ...
 		SCX__ASYNC_TIMER_CTRL x_asyc_timer;
 
 		x_asyc_timer->REGISTER__COUNT_CHANNEL_NAME(sCH__OBJ_TIMER->Get__CHANNEL_NAME());
@@ -420,6 +443,9 @@ RETRY_LOOP:
 
 	// SR CLOSE & FR OPEN ...
 	{
+		sCH__OBJ_MSG->Set__DATA("SR Close & FR Open");
+
+		// ...
 		SCX__ASYNC_TIMER_CTRL x_asyc_timer;
 
 		x_asyc_timer->REGISTER__COUNT_CHANNEL_NAME(sCH__OBJ_TIMER->Get__CHANNEL_NAME());
@@ -433,10 +459,10 @@ RETRY_LOOP:
 		// ...
 		{
 			log_msg = "Fast.Vacuum Checking ...";
+
+			sCH__OBJ_MSG->Set__DATA(log_msg);
 			xLOG_CTRL->WRITE__LOG(log_msg);
 		}
-
-		sCH__OBJ_MSG->Set__DATA("Fast.Vacuum Checking ...");
 
 		while(1)
 		{
@@ -514,10 +540,10 @@ RETRY_LOOP:
 		// ...
 		{
 			log_msg = "VAC_Sensor.On Checking ...";
+
+			sCH__OBJ_MSG->Set__DATA(log_msg);
 			xLOG_CTRL->WRITE__LOG(log_msg);
 		}
-
-		sCH__OBJ_MSG->Set__DATA("VAC_Sensor.On Checking ...");
 
 		// ...
 		SCX__ASYNC_TIMER_CTRL x_asyc_timer;
@@ -576,6 +602,16 @@ RETRY_LOOP:
 int CObj__CHM_FNC
 ::Fnc__HIGH_VAC_PUMP(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm)
 {
+	if(bActive__OBJ_CTRL__TURBO_PUMP)		dEXT_CH__TURBO_PUMP__ACTIVE_INTERLOCK_SKIP_FORELINE_VAC->Set__DATA(STR__ON);
+
+	int r_flag = _Fnc__HIGH_VAC_PUMP(p_variable,p_alarm);
+
+	if(bActive__OBJ_CTRL__TURBO_PUMP)		dEXT_CH__TURBO_PUMP__ACTIVE_INTERLOCK_SKIP_FORELINE_VAC->Set__DATA(STR__OFF);
+	return r_flag;
+}
+int CObj__CHM_FNC
+::_Fnc__HIGH_VAC_PUMP(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm)
+{
 	CString log_msg;
 	int flag;
 
@@ -584,8 +620,7 @@ int CObj__CHM_FNC
 
 	if(bActive__OBJ_CTRL__TURBO_PUMP)
 	{
-		if((dEXT_CH__TURBO_PUMP__POWER_SNS->Check__DATA(STR__ON) > 0)
-		&& (dEXT_CH__TURBO_PUMP__MON_PUMP_STATE->Check__DATA(STR__NORMAL) > 0))
+		if(dEXT_CH__TURBO_PUMP__MON_PUMP_STATE->Check__DATA(STR__NORMAL) > 0)
 		{
 			active__tmp_on = true;
 		}
@@ -597,6 +632,8 @@ int CObj__CHM_FNC
 		// ...
 		{
 			log_msg = "VAC-Valve <- All_Close, In TMP-ON State.";
+
+			sCH__OBJ_MSG->Set__DATA(log_msg);
 			xLOG_CTRL->WRITE__LOG(log_msg);
 		}
 
@@ -610,6 +647,8 @@ int CObj__CHM_FNC
 		// ...
 		{
 			log_msg = "VAC-Valve <- All_Close";
+
+			sCH__OBJ_MSG->Set__DATA(log_msg);
 			xLOG_CTRL->WRITE__LOG(log_msg);
 		}
 
@@ -621,23 +660,21 @@ int CObj__CHM_FNC
 
 RETRY_LOOP:
 
-	if(bActive__OBJ_CTRL__TURBO_PUMP)
-	{
-		dEXT_CH__TURBO_PUMP__ACTIVE_INTERLOCK_SKIP_FORELINE_VAC->Set__DATA(STR__OFF);
-	}
-
 	// Turbo_Pump On : Check 
 	if(bActive__OBJ_CTRL__TURBO_PUMP)
 	{
 		// ...
 		{
 			log_msg = "Turbo_Pump On Check";
+
+			sCH__OBJ_MSG->Set__DATA(log_msg);
 			xLOG_CTRL->WRITE__LOG(log_msg);
 		}
 
-		if((dEXT_CH__TURBO_PUMP__POWER_SNS->Check__DATA(STR__ON) < 0)
-		|| (dEXT_CH__TURBO_PUMP__MON_PUMP_STATE->Check__DATA(STR__NORMAL) < 0))
+		if(dEXT_CH__TURBO_PUMP__MON_PUMP_STATE->Check__DATA(STR__NORMAL) < 0)
 		{
+			sCH__OBJ_MSG->Set__DATA("TMP.On");
+
 			if(Fnc__TURBO_PUMP_ON(p_variable, p_alarm) < 0)
 			{
 				return -21;
@@ -662,11 +699,6 @@ RETRY_LOOP:
 		}
 	}
 
-	if(bActive__OBJ_CTRL__TURBO_PUMP)
-	{
-		dEXT_CH__TURBO_PUMP__ACTIVE_INTERLOCK_SKIP_FORELINE_VAC->Set__DATA(STR__ON);
-	}
-
 	// High-Vacuum Pumping ...
 	{
 		CString ch_data;
@@ -678,9 +710,12 @@ RETRY_LOOP:
 
 		if(bActive__OBJ_CTRL__TURBO_PUMP)
 		{
-			if(pOBJ_CTRL__TURBO_PUMP->Call__OBJECT(CMMD_TMP__FULL_OPEN) < 0)
-				return -101;
+			sCH__OBJ_MSG->Set__DATA("TMP Full Open");
+
+			if(pOBJ_CTRL__TURBO_PUMP->Call__OBJECT(CMMD_TMP__FULL_OPEN) < 0)		return -101;
 		}
+
+		sCH__OBJ_MSG->Set__DATA("Fast.Vac Pressure Checking");
 
 		while(1)
 		{
@@ -720,12 +755,6 @@ RETRY_LOOP:
 
 				if(ref_timeout <= x_asyc_timer->Get__CURRENT_TIME())
 				{
-					if(bActive__OBJ_CTRL__TURBO_PUMP)
-					{
-						dEXT_CH__TURBO_PUMP__ACTIVE_INTERLOCK_SKIP_FORELINE_VAC->Set__DATA(STR__OFF);
-					}
-
-					// ...	
 					int alarm_id = ALID__LOW_VAC_CHECK_COMPLETE_TIMEOUT;
 					CString alarm_msg;
 					CString msg_bff;
@@ -756,17 +785,14 @@ RETRY_LOOP:
 		}
 	}
 
-	if(bActive__OBJ_CTRL__TURBO_PUMP)
-	{
-		dEXT_CH__TURBO_PUMP__ACTIVE_INTERLOCK_SKIP_FORELINE_VAC->Set__DATA(STR__OFF);
-	}
-
 	// Gas-Valve : Proc_Ready ...
 	if(dCH__CFG_PROCESS_READY_CTRL_AFTER_CHM_PUMPING->Check__DATA(STR__YES) > 0)
 	{
 		// ...
 		{
 			log_msg = "GAS-Valve <- Proc_Ready";
+
+			sCH__OBJ_MSG->Set__DATA(log_msg);
 			xLOG_CTRL->WRITE__LOG(log_msg);
 		}
 
@@ -850,8 +876,7 @@ RETRY_LOOP:
 	}
 
 	// 3.2 Turbo Pump Status Check
-	if((dEXT_CH__TURBO_PUMP__POWER_SNS->Check__DATA(STR__ON) > 0)
-	&& (dEXT_CH__TURBO_PUMP__MON_PUMP_STATE->Check__DATA(STR__NORMAL) > 0))
+	if(dEXT_CH__TURBO_PUMP__MON_PUMP_STATE->Check__DATA(STR__NORMAL) > 0)
 	{
 		flag = Call__VAC_VLV__EXHAUST_OPEN(p_variable, p_alarm);
 		if(flag < 0)
@@ -991,7 +1016,8 @@ int CObj__CHM_FNC
 			{
 				if(dEXT_CH__DRY_PUMP__POWER_SNS->Check__DATA(STR__ON) < 0)
 				{
-					pOBJ_CTRL__DRY_PUMP->Abort__OBJECT();
+					if(pOBJ_CTRL__DRY_PUMP->Is__OBJ_BUSY() > 0)
+						pOBJ_CTRL__DRY_PUMP->Abort__OBJECT();
 
 					if(pOBJ_CTRL__DRY_PUMP->Call__OBJECT(CMMD_TMP__PUMP_ON) < 0)
 					{
@@ -1009,7 +1035,8 @@ int CObj__CHM_FNC
 			{
 				if(dEXT_CH__DRY_PUMP__POWER_SNS->Check__DATA(STR__OFF) < 0)
 				{
-					pOBJ_CTRL__DRY_PUMP->Abort__OBJECT();
+					if(pOBJ_CTRL__DRY_PUMP->Is__OBJ_BUSY() > 0)
+						pOBJ_CTRL__DRY_PUMP->Abort__OBJECT();
 
 					if(pOBJ_CTRL__DRY_PUMP->Call__OBJECT(CMMD_TMP__PUMP_OFF) < 0)
 					{
@@ -1024,34 +1051,17 @@ int CObj__CHM_FNC
 
 		// Turbo-Pump ...
 		case MODE__TMP_ON:
-			if(iActive__SIM_MODE > 0)
+			if(bActive__OBJ_CTRL__TURBO_PUMP)
 			{
-				if(bActive__OBJ_CTRL__TURBO_PUMP)
-				{
-					pOBJ_CTRL__TURBO_PUMP->Abort__OBJECT();
-
-					if(pOBJ_CTRL__TURBO_PUMP->Call__OBJECT(CMMD_TMP__PUMP_ON) < 0)
-					{
-						log_msg.Format("Fnc__PUMP_CTRL - Turbo Pump On Failed");
-						xLOG_CTRL->WRITE__LOG(log_msg);
-						
-						return -113;
-					}
-				}
-			}
-			else
-			{
-				if(bActive__OBJ_CTRL__TURBO_PUMP)
-				{
+				if(pOBJ_CTRL__TURBO_PUMP->Is__OBJ_BUSY() > 0)
 					pOBJ_CTRL__TURBO_PUMP->Abort__OBJECT();
 					
-					if(pOBJ_CTRL__TURBO_PUMP->Call__OBJECT(CMMD_TMP__PUMP_ON) < 0)
-					{
-						log_msg.Format("Fnc__PUMP_CTRL - Turbo Pump On Failed");
-						xLOG_CTRL->WRITE__LOG(log_msg);
+				if(pOBJ_CTRL__TURBO_PUMP->Call__OBJECT(CMMD_TMP__PUMP_ON) < 0)
+				{
+					log_msg.Format("Fnc__PUMP_CTRL - Turbo Pump On Failed");
+					xLOG_CTRL->WRITE__LOG(log_msg);
 
-						return -113;
-					}
+					return -113;
 				}
 			}
 			break;
@@ -1059,7 +1069,8 @@ int CObj__CHM_FNC
 		case MODE__TMP_OFF:
 			if(bActive__OBJ_CTRL__TURBO_PUMP)
 			{
-				pOBJ_CTRL__TURBO_PUMP->Abort__OBJECT();
+				if(pOBJ_CTRL__TURBO_PUMP->Is__OBJ_BUSY() > 0)
+					pOBJ_CTRL__TURBO_PUMP->Abort__OBJECT();
 
 				if(pOBJ_CTRL__TURBO_PUMP->Call__OBJECT(CMMD_TMP__PUMP_OFF) < 0)
 				{

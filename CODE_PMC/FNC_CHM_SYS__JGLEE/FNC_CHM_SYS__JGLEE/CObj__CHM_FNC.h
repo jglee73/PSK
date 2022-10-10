@@ -283,6 +283,7 @@ private:
 
 	int Check__LOW_VAC_PUMP();
 	int Fnc__LOW_VAC_PUMP(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm, const int high_vac_flag,const int purge_flag);
+	int _Fnc__LOW_VAC_PUMP(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm, const int high_vac_flag,const int purge_flag);
 	
 	int _Fnc__SOFT_LOW_VAC(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm, const int purge_flag);
 
@@ -291,6 +292,7 @@ private:
 	int Call__HIGH_VAC_PUMP(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 
 	int Fnc__HIGH_VAC_PUMP(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
+	int _Fnc__HIGH_VAC_PUMP(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 
 	//
 	CString sMODE__PROC_READY;
@@ -389,6 +391,11 @@ private:
 
 	// MON Function .....
 	void Mon__PRESSURE_STATUS(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm);
+
+
+	// OBJ_VAT.CTRL ...
+	int VAT__CALL_OBJECT(const CString& obj_mode);
+	int VAT__RUN_OBJECT(const CString& obj_mode);
 	//
 
 

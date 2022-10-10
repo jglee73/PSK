@@ -44,6 +44,7 @@ int CObj__TMP_IO
 	double cur__di_pcw__err_sec = 0;
 
 	int count_error__foreline_vlv_open = 0;
+	int count_error__tmp_not_nromal = 0;
 
 	bool active__tmp_init_check = true;
 
@@ -591,13 +592,62 @@ int CObj__TMP_IO
 								p_alarm->Post__ALARM_With_MESSAGE(alarm_id, alm_msg);
 							}
 
-							pOBJ_CTRL__VAT->Abort__OBJECT();
-							pOBJ_CTRL__VAT->Run__OBJECT("CLOSE");
+							Fnc_Interlock__APC_CLOSE(p_variable, p_alarm);
 						}
 					}
 				}
 
 				// ...
+			}
+		}
+
+		if(sCH__MON_PUMP_STATE->Check__DATA(STR__NORMAL) > 0)
+		{
+			count_error__tmp_not_nromal = 0;
+		}
+		else
+		{
+			count_error__tmp_not_nromal++;
+
+			if(count_error__tmp_not_nromal >= 10)
+			{
+				count_error__tmp_not_nromal = 0;
+
+				if(bActive__VAT_USE)
+				{
+					ch_data = sEXT_CH__VAT_MON_POSITION->Get__STRING();
+					double cur_pos = atof(ch_data);
+
+					if(cur_pos > 0.0)
+					{
+						// ...
+						{
+							int alarm_id = ALID__TMP_STATE_NOT_NORMAL;
+							CString alm_msg;
+							CString alm_bff;
+							CString r_act;
+
+							alm_msg  = "The state of TMP is not \"NORMAL \n";
+							alm_msg += "\n";
+
+							alm_msg += "APC-Valve muse be closed ! \n";
+							
+							alm_bff.Format(" * Current APC valve position is %.1f %%. \m", cur_pos);
+							alm_msg += alm_bff;
+							alm_msg += "\n";
+
+							alm_bff.Format(" * %s <- %s \n", 
+											sCH__MON_PUMP_STATE->Get__CHANNEL_NAME(),
+											sCH__MON_PUMP_STATE->Get__STRING());
+							alm_msg += alm_bff;
+
+							p_alarm->Check__ALARM(alarm_id, r_act);
+							p_alarm->Post__ALARM_With_MESSAGE(alarm_id, alm_msg);
+						}
+
+						Fnc_Interlock__APC_CLOSE(p_variable, p_alarm);
+					}
+				}
 			}
 		}
 

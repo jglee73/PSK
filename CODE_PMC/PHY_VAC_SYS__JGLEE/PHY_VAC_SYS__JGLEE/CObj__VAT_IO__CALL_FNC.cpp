@@ -1,5 +1,7 @@
 #include "StdAfx.h"
 #include "CObj__VAT_IO.h"
+
+#include "CObj__VAT_IO__ALID.h"
 #include "CObj__VAT_IO__DEF.h"
 
 #include "CCommon_Utility.h"
@@ -52,6 +54,13 @@ int CObj__VAT_IO
 		}
 	}
 
+	// ...
+	double ref_pos = 0.1;
+	double cfg__timeout_sec = aCH__CFG_TIMEOUT_CLOSE->Get__VALUE();
+
+	SCX__ASYNC_TIMER_CTRL x_timer_ctrl;
+	x_timer_ctrl->START__COUNT_DOWN(cfg__timeout_sec);
+
 	while(1)
 	{
 		if(p_variable->Check__CTRL_ABORT() > 0)
@@ -59,9 +68,36 @@ int CObj__VAT_IO
 			return -101;
 		}
 
+		if(x_timer_ctrl->Get__CURRENT_TIME() < 0.1)
+		{
+			// Alarm ...
+			{
+				int alm_id = ALID__VAT_CLOSE_TIMEOUT;
+				CString alm_msg;
+				CString alm_bff;
+				CString r_act;
+
+				alm_bff.Format("Config VAT-Close timeout is %.0f (sec) \n", cfg__timeout_sec);
+				alm_msg += alm_bff;
+
+				alm_bff.Format("VAT-Valve position must be less than %.1f %% \n", ref_pos);
+				alm_msg += alm_bff;
+				alm_msg += "\n";
+
+				alm_bff.Format(" * %s <- %s \n",
+								sCH__MON_POSITION->Get__CHANNEL_NAME(),				
+								sCH__MON_POSITION->Get__STRING());
+				alm_msg += alm_bff;
+
+				p_alarm->Check__ALARM(alm_id, r_act);
+				p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
+			}
+			return -102;
+		}
+
 		CString ch_data = sCH__MON_POSITION->Get__STRING();
 		double cur_pos = atof(ch_data);
-		if(cur_pos < 0.1)		break;
+		if(cur_pos < ref_pos)		break;
 
 		Sleep(10);
 	}
@@ -142,6 +178,13 @@ int CObj__VAT_IO
 		}
 	}
 
+	// ...
+	double ref_pos = 99.0;
+	double cfg__timeout_sec = aCH__CFG_TIMEOUT_OPEN->Get__VALUE();
+
+	SCX__ASYNC_TIMER_CTRL x_timer_ctrl;
+	x_timer_ctrl->START__COUNT_DOWN(cfg__timeout_sec);
+
 	while(1)
 	{
 		if(p_variable->Check__CTRL_ABORT() > 0)
@@ -149,9 +192,36 @@ int CObj__VAT_IO
 			return -101;
 		}
 
+		if(x_timer_ctrl->Get__CURRENT_TIME() < 0.1)
+		{
+			// Alarm ...
+			{
+				int alm_id = ALID__VAT_OPEN_TIMEOUT;
+				CString alm_msg;
+				CString alm_bff;
+				CString r_act;
+
+				alm_bff.Format("Config VAT-Open timeout is %.0f (sec) \n", cfg__timeout_sec);
+				alm_msg += alm_bff;
+
+				alm_bff.Format("VAT-Valve position must be more than %.1f %% \n", ref_pos);
+				alm_msg += alm_bff;
+				alm_msg += "\n";
+
+				alm_bff.Format(" * %s <- %s \n",
+								sCH__MON_POSITION->Get__CHANNEL_NAME(),				
+								sCH__MON_POSITION->Get__STRING());
+				alm_msg += alm_bff;
+
+				p_alarm->Check__ALARM(alm_id, r_act);
+				p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
+			}
+			return -102;
+		}
+
 		CString ch_data = sCH__MON_POSITION->Get__STRING();
 		double cur_pos = atof(ch_data);
-		if(cur_pos > 99.0)		break;
+		if(cur_pos > ref_pos)		break;
 
 		Sleep(10);
 	}

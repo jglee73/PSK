@@ -449,6 +449,21 @@ int CObj__TMP_IO::__DEFINE__ALARM(p_alarm)
 		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
 	}
 
+	// ...
+	{
+		alarm_id = ALID__TMP_STATE_NOT_NORMAL;
+
+		alarm_title  = title;
+		alarm_title += "TM 상태가 Normal 아닙니다 !";
+
+		alarm_msg = "TMP 상부의 모든 Valve들을 Close 시킵니다. \n";
+
+		l_act.RemoveAll();
+		l_act.Add(ACT__CHECK);
+
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
+
 	return 1;
 }
 

@@ -102,7 +102,6 @@ int CObj__STEP_STRIP::_Fnc__END()
 	{
 		APC_OBJ__Call_OPEN();
 	}
-
 	return 1;
 }
 

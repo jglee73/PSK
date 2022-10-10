@@ -159,6 +159,7 @@ private:
 	// OBJ APC ...
 	int APC_OBJ__Start_MODE(const CString& obj_mode,const CString& para_data, const double para_hold_sec,const double para_hold_pos);
 	int APC_OBJ__Start_OPEN();	
+	int APC_OBJ__Call_OPEN();	
 	int APC_OBJ__Check_ERROR();
 	int APC_OBJ__Check_ABORTED();
 	int APC_OBJ__Check_STABLE();

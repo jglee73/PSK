@@ -22,6 +22,8 @@ int CObj__STEP_METAL
 		aEXT_CH__APC_OBJ__PARA_POSITION->Set__VALUE(para_hold_pos);
 	}
 
+	if(pOBJ_CTRL__APC->Is__OBJ_BUSY() > 0)		pOBJ_CTRL__APC->Abort__OBJECT();
+
 	return pOBJ_CTRL__APC->Run__OBJECT(obj_mode);
 }
 int CObj__STEP_METAL
@@ -29,9 +31,24 @@ int CObj__STEP_METAL
 {
 	if(!bActive__OBJ_CTRL__APC)						return 1;
 
+	if(pOBJ_CTRL__APC->Is__OBJ_BUSY() > 0)		pOBJ_CTRL__APC->Abort__OBJECT();
+
+	// ...
 	CString obj_mode = _APC_CMD__OPEN;
 
 	return pOBJ_CTRL__APC->Run__OBJECT(obj_mode);
+}
+int CObj__STEP_METAL
+::APC_OBJ__Call_OPEN()
+{
+	if(!bActive__OBJ_CTRL__APC)						return 1;
+
+	if(pOBJ_CTRL__APC->Is__OBJ_BUSY() > 0)		pOBJ_CTRL__APC->Abort__OBJECT();
+
+	// ...
+	CString obj_mode = _APC_CMD__OPEN;
+
+	return pOBJ_CTRL__APC->Call__OBJECT(obj_mode);
 }
 
 int CObj__STEP_METAL::APC_OBJ__Check_ERROR()

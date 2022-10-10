@@ -112,9 +112,8 @@ int CObj__STEP_METAL::_Fnc__END()
 
 	// APC.CTRL ...
 	{
-		APC_OBJ__Start_OPEN();
+		APC_OBJ__Call_OPEN();
 	}
-
 	return 1;
 }
 

@@ -288,6 +288,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\CObj__CHM_FNC__OBJ_VAT_CTRL.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\CObj__CHM_FNC__SUB_FNC.cpp"
 					>
 				</File>
