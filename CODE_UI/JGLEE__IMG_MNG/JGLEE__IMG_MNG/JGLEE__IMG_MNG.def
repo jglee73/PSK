@@ -1,6 +1,0 @@
-; JGLEE__IMG_MNG.def : Declares the module parameters for the DLL.
-
-LIBRARY      "JGLEE__IMG_MNG"
-
-EXPORTS
-    ; Explicit exports can go here
