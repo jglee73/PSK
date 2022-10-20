@@ -257,7 +257,7 @@ private:
 
 	// ...
 	int  Drv__RECV_COMMAND(const CString& var_name, const CString& str_cmmd,const CString& str_para, CString& recv_data);
-	int  Drv__SEND_COMMAND(const CString& var_name, const CString& str_cmmd,const CString& str_para);
+	int  Drv__SEND_COMMAND(const CString& var_name, const CString& str_cmmd,const CString& str_para, bool Wait_flag);
 
 	// ...
 	int  Fnc__HexToDec(const CString& str_dec);

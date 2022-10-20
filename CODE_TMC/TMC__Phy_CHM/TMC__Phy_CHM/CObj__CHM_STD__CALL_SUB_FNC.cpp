@@ -20,18 +20,27 @@ int  CObj__CHM_STD
 int  CObj__CHM_STD
 ::Check__PUMP_ALL_VLV__CLOSE(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
 {
-	if(doEXT_CH__FAST_PUMP_VLV__SET->Check__DATA(STR__CLOSE) < 0)			return -1;
-
+	if(doEXT_CH__FAST_PUMP_VLV__SET->Check__DATA(STR__CLOSE) < 0)
+	{
+		return -1;
+	}
 	if(bActive__SOFT_PUMP_VLV__SET)
 	{
 		if(doEXT_CH__SOFT_PUMP_VLV__SET->Check__DATA(STR__CLOSE) < 0)		return -2;
 	}
 
 	// SR.VLV CHECK ...
-	if(Check__SR_VLV_CLOSE(p_variable,p_alarm, false) < 0)					return -11;
-
+	if((bActive__DI_SR_VLV_CLOSE)
+	|| (bActive__DI_SR_VLV_OPEN))
+	{
+		if(Check__SR_VLV_CLOSE(p_variable,p_alarm, false) < 0)				return -11;
+	}
 	// FR.VLV CHECK ...
-	if(Check__FR_VLV_CLOSE(p_variable,p_alarm, false) < 0)					return -21;
+	if((bActive__DI_FR_VLV_CLOSE)
+	|| (bActive__DI_FR_VLV_OPEN))
+	{
+		if(Check__FR_VLV_CLOSE(p_variable,p_alarm, false) < 0)				return -21;
+	}
 
 	return 1;
 }
@@ -39,18 +48,27 @@ int  CObj__CHM_STD
 int  CObj__CHM_STD
 ::Check__PUMP_VLV__OPEN(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
 {
-	if(doEXT_CH__FAST_PUMP_VLV__SET->Check__DATA(STR__OPEN) > 0)			return 1;
-
+	if(doEXT_CH__FAST_PUMP_VLV__SET->Check__DATA(STR__OPEN) > 0)
+	{
+		return 1;
+	}
 	if(bActive__SOFT_PUMP_VLV__SET)
 	{
 		if(doEXT_CH__SOFT_PUMP_VLV__SET->Check__DATA(STR__OPEN) > 0)		return 2;
 	}
 
 	// SR.VLV CHECK ...
-	if(Check__SR_VLV_OPEN(p_variable,p_alarm, false) > 0)					return 11;
-
+	if((bActive__DI_SR_VLV_CLOSE)
+	|| (bActive__DI_SR_VLV_OPEN))
+	{
+		if(Check__SR_VLV_OPEN(p_variable,p_alarm, false) > 0)				return 11;
+	}
 	// FR.VLV CHECK ...
-	if(Check__FR_VLV_OPEN(p_variable,p_alarm, false) > 0)					return 21;
+	if((bActive__DI_FR_VLV_CLOSE)
+	|| (bActive__DI_FR_VLV_OPEN))
+	{
+		if(Check__FR_VLV_OPEN(p_variable,p_alarm, false) > 0)				return 21;
+	}
 
 	return -1;
 }
@@ -181,7 +199,10 @@ int  CObj__CHM_STD
 		doEXT_CH__SOFT_PUMP_VLV__SET->Set__DATA(STR__CLOSE);
 	}
 
-	doEXT_CH__BALLAST_VALVE_SET->Set__DATA(STR__CLOSE);
+	if(bActive__DO_BALLAST_VALVE_SET)
+	{
+		doEXT_CH__DO_BALLAST_VALVE_SET->Set__DATA(STR__CLOSE);
+	}
 
 	if(flag_close < 0)
 	{
@@ -238,12 +259,6 @@ int  CObj__CHM_STD
 	}
 
 	return Check__SR_VLV_OPEN(p_variable,p_alarm, true);
-}
-int  CObj__CHM_STD
-::Fnc__PUMP_BALLAST_VLV__OPEN(CII_OBJECT__ALARM* p_alarm)
-{
-	doEXT_CH__BALLAST_VALVE_SET->Set__DATA(STR__OPEN);
-	return 1;
 }
 
 int  CObj__CHM_STD
@@ -335,19 +350,31 @@ LOOP_RETRY:
 
 		// SR.VLV ...
 		{
+			int count__sensor_check = 0;
+
 			if(bActive__DI_SR_VLV_CLOSE)
 			{
+				count__sensor_check++;
+
 				if(diEXT_CH__DI_SR_VLV_CLOSE->Check__DATA(STR__ON) < 0)			active__sr_close = false;
 			}
 			if(bActive__DI_SR_VLV_OPEN)
 			{
-				if(diEXT_CH__DI_SR_VLV_OPEN->Check__DATA(STR__OFF) < 0)			active__sr_close = false;
+				count__sensor_check++;
+
+				if(diEXT_CH__DI_SR_VLV_OPEN->Check__DATA(STR__ON) > 0)			active__sr_close = false;
 			}
+
+			if(count__sensor_check == 0)		return 1;
 		}
 
-		if(active__sr_close)
+		if(active__close_check)
 		{
-			return 1;
+			if(active__sr_close)			return 1;
+		}
+		else
+		{
+			if(!active__sr_close)			return 1;
 		}
 		
 		if(active__wait_check)
@@ -430,19 +457,31 @@ LOOP_RETRY:
 
 		// FR.VLV ...
 		{
+			int count__sensor_check = 0;
+
 			if(bActive__DI_FR_VLV_CLOSE)
 			{
+				count__sensor_check++;
+
 				if(diEXT_CH__DI_FR_VLV_CLOSE->Check__DATA(STR__ON) < 0)			active__fr_close = false;
 			}
 			if(bActive__DI_FR_VLV_OPEN)
 			{
-				if(diEXT_CH__DI_FR_VLV_OPEN->Check__DATA(STR__OFF) < 0)			active__fr_close = false;
+				count__sensor_check++;
+
+				if(diEXT_CH__DI_FR_VLV_OPEN->Check__DATA(STR__ON) > 0)			active__fr_close = false;
 			}
+
+			if(count__sensor_check == 0)		return 1;
 		}
 
-		if(active__fr_close)
+		if(active__close_check)
 		{
-			return 1;
+			if(active__fr_close)			return 1;
+		}
+		else
+		{
+			if(!active__fr_close)			return 1;
 		}
 
 		if(active__wait_check)

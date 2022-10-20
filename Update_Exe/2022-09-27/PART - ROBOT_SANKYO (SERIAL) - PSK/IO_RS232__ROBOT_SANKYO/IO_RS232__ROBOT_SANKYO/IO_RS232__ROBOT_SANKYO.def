@@ -1,6 +1,0 @@
-; IO_RS232__ROBOT_SANKYO.def : Declares the module parameters for the DLL.
-
-LIBRARY      "IO_RS232__ROBOT_SANKYO"
-
-EXPORTS
-    ; Explicit exports can go here

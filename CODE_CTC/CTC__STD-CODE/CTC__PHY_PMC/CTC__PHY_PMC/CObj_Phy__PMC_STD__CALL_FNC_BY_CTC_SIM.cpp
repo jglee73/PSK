@@ -469,19 +469,16 @@ int  CObj_Phy__PMC_STD
 					xCH_PRE__LPx_CID->Set__DATA(var_data);
 				}
 
-				// ...
-				{
-					Datalog__Write_Lot_Proc_Slot_Start(i,slot_lot_count++,pmc_slot_id,db_info,pm_log_path);
+				Datalog__Write_Lot_Proc_Slot_Start(i,slot_lot_count++,pmc_slot_id,db_info,pm_log_path);
 
-					if(fa_report_flag > 0)
-					{
-						xSCH_MATERIAL_CTRL->Process_Start__PMC_WITH_SLOT_EX(material_port_id,
-																			material_slot_id,
-																			iPMx_ID,
-																			pmc_slot_id,
-																			material_recipe,
-																			pm_log_path);
-					}
+				if(fa_report_flag > 0)
+				{
+					xSCH_MATERIAL_CTRL->Process_Start__PMC_WITH_SLOT_EX(material_port_id,
+																		material_slot_id,
+																		iPMx_ID,
+																		pmc_slot_id,
+																		material_recipe,
+																		pm_log_path);
 				}
 
 				xCH__SLOT_STATUS[i]->Set__DATA("PROCESSING");

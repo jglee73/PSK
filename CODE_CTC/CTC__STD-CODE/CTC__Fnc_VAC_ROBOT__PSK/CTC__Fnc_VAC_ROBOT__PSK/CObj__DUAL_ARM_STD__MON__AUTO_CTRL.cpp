@@ -4470,7 +4470,8 @@ _AUTO_CTRL__RB_PMx_WITH_DUAL_TYPE(CII_OBJECT__VARIABLE *p_variable,
 					else
 					{
 						if((dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__ALL) > 0)
-						|| (dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PROCESS) > 0))
+						|| (dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PROCESS) > 0)
+						|| (dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PATH) > 0))
 						{
 							active__pm_constraint = false;
 						}
@@ -6320,6 +6321,32 @@ _SCH_CHECK__PMo_RB(const bool active__pm_constaint)
 		return -11;
 	}
 
+	if(xTIMER__WAFER_ON_ARM->Get__CURRENT_TIME() > 0.1)
+	{
+		CString sch_name;
+		CString pm_name;
+		CString pm_slot = "1";
+
+		for(int i=0; i<iPMx_SIZE; i++)
+		{
+			pm_name.Format("PM%1d",i+1);
+			sch_name.Format("%s-%s", pm_name,pm_slot);
+
+			if(PMx__Check_Empty__SlotStatus(i) > 0)							continue;
+			if(xSCH_MATERIAL_CTRL->Check__NEXT_PROCESS(sch_name) > 0)		continue;
+
+			if(active__pm_constaint)
+			{
+				if(!VAC_RB__Check_Empty__Arm_Type_With_PMx_Constraint(empty_arm, pm_name))
+				{
+					continue;
+				}
+			}
+			
+			return 1;
+		}
+	}
+
 	// ...
 	CString sch_name;
 	CString pm_name;
@@ -6393,10 +6420,16 @@ _AUTO_CTRL__PMo_RB_WITH_DUAL_TYPE(CII_OBJECT__VARIABLE *p_variable,
 	{
 		if(VAC_RB__Check_Occupied__A_Arm() > 0)
 		{
+			CString check_arm = _ARM__A;
+
+			if(xSCH_MATERIAL_CTRL->Check__NEXT_PROCESS(check_arm) > 0)				NEXT__LOOP;
 			if(xCH__VAC_RB__SLOT01_STATUS->Check__DATA(STR__MAPPED) > 0)			NEXT__LOOP;
 		}
 		if(VAC_RB__Check_Occupied__B_Arm() > 0)
 		{
+			CString check_arm = _ARM__B;
+
+			if(xSCH_MATERIAL_CTRL->Check__NEXT_PROCESS(check_arm) > 0)				NEXT__LOOP;
 			if(xCH__VAC_RB__SLOT02_STATUS->Check__DATA(STR__MAPPED) > 0)			NEXT__LOOP;
 		}
 	}
@@ -6576,26 +6609,6 @@ _AUTO_CTRL__PMo_RB_WITH_DUAL_TYPE(CII_OBJECT__VARIABLE *p_variable,
 				continue;
 			}
 
-			if(dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PROCESS) > 0)
-			{
-				int pmc__step_count = xSCH_MATERIAL_CTRL->SCH_DB_INFO__Get_Current_Step_Count(sch_name);
-
-				if(VAC_RB__Check_Occupied__A_Arm() > 0)
-				{
-					CString check_arm = _ARM__A;
-
-					int arm__step_count = xSCH_MATERIAL_CTRL->SCH_DB_INFO__Get_Current_Step_Count(check_arm);
-					if(arm__step_count != pmc__step_count)			continue;
-				}
-				if(VAC_RB__Check_Occupied__B_Arm() > 0)
-				{
-					CString check_arm = _ARM__B;
-
-					int arm__step_count = xSCH_MATERIAL_CTRL->SCH_DB_INFO__Get_Current_Step_Count(check_arm);
-					if(arm__step_count != pmc__step_count)			continue;
-				}
-			}
-
 			if(xEXT_CH__CFG__PMx_USE[i]->Check__DATA(STR__ENABLE) > 0)
 			{
 				if(PMx__Is_Available(i) < 0)		continue;
@@ -6614,6 +6627,29 @@ _AUTO_CTRL__PMo_RB_WITH_DUAL_TYPE(CII_OBJECT__VARIABLE *p_variable,
 			{
 				continue;
 			}
+
+			/*
+			if((dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PATH) > 0)
+			|| (dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PROCESS) > 0))
+			{
+				int pmc__step_count = xSCH_MATERIAL_CTRL->SCH_DB_INFO__Get_Current_Step_Count(sch_name);
+
+				if(VAC_RB__Check_Occupied__A_Arm() > 0)
+				{
+					CString check_arm = _ARM__A;
+
+					int arm__step_count = xSCH_MATERIAL_CTRL->SCH_DB_INFO__Get_Current_Step_Count(check_arm);
+					if(arm__step_count != pmc__step_count)			continue;
+				}
+				if(VAC_RB__Check_Occupied__B_Arm() > 0)
+				{
+					CString check_arm = _ARM__B;
+
+					int arm__step_count = xSCH_MATERIAL_CTRL->SCH_DB_INFO__Get_Current_Step_Count(check_arm);
+					if(arm__step_count != pmc__step_count)			continue;
+				}
+			}
+			*/
 
 			int pm_index = pm_id - 1;
 			l__pm_index.Add(pm_index);
@@ -6710,6 +6746,10 @@ _AUTO_CTRL__PMo_RB_WITH_DUAL_TYPE(CII_OBJECT__VARIABLE *p_variable,
 			{
 				xSCH_MATERIAL_CTRL->Pick__From_MODULE(sch_name, empty_arm);
 				xSCH_MATERIAL_CTRL->Set__MATERIAL_STATUS(empty_arm, "PROCESSED");
+
+				double cfg__limit_sec = aCH__CFG_WAFER_WAITING_LIMIT_TIME_ON_ARM->Get__VALUE();
+				xTIMER__WAFER_ON_ARM->REGISTER__COUNT_CHANNEL_NAME(sCH__CUR_WAFER_WAITING_LIMIT_TIME_ON_ARM->Get__CHANNEL_NAME());
+				xTIMER__WAFER_ON_ARM->START__COUNT_DOWN(cfg__limit_sec);
 			}
 
 			// ...
@@ -7163,7 +7203,8 @@ _AUTO_CTRL__PMx_RB_WITH_DUAL_TYPE(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__
 		bool active__pm_to_pm_constraint = true;
 
 		if((dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__ALL) > 0)
-		|| (dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PROCESS) > 0))
+		|| (dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PROCESS) > 0)
+		|| (dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PATH) > 0))
 		{
 			if(VAC_RB__Get_Empty__Arm_Type_From_All(arm_type) < 0)
 			{
@@ -7271,7 +7312,7 @@ _AUTO_CTRL__PMx_RB_WITH_DUAL_TYPE(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__
 						continue;
 					}
 
-					if(dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PROCESS) > 0)
+					if(dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PATH) > 0)
 					{
 						int pmc__step_count = xSCH_MATERIAL_CTRL->SCH_DB_INFO__Get_Current_Step_Count(sch_name);
 
@@ -7288,6 +7329,90 @@ _AUTO_CTRL__PMx_RB_WITH_DUAL_TYPE(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__
 
 							int arm__step_count = xSCH_MATERIAL_CTRL->SCH_DB_INFO__Get_Current_Step_Count(check_arm);
 							if(arm__step_count != pmc__step_count)			continue;
+						}
+					}
+					else if(dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PROCESS) > 0)
+					{
+						CString cur__pmc_name;
+						CString cur__pmc_rcp;
+
+						xSCH_MATERIAL_CTRL->Get__Last_Processing_Info(sch_name, cur__pmc_name,cur__pmc_rcp);
+
+						if(VAC_RB__Check_Occupied__A_Arm() > 0)
+						{
+							CString check_arm = _ARM__A;
+							CString arm__pmc_name;
+							CString arm__pmc_rcp;
+
+							xSCH_MATERIAL_CTRL->Get__Last_Processing_Info(check_arm, arm__pmc_name,arm__pmc_rcp);
+							if(cur__pmc_rcp != arm__pmc_rcp)				continue;;
+						}
+						if(VAC_RB__Check_Occupied__B_Arm() > 0)
+						{
+							CString check_arm = _ARM__B;
+							CString arm__pmc_name;
+							CString arm__pmc_rcp;
+
+							xSCH_MATERIAL_CTRL->Get__Last_Processing_Info(check_arm, arm__pmc_name,arm__pmc_rcp);
+							if(cur__pmc_rcp != arm__pmc_rcp)				continue;;
+						}
+
+						// ...
+						{
+							CString log_msg;
+							CString log_bff;
+
+							log_msg = "_AUTO_CTRL__PMx_RB_WITH_DUAL_TYPE() ... \n";
+
+							// ...
+							{
+								CString cur__pmc_name;
+								CString cur__pmc_rcp;
+
+								xSCH_MATERIAL_CTRL->Get__Last_Processing_Info(sch_name, cur__pmc_name,cur__pmc_rcp);
+
+								log_bff.Format("sch_name <- %s \n", sch_name);
+								log_msg += log_bff;
+								log_bff.Format(" * pmc_name <- [%s] \n", cur__pmc_name);
+								log_msg += log_bff;
+								log_bff.Format(" * pmc_rcp  <- [%s] \n", cur__pmc_rcp);
+								log_msg += log_bff;
+							}
+
+							if(VAC_RB__Check_Occupied__A_Arm() > 0)
+							{
+								CString check_arm = _ARM__A;
+								CString arm__pmc_name;
+								CString arm__pmc_rcp;
+
+								xSCH_MATERIAL_CTRL->Get__Last_Processing_Info(check_arm, arm__pmc_name,arm__pmc_rcp);
+
+								log_bff.Format("sch_name <- %s \n", check_arm);
+								log_msg += log_bff;
+								log_bff.Format(" * pmc_name <- [%s] \n", arm__pmc_name);
+								log_msg += log_bff;
+								log_bff.Format(" * pmc_rcp  <- [%s] \n", arm__pmc_rcp);
+								log_msg += log_bff;
+							}
+							if(VAC_RB__Check_Occupied__B_Arm() > 0)
+							{
+								CString check_arm = _ARM__B;
+								CString arm__pmc_name;
+								CString arm__pmc_rcp;
+
+								xSCH_MATERIAL_CTRL->Get__Last_Processing_Info(check_arm, arm__pmc_name,arm__pmc_rcp);
+
+								log_bff.Format("sch_name <- %s \n", check_arm);
+								log_msg += log_bff;
+								log_bff.Format(" * pmc_name <- [%s] \n", arm__pmc_name);
+								log_msg += log_bff;
+								log_bff.Format(" * pmc_rcp  <- [%s] \n", arm__pmc_rcp);
+								log_msg += log_bff;
+							}
+
+							log_msg += "\n";
+
+							printf(log_msg);
 						}
 					}
 
@@ -7461,7 +7586,7 @@ _AUTO_CTRL__RB_LBo__ONLY_MODE_WITH_DUAL_TYPE(CII_OBJECT__VARIABLE *p_variable, C
 {
 	if(VAC_RB__Check_Occupied__Dual_Arm() < 0)
 	{
-		if(_SCH_CHECK__PMo_RB(true) > 0)			NEXT__LOOP;
+		if(_SCH_CHECK__PMo_RB(false) > 0)			NEXT__LOOP;
 	}
 
 	// ...

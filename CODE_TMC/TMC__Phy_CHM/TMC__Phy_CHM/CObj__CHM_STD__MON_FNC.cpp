@@ -250,7 +250,7 @@ void CObj__CHM_STD
 
 		// ...
 		{
-			if(diEXT_CH__ATM_SENSOR->Check__DATA(sDATA__ATM_ON) > 0)			dCH__TMC_CMH_VAC_SNS->Set__DATA(STR__OFF);
+			if(diEXT_CH__VAC_SENSOR->Check__DATA(sDATA__VAC_ON) > 0)			dCH__TMC_CMH_VAC_SNS->Set__DATA(STR__OFF);
 			else																dCH__TMC_CMH_VAC_SNS->Set__DATA(STR__ON);
 		}
 
@@ -264,39 +264,136 @@ void CObj__CHM_STD
 void CObj__CHM_STD
 ::Mon__BALLAST_CTRL(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM *p_alarm)
 {
-	CString ch_data;
-
-
+	bool active__ballast_ctrl = false;
+	int i;
+	
 	while(1)
 	{
 		p_variable->Wait__SINGLE_OBJECT(0.1);
 
 
+		// ...
+		bool active__chm_pumping = true;
+
+		// Check : Chamber Pumping ...
+		{
+			if(dCH__TMC_CHM_PRESSURE_STATUS->Check__DATA(STR__VAC) < 0)
+			{
+				active__chm_pumping = false;
+			}
+			if(sEXT_CH__MON_PUMP_RUN_STS->Check__DATA(STR__ON) < 0)
+			{
+				active__chm_pumping = false;
+			}
+			if(sCH__PUMP_VLV_OPEN_FLAG->Check__DATA(STR__YES) < 0)
+			{
+				active__chm_pumping = false;
+			}
+			if(dCH__MON_PUMPING_SEQ_ACTIVE->Check__DATA(STR__ON) > 0)
+			{
+				active__chm_pumping = false;
+			}
+
+			if(!active__chm_pumping)
+			{
+				Fnc__BALLAST_CLOSE();
+			}
+		}
+
+		if(iActive__SIM_MODE > 0)
+		{
+			double cur__pressure_torr = 0.0;
+
+			if(bActive__AO_BALLAST_PRESSURE_TORR)		cur__pressure_torr = aoEXT_CH__AO_BALLAST_PRESSURE_TORR->Get__VALUE();
+			if(bActive__AI_BALLAST_PRESSURE_TORR)		aoEXT_CH__AI_BALLAST_PRESSURE_TORR->Set__VALUE(cur__pressure_torr);
+		}
+
 		if(dCH__CFG_TM_BALLAST_CONTROL->Check__DATA(STR__DISABLE) > 0)
 		{
+			if(active__ballast_ctrl)
+			{
+				active__ballast_ctrl = false;
+
+				Fnc__BALLAST_CLOSE();
+			}
 			continue;
+		}
+		else
+		{
+			active__ballast_ctrl = true;
+		
+		}
+
+		if(active__chm_pumping)
+		{
+			bool active__ballast_interlock = false;
+
+			// Check : SV Open ...
+			{
+				int count__pm_open = 0;
+				int count__ll_open = 0;
+
+				for(i=0; i<iSIZE__PMx_SLOT_VLV; i++)
+				{
+					if(dEXT_CH__PMx_SLOT_VLV_X[i]->Check__DATA(STR__OPEN) > 0)		count__pm_open++;
+				}
+				for(i=0; i<iSIZE__LLx_SLOT_VLV; i++)
+				{
+					if(dEXT_CH__LLx_SLOT_VLV_X[i]->Check__DATA(STR__OPEN) > 0)		count__ll_open++;
+				}
+
+				if((count__pm_open > 0)
+				|| (count__ll_open > 0))
+				{
+					if(dCH__CFG_TM_BALLAST_TRANSFER_FLOW->Check__DATA(STR__YES) < 0)		active__ballast_interlock = true;
+				}
+				else
+				{
+					if(dCH__CFG_TM_BALLAST_IDLE_FLOW->Check__DATA(STR__YES) < 0)			active__ballast_interlock = true;
+				}
+			}
+
+			// Check : Wafer Transfer ...
+			if(dCH__PARA_BALLAST_CTRL_ACTIVE->Check__DATA(STR__ON) > 0)
+			{
+				if(dCH__CFG_TM_BALLAST_TRANSFER_FLOW->Check__DATA(STR__YES) < 0)			active__ballast_interlock = true;
+			}
+
+			if(active__ballast_interlock)
+			{
+				Fnc__BALLAST_CLOSE();
+			}
+			else
+			{
+				CString cfg__ctrl_mode = dCH__CFG_TM_BALLAST_MODE->Get__STRING();
+
+				if(cfg__ctrl_mode.CompareNoCase(STR__VALVE) == 0)
+				{
+					if(bActive__DO_BALLAST_VALVE_SET)			doEXT_CH__DO_BALLAST_VALVE_SET->Set__DATA(STR__OPEN);	
+				}
+				else if(cfg__ctrl_mode.CompareNoCase(STR__PRESSURE_SET) == 0)
+				{
+					double cfg__pressure_mtorr = aCH__CFG_TM_BALLAST_N2_PRESSURE_mTORR->Get__VALUE();
+
+					if(bActive__DO_BALLAST_VALVE_SET)			doEXT_CH__DO_BALLAST_VALVE_SET->Set__DATA(STR__OPEN);
+					if(bActive__AO_BALLAST_PRESSURE_TORR)		aoEXT_CH__AO_BALLAST_PRESSURE_TORR->Set__VALUE(cfg__pressure_mtorr);
+				}
+				else if(cfg__ctrl_mode.CompareNoCase(STR__PRESSURE_PID) == 0)
+				{
+
+				}
+			}
 		}
 
 		// ...
-		{
-			CString cfg__ctrl_mode = dCH__CFG_TM_BALLAST_MODE->Get__STRING();
-
-			if(cfg__ctrl_mode.CompareNoCase(STR__VALVE) == 0)
-			{
-	
-			}
-			else if(cfg__ctrl_mode.CompareNoCase(STR__PRESSURE_SET) == 0)
-			{
-
-			}
-			else if(cfg__ctrl_mode.CompareNoCase(STR__PRESSURE_PID) == 0)
-			{
-
-			}
-		}
 	}
 }
 
+void CObj__CHM_STD::Fnc__BALLAST_CLOSE()
+{
+	if(bActive__DO_BALLAST_VALVE_SET)			doEXT_CH__DO_BALLAST_VALVE_SET->Set__DATA(STR__CLOSE);
+	if(bActive__AO_BALLAST_PRESSURE_TORR)		aoEXT_CH__AO_BALLAST_PRESSURE_TORR->Set__VALUE(0.0);
+}
 
 void CObj__CHM_STD
 ::Fnc__INTERLOCK(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)

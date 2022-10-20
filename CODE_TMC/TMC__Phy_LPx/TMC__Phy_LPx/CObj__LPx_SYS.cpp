@@ -191,6 +191,11 @@ int CObj__LPx_SYS::__DEFINE__VARIABLE_STD(p_variable)
 
 	// CFG : LOAD & UNLOAF ...
 	{
+		str_name = "CFG.MAX.SLOT.COUNT";
+		STD__ADD_DIGITAL(str_name, "25");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_MAX_SLOT_COUNT, str_name);
+
+		//
 		str_name = "CFG.MACRO_LOAD.USE";
 		STD__ADD_DIGITAL(str_name, "YES NO");
 		LINK__VAR_DIGITAL_CTRL(dCH__CFG_MACRO_LOAD_USE, str_name);
@@ -611,6 +616,23 @@ int CObj__LPx_SYS::__DEFINE__ALARM(p_alarm)
 		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
 	}
 
+	// ...
+	{
+		alarm_id = ALID__EFEM_ROBOT__STATE_ERROR;
+
+		alarm_title  = title;
+		alarm_title += "EFEM Robot의 상태를 확인 바랍니다 !";
+
+		alarm_msg  = "Robot이 비정상 종료된 상태입니다. \n";
+		alarm_msg += "\"HOME\" 수행 후 동작을 수행하시기 바랍니다. \n";
+		alarm_msg += "Please, check the state of EFEM-Robot ! \n";
+
+		l_act.RemoveAll();
+		l_act.Add(ACT__ABORT);
+
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
+
 	return 1;
 }
 
@@ -842,24 +864,27 @@ LOOP_RETRY:
 
 	if(sCH__MAP_SEQ_LOCK->Check__DATA("YES") > 0)
 	{
-		CString log_msg;
-
-		log_msg.Format("Current MAP_SEQ Lock occurred !");
-		xLOG_CTRL->WRITE__LOG(log_msg);
-
-		// ...
+		if(mode.CompareNoCase(sMODE__CHECK_DOOR_OPEN) != 0)
 		{
-			int alarm_id = ALID__MAP_SEQ_LOCK__INTERLOCK;
-			CString r_act;
+			CString log_msg;
 
-			p_alarm->Popup__ALARM(alarm_id,r_act);
+			log_msg.Format("Current MAP_SEQ Lock occurred !");
+			xLOG_CTRL->WRITE__LOG(log_msg);
 
-			if(r_act.CompareNoCase(ACT__RETRY) == 0)
+			// ...
 			{
-				goto LOOP_RETRY;
+				int alarm_id = ALID__MAP_SEQ_LOCK__INTERLOCK;
+				CString r_act;
+
+				p_alarm->Popup__ALARM(alarm_id,r_act);
+	
+				if(r_act.CompareNoCase(ACT__RETRY) == 0)
+				{
+					goto LOOP_RETRY;
+				}
 			}
+			return -1;
 		}
-		return -1;
 	}
 
 	// ACTIVE CHECK : INIT ...
@@ -946,6 +971,9 @@ LOOP_RETRY:
 			dEXT_CH__ROBOT__MON_ACTIVE_INTERLOCK_BY_LP->Set__DATA(STR__ON);
 			dEXT_CH__ROBOT__MON_ACTIVE_WAIT_BY_LP->Set__DATA(STR__OFF);
 
+			// ...
+			int count__robot_check = 0;
+
 			while(1)
 			{
 				if(dEXT_CH__ROBOT__MON_ACTIVE_ROBOT_ACTION_BUSY->Check__DATA(STR__OFF) > 0)
@@ -953,11 +981,32 @@ LOOP_RETRY:
 					break;
 				}
 
+				if(pROBOT__OBJ_CTRL->Is__OBJ_BUSY() < 0)
+				{
+					count__robot_check++;
+						
+					if(count__robot_check > 10)
+					{
+						int alm_id = ALID__EFEM_ROBOT__STATE_ERROR;
+						CString alm_msg;
+						CString r_act;
+
+						alm_msg.Format(" * %s <- %s \n",
+										dEXT_CH__ROBOT__MON_ACTIVE_ROBOT_ACTION_BUSY->Get__CHANNEL_NAME(),
+										dEXT_CH__ROBOT__MON_ACTIVE_ROBOT_ACTION_BUSY->Get__STRING());
+
+						p_alarm->Popup__ALARM_With_MESSAGE(alm_id, alm_msg, r_act);
+
+						flag = -1001;
+						break;
+					}
+				}
+
 				dEXT_CH__ROBOT__MON_ACTIVE_WAIT_BY_LP->Set__DATA(STR__ON);
 
 				if(p_variable->Check__CTRL_ABORT() > 0)
 				{
-					flag = -1001;
+					flag = -1011;
 					break;
 				}
 

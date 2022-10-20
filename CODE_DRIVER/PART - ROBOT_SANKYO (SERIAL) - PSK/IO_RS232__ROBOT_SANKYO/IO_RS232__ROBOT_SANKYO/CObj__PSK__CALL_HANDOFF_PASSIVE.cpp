@@ -44,9 +44,19 @@ int  CObj__PSK
 
 	if(iActive__SIM_MODE > 0)
 	{
-		if(arm_type.CompareNoCase(ARM_A) == 0)			sCH__MON_A_ARM_GRIPPER_STATE->Set__DATA(STR__WAFER);
-		if(arm_type.CompareNoCase(ARM_B) == 0)			sCH__MON_B_ARM_GRIPPER_STATE->Set__DATA(STR__WAFER);
+		if((arm_type.CompareNoCase(ARM_A)  == 0)
+		|| (arm_type.CompareNoCase(ARM_AB) == 0))
+		{
+			sCH__MON_A_ARM_GRIPPER_STATE->Set__DATA(STR__WAFER);
+		}
+		
+		if((arm_type.CompareNoCase(ARM_B)  == 0)
+		|| (arm_type.CompareNoCase(ARM_AB) == 0))
+		{
+			sCH__MON_B_ARM_GRIPPER_STATE->Set__DATA(STR__WAFER);
+		}
 	}
+
 	return 1;
 }
 
@@ -126,9 +136,19 @@ int  CObj__PSK
 
 	if(iActive__SIM_MODE > 0)
 	{
-		if(arm_type.CompareNoCase(ARM_A) == 0)			sCH__MON_A_ARM_GRIPPER_STATE->Set__DATA(STR__NONE);
-		if(arm_type.CompareNoCase(ARM_B) == 0)			sCH__MON_B_ARM_GRIPPER_STATE->Set__DATA(STR__NONE);
+		if((arm_type.CompareNoCase(ARM_A)  == 0)
+		|| (arm_type.CompareNoCase(ARM_AB) == 0))
+		{
+			sCH__MON_A_ARM_GRIPPER_STATE->Set__DATA(STR__NONE);
+		}
+
+		if((arm_type.CompareNoCase(ARM_B)  == 0)
+		|| (arm_type.CompareNoCase(ARM_AB) == 0))
+		{
+			sCH__MON_B_ARM_GRIPPER_STATE->Set__DATA(STR__NONE);
+		}
 	}
+
 	return 1;
 }
 
@@ -163,7 +183,8 @@ int  CObj__PSK
 		//
 		CString rb_cmmd = "";
 
-		if(arm_type.CompareNoCase(ARM_A) == 0)
+		if((arm_type.CompareNoCase(ARM_A)  == 0)
+		|| (arm_type.CompareNoCase(ARM_AB) == 0))
 		{
 			if(dCH__MON_ARM_A_MATERIAL_STATUS->Check__DATA(STR__NONE) > 0)		rb_cmmd = _RB_MODE__GOTO_GET;
 			else																rb_cmmd = _RB_MODE__GOTO_PUT;

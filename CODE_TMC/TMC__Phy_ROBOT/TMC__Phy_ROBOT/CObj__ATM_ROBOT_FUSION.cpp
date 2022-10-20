@@ -78,7 +78,7 @@ AL1 AL2												\
 BUFF1 BUFF2 FULL_BUFF"
 
 #define APP_DSP__ARM_TYPE							\
-"A B"
+"A  B  AB"
 
 #define APP_DSP__ARM_STS_ANI						\
 "UNKNOWN RETRACT EXTEND"
@@ -174,6 +174,10 @@ int CObj__ATM_ROBOT_FUSION::__DEFINE__VARIABLE_STD(p_variable)
 			str_name = "MON.ACTIVE.ROBOT_ACTION_TO_ST.1";
 			STD__ADD_DIGITAL(str_name, "OFF ON");
 			LINK__VAR_DIGITAL_CTRL(dCH__MON_ACTIVE_ROBOT_ACTION_TO_ST1, str_name);
+
+			str_name = "MON.ACTIVE.ROBOT_ACTION_TO_ST.2";
+			STD__ADD_DIGITAL(str_name, "OFF ON");
+			LINK__VAR_DIGITAL_CTRL(dCH__MON_ACTIVE_ROBOT_ACTION_TO_ST2, str_name);
 		}
 	}
 
@@ -198,6 +202,19 @@ int CObj__ATM_ROBOT_FUSION::__DEFINE__VARIABLE_STD(p_variable)
 		str_name = "CFG.ARM_B.USE";
 		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO YES", "");
 		LINK__VAR_DIGITAL_CTRL(dCH__CFG_ARM_B_USE, str_name);
+
+		//
+		str_name = "CFG.DUALARM.USE.LPx";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO YES", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_DUAL_ARM_USE_LPx, str_name);
+
+		str_name = "CFG.DUALARM.USE.STx";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO YES", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_DUAL_ARM_USE_STx, str_name);
+
+		str_name = "CFG.DUALARM.USE.LLx";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO YES", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_DUAL_ARM_USE_LLx, str_name);
 	}
 
 	// PARA CHANNEL -----
@@ -266,7 +283,7 @@ int CObj__ATM_ROBOT_FUSION::__DEFINE__VARIABLE_STD(p_variable)
 	// Wafer Present Check [NO/YES]
 	{
 		str_name = "CFG.dWAFER.PRESENT.CHECK";
-		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "YES NO", "");
+		STD__ADD_DIGITAL(str_name, "YES NO");
 		LINK__VAR_DIGITAL_CTRL(dCH__CFG__WAFER_PRESENT_CHECK, str_name);
 
 		str_name = "CFG.dWAFER.CROSSED.CHECK.AFTER.MAPPING";
@@ -568,6 +585,18 @@ int CObj__ATM_ROBOT_FUSION::__DEFINE__ALARM(p_alarm)
 
 		alarm_title  = title;
 		alarm_title += "You can't use Arm-B.";
+
+		alarm_msg = "Please, check robot-config page.\n";
+
+		_LALM__RETRY_ABORT;
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
+	// ...
+	{
+		alarm_id = ALID__ARM_AB__NOT_USE;
+
+		alarm_title  = title;
+		alarm_title += "You can't use Arm-AB.";
 
 		alarm_msg = "Please, check robot-config page.\n";
 
@@ -1243,6 +1272,30 @@ int CObj__ATM_ROBOT_FUSION::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 				LINK__EXT_VAR_ANALOG_CTRL(aEXT_CH__CUR_LLx_POST_POSITION_INCREMENT_ANGLE[i], def_data,str_name);
 			}
 		}
+
+		// PMx ...
+		for(i=0; i<CFG_PMx__SIZE; i++)
+		{
+			int id = i + 1;
+
+			str_name.Format("CFG.PM%1d.ALIGN.POS", id);
+			LINK__EXT_VAR_ANALOG_CTRL(aEXT_CH__CFG_PMx_ALIGN_ANGLE[i], def_data,str_name);
+
+			str_name.Format("CFG.PM%1d.POST.POSITION.INCREMENT", id);
+			LINK__EXT_VAR_ANALOG_CTRL(aEXT_CH__CFG_PMx_POST_POSITION_INCREMENT[i], def_data,str_name);
+
+			str_name.Format("CFG.PM%1d.POST.POSITION.INCREMENT.RANGE", id);
+			LINK__EXT_VAR_ANALOG_CTRL(aEXT_CH__CFG_PMx_POST_POSITION_INCREMENT_RANGE[i], def_data,str_name);
+
+			str_name.Format("CFG.PM%1d.POST.POSITION.INCREMENT.START.ANGLE", id);
+			LINK__EXT_VAR_ANALOG_CTRL(aEXT_CH__CFG_PMx_POST_POSITION_INCREMENT_START_ANGLE[i], def_data,str_name);
+
+			str_name.Format("CFG.PM%1d.POST.POSITION.INCREMENT.APPLY", id);
+			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__CFG_PMx_POST_POSITION_INCREMENT_APPLY[i], def_data,str_name);
+
+			str_name.Format("CUR.PM%1d.POST.POSITION.INCREMENT.ANGLE", id);
+			LINK__EXT_VAR_ANALOG_CTRL(aEXT_CH__CUR_PMx_POST_POSITION_INCREMENT_ANGLE[i], def_data,str_name);
+		}
 	}
 
 	// IO ...
@@ -1318,7 +1371,13 @@ int CObj__ATM_ROBOT_FUSION::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 
 			pLPx__OBJ_CTRL[i] = p_ext_obj_create->Create__OBJECT_CTRL(def_data);
 
-			for(j=0;j<CFG_LPx__SLOT_SIZE;j++)
+			// CFG ...
+			{
+				str_name = "CFG.MAX.SLOT.COUNT";
+				LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__LPx_CFG_MAX_SLOT_COUNT[i], def_data,str_name);
+			}
+
+			for(j=0; j<CFG_LPx__SLOT_SIZE; j++)
 			{
 				// Status
 				str_name.Format("OTR.OUT.MON.dSLOT%002d.STATUS",j+1);
@@ -1360,6 +1419,9 @@ int CObj__ATM_ROBOT_FUSION::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		def_name = "OBJ__SIDE_STORAGE1";
 		p_variable->Get__DEF_CONST_DATA(def_name,def_data);
 
+		str_name = "CFG.SLOT.MAX";
+		LINK__EXT_VAR_ANALOG_CTRL(aEXT_CH__SIDE_STORAGE1_CFG_SLOT_MAX, def_data,str_name);
+	
 		for(i=0;i<CFG_LPx__SLOT_SIZE;i++)
 		{
 			str_name.Format("SLOT%002d.STATUS", i+1);
@@ -1373,6 +1435,9 @@ int CObj__ATM_ROBOT_FUSION::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 	{
 		def_name = "OBJ__SIDE_STORAGE2";
 		p_variable->Get__DEF_CONST_DATA(def_name,def_data);
+
+		str_name = "CFG.SLOT.MAX";
+		LINK__EXT_VAR_ANALOG_CTRL(aEXT_CH__SIDE_STORAGE2_CFG_SLOT_MAX, def_data,str_name);
 
 		for(i=0;i<CFG_LPx__SLOT_SIZE;i++)
 		{
@@ -1606,8 +1671,8 @@ int CObj__ATM_ROBOT_FUSION::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_al
 			{
 				while(1)
 				{
-					if((para__arm_type.CompareNoCase(ARM_A)  == 0)
-					|| (para__arm_type.CompareNoCase(ARM_AB) == 0))
+					if((para__arm_type.CompareNoCase(_ARM_A)  == 0)
+					|| (para__arm_type.CompareNoCase(_ARM_AB) == 0))
 					{
 						if(dCH__CFG_ARM_A_USE->Check__DATA(STR__YES) > 0)			break;
 
@@ -1630,8 +1695,8 @@ int CObj__ATM_ROBOT_FUSION::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_al
 						break;
 					}
 
-					if((para__arm_type.CompareNoCase(ARM_B)  == 0)
-					|| (para__arm_type.CompareNoCase(ARM_AB) == 0))
+					if((para__arm_type.CompareNoCase(_ARM_B)  == 0)
+					|| (para__arm_type.CompareNoCase(_ARM_AB) == 0))
 					{
 						if(dCH__CFG_ARM_B_USE->Check__DATA(STR__YES) > 0)			break;
 
@@ -1656,6 +1721,90 @@ int CObj__ATM_ROBOT_FUSION::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_al
 
 					flag = -10003;
 					break;
+				}
+			}
+
+			if(flag > 0)
+			{
+				if(para__arm_type.CompareNoCase(_ARM_AB) == 0)
+				{
+					while(1)
+					{
+						int check__err_count = 0;
+						CString err_msg;
+
+						if(check__err_count == 0)
+						{
+							int lp_index = Macro__CHECK_LPx_INDEX(para__stn_name);
+							if(lp_index >= 0)
+							{
+								if(dCH__CFG_DUAL_ARM_USE_LPx->Check__DATA(STR__YES) > 0)		break;
+	
+								err_msg.Format(" * %s <- %s \n",
+												dCH__CFG_DUAL_ARM_USE_LPx->Get__CHANNEL_NAME(),
+												dCH__CFG_DUAL_ARM_USE_LPx->Get__STRING());
+
+								check__err_count++;
+							}
+						}
+
+						if(check__err_count == 0)
+						{
+							int st_index = Macro__CHECK_STx_INDEX(para__stn_name);
+							if(st_index >= 0)
+							{
+								if(dCH__CFG_DUAL_ARM_USE_STx->Check__DATA(STR__YES) > 0)		break;
+
+								err_msg.Format(" * %s <- %s \n",
+												dCH__CFG_DUAL_ARM_USE_STx->Get__CHANNEL_NAME(),
+												dCH__CFG_DUAL_ARM_USE_STx->Get__STRING());
+
+								check__err_count++;
+							}
+						}
+
+						if(check__err_count == 0)
+						{
+							int ll_index = Macro__CHECK_LLx_INDEX(para__stn_name);
+							if(ll_index >= 0)
+							{
+								if(dCH__CFG_DUAL_ARM_USE_LLx->Check__DATA(STR__YES) > 0)		break;
+
+								err_msg.Format(" * %s <- %s \n",
+												dCH__CFG_DUAL_ARM_USE_LLx->Get__CHANNEL_NAME(),
+												dCH__CFG_DUAL_ARM_USE_LLx->Get__STRING());
+
+								check__err_count++;
+							}
+						}
+
+						if(check__err_count > 0)
+						{
+							int alm_id = ALID__ARM_AB__NOT_USE;
+							CString alm_msg;
+							CString alm_bff;
+							CString r_act;
+
+							alm_msg = "Command Parameter \n";
+
+							alm_bff.Format(" arm_type <- %s \n", para__arm_type);
+							alm_msg += alm_bff;
+							alm_bff.Format(" stn_name <- %s \n", para__stn_name);
+							alm_msg += alm_bff;
+							alm_bff.Format(" stn_slot <- %s \n", para__stn_slot);
+							alm_msg += alm_bff;
+
+							alm_msg += "\n";
+							alm_msg += err_msg;
+
+							p_alarm->Popup__ALARM_With_MESSAGE(alm_id, alm_msg, r_act);
+
+							if(r_act.CompareNoCase(ACT__RETRY) == 0)		continue;
+						}
+
+						flag = -10011;
+						break;
+					}
 				}
 			}
 
@@ -1859,6 +2008,78 @@ int CObj__ATM_ROBOT_FUSION::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_al
 				}
 			}
 
+			int pm_i = Macro__CHECK_PMx_INDEX(llx_name);
+			if(pm_i >= 0)
+			{
+				// ...
+				{
+					log_msg = "\n";
+
+					log_bff.Format("%s(%s) Align Info ... \n", llx_name,llx_slot);
+					log_msg += log_bff;
+				}
+
+				if(dEXT_CH__CFG_PMx_POST_POSITION_INCREMENT_APPLY[pm_i]->Check__DATA(STR__ENABLE) > 0)
+				{
+					aEXT_CH__CUR_PMx_POST_POSITION_INCREMENT_ANGLE[pm_i]->Get__DATA(var_data);
+					double cur_angle = atof(var_data);
+
+					aEXT_CH__CFG_PMx_POST_POSITION_INCREMENT[pm_i]->Get__DATA(var_data);
+					double cfg_inc = atof(var_data);
+
+					aEXT_CH__CFG_PMx_POST_POSITION_INCREMENT_RANGE[pm_i]->Get__DATA(var_data);
+					double max_angle = atof(var_data);
+
+					if(cur_angle > max_angle)		cur_angle = 0;
+
+					// ...
+					aEXT_CH__CFG_PMx_POST_POSITION_INCREMENT_START_ANGLE[pm_i]->Get__DATA(var_data);
+					double start_angle = atof(var_data);
+
+					al_angle.Format("%.0f", (start_angle+cur_angle));
+
+					// ...
+					{
+						double next_angle = cur_angle + cfg_inc;
+						if(next_angle > max_angle)		next_angle = 0;
+
+						var_data.Format("%.0f", next_angle);
+						aEXT_CH__CUR_PMx_POST_POSITION_INCREMENT_ANGLE[pm_i]->Set__DATA(var_data);
+					}
+
+					// ...
+					{
+						log_bff.Format("   CFG Increment Apply <- [%s] \n", STR__ENABLE);
+						log_msg += log_bff;
+
+						log_bff.Format("   Current Increment Angle <- [%.0f] \n", cur_angle);
+						log_msg += log_bff;
+
+						log_bff.Format("   CFG Increment Start Angle <- [%.0f] \n", start_angle);
+						log_msg += log_bff;
+
+						log_bff.Format("   CFG Increment Angle <- [%.0f] \n", cfg_inc);
+						log_msg += log_bff;
+
+						log_bff.Format("   CFG Increment Range <- [%.0f] \n", max_angle);
+						log_msg += log_bff;
+
+						log_bff.Format("   Target Align Angle <- [%s] \n", al_angle);
+						log_msg += log_bff;
+					}
+				}	
+				else
+				{
+					aEXT_CH__CFG_PMx_ALIGN_ANGLE[pm_i]->Get__DATA(al_angle);
+
+					// ...
+					{
+						log_bff.Format("   Target Align Angle <- [%s] \n", al_angle);
+						log_msg += log_bff;
+					}
+				}
+			}
+
 			if(dEXT_CH__CFG_ALIGN_DEVICE->Check__DATA(STR__ATM_RB) > 0)
 			{
 				sEXT_CH__CUR_AL1_TARGET_LLx_NAME->Set__DATA(llx_name);
@@ -1915,6 +2136,10 @@ int CObj__ATM_ROBOT_FUSION::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_al
 			else if(para__stn_name.CompareNoCase(STR__ST1) == 0)
 			{
 				dCH__MON_ACTIVE_ROBOT_ACTION_TO_ST1->Set__DATA(STR__ON);
+			}
+			else if(para__stn_name.CompareNoCase(STR__ST2) == 0)
+			{
+				dCH__MON_ACTIVE_ROBOT_ACTION_TO_ST2->Set__DATA(STR__ON);
 			}
 		}
 	
@@ -2281,14 +2506,18 @@ int CObj__ATM_ROBOT_FUSION::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_al
 		|| (mode.CompareNoCase(sMODE__HOME) == 0)
 		|| (mode.CompareNoCase(sMODE__VACOFF_HOME) == 0))
 		{
-			for(int i=0; i<CFG_LPx__SIZE; i++)
+			for(int i=0; i<iLPx_SIZE; i++)
+			{
 				dCH__MON_ACTIVE_ROBOT_ACTION_TO_LPx[i]->Set__DATA(STR__OFF);
-
-			for(int i=0; i<CFG_LLx__SIZE; i++)
+			}
+			for(int i=0; i<iSIZE_LLx; i++)
+			{
 				dCH__MON_ACTIVE_ROBOT_ACTION_TO_LLx[i]->Set__DATA(STR__OFF);
+			}
 
 			dCH__MON_ACTIVE_ROBOT_ACTION_TO_AL1->Set__DATA(STR__OFF);
 			dCH__MON_ACTIVE_ROBOT_ACTION_TO_ST1->Set__DATA(STR__OFF);
+			dCH__MON_ACTIVE_ROBOT_ACTION_TO_ST2->Set__DATA(STR__OFF);
 		}
 		else
 		{
@@ -2308,6 +2537,10 @@ int CObj__ATM_ROBOT_FUSION::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_al
 			else if(para__stn_name.CompareNoCase(STR__ST1) == 0)
 			{
 				dCH__MON_ACTIVE_ROBOT_ACTION_TO_ST1->Set__DATA(STR__OFF);
+			}
+			else if(para__stn_name.CompareNoCase(STR__ST2) == 0)
+			{
+				dCH__MON_ACTIVE_ROBOT_ACTION_TO_ST2->Set__DATA(STR__OFF);
 			}
 		}
 

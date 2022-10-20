@@ -388,7 +388,7 @@ int CObj_Phy__ROBOT_VAC::__DEFINE__VARIABLE_STD(p_variable)
 		// PMx To PMx ...
 		{
 			str_name = "CFG.PMx_To_PMx.CONSTRAINT";
-			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "ALL  SAME.PROCESS", "");
+			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "ALL  SAME.PROCESS  SAME.PATH", "");
 		}
 	}
 

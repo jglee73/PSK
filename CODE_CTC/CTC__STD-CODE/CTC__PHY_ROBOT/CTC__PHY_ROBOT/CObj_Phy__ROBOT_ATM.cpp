@@ -232,6 +232,11 @@ int CObj_Phy__ROBOT_ATM::__DEFINE__VARIABLE_STD(p_variable)
 
 	// ALIGN PARAMETER ...
 	{
+		str_name = "TARGET.PMx.MODE";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "DISABLE  ENABLE","");
+		LINK__VAR_DIGITAL_CTRL(dCH__TARGET_PMx_MODE, str_name);
+
+		//
 		str_name = "TARGET.LLx.MODE";
 		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "DISABLE  ENABLE","");
 		LINK__VAR_DIGITAL_CTRL(dCH__TARGET_LLx_MODE, str_name);
@@ -400,9 +405,22 @@ int CObj_Phy__ROBOT_ATM::__DEFINE__VARIABLE_STD(p_variable)
 		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "SINGLE DUAL", "");
 		LINK__VAR_DIGITAL_CTRL(dCH__CFG_LLx_CTRL_ONLY_INPUT_OUTPUT_MODE, str_name);
 
+		//
 		str_name = "CFG.DUAL_ARM_MOVING_AT_THE_SAME_TIME";
 		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "DISABLE ENABLE", "");
 		LINK__VAR_DIGITAL_CTRL(dCH__CFG_DUAL_ARM_MOVING_AT_THE_SAME_TIME, str_name);
+
+		str_name = "CFG.DUAL_ARM_MOVING_AT_LPx";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO YES", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_DUAL_ARM_MOVING_AT_LPx, str_name);
+
+		str_name = "CFG.DUAL_ARM_MOVING_AT_STx";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO YES", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_DUAL_ARM_MOVING_AT_STx, str_name);
+
+		str_name = "CFG.DUAL_ARM_MOVING_AT_LLx";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO YES", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_DUAL_ARM_MOVING_AT_LLx, str_name);
 	}
 
 	// LLx : CONTRAINT ...
@@ -1376,6 +1394,11 @@ int CObj_Phy__ROBOT_ATM
 
 			// ...
 			{
+				log_bff.Format("  ** %s <- %s \n", 
+								dCH__TARGET_PMx_MODE->Get__CHANNEL_NAME(), 
+								dCH__TARGET_PMx_MODE->Get__STRING());
+				log_msg += log_bff;
+
 				log_bff.Format("  ** %s <- %s \n", 
 								dCH__TARGET_LLx_MODE->Get__CHANNEL_NAME(), 
 								dCH__TARGET_LLx_MODE->Get__STRING());

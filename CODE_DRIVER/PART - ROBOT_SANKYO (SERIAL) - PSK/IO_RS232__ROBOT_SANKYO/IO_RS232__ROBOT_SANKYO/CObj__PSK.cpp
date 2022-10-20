@@ -84,7 +84,7 @@ AL1 AL2														\
 BUFF1 BUFF2 FULL_BUFF"
 
 #define APP_DSP__ARM_TYPE									\
-"A B"
+"A  B  AB"
 
 #define APP_DSP__RET_EXT									\
 "Retract Extend"
@@ -398,21 +398,21 @@ int CObj__PSK::__DEFINE__VARIABLE_STD(p_variable)
 
 
 // ...
-#define  ACT__RETRY_ABORT						\
+#define  _LACT__RETRY_ABORT						\
 l_act.RemoveAll();								\
 l_act.Add("RETRY");								\
 l_act.Add("ABORT");
 
-#define  ACT__ABORT_ALARM						\
+#define  _LACT__ABORT_ALARM						\
 l_act.RemoveAll();								\
 l_act.Add("ABORT");
 
-#define  ACT__NO_YES_ALARM						\
+#define  _LACT__NO_YES_ALARM					\
 l_act.RemoveAll();								\
 l_act.Add("NO");								\
 l_act.Add("YES");
 
-#define  ACT__CHECK_ALARM						\
+#define  _LACT__CHECK_ALARM						\
 l_act.RemoveAll();								\
 l_act.Add("CHECK");
 
@@ -442,7 +442,7 @@ int CObj__PSK::__DEFINE__ALARM(p_alarm)
 		alarm_msg  = "Controller is Offline.\n";
 		alarm_msg += "Please, Check Communication Status !\n";
 
-		ACT__RETRY_ABORT;
+		_LACT__RETRY_ABORT;
 		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
 	}
 	// ...
@@ -455,7 +455,7 @@ int CObj__PSK::__DEFINE__ALARM(p_alarm)
 		alarm_msg  = "Align and Pick Action Timeout Occur.\n";
 		alarm_msg += "Please, Check ATM Robot Status !\n";
 
-		ACT__ABORT_ALARM;
+		_LACT__ABORT_ALARM;
 		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
 	}
 	// ...
@@ -468,7 +468,7 @@ int CObj__PSK::__DEFINE__ALARM(p_alarm)
 		alarm_msg  = "Now, Mapping Disable Config Option Selected.\n";
 		alarm_msg += "Would you like to continue ??\n";
 
-		ACT__NO_YES_ALARM;
+		_LACT__NO_YES_ALARM;
 		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
 	}
 
@@ -481,19 +481,7 @@ int CObj__PSK::__DEFINE__ALARM(p_alarm)
 
 		alarm_msg = "Error state must be \"OFF\". \n";
 
-		ACT__CHECK_ALARM;
-		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
-	}
-	// ...
-	{
-		alarm_id = ALID__SERVO_STATE;
-
-		alarm_title  = title;
-		alarm_title += "Servo State";
-
-		alarm_msg = "Servo state must be \"ON\". \n";
-
-		ACT__CHECK_ALARM;
+		_LACT__CHECK_ALARM;
 		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
 	}
 	// ...
@@ -505,7 +493,32 @@ int CObj__PSK::__DEFINE__ALARM(p_alarm)
 
 		alarm_msg = "Robot's FAN state must be \"ON\". \n";
 
-		ACT__CHECK_ALARM;
+		_LACT__CHECK_ALARM;
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
+
+	// ...
+	{
+		alarm_id = ALID__SERVO_STATE_POST;
+
+		alarm_title  = title;
+		alarm_title += "Servo Off !";
+
+		alarm_msg = "Servo state must be \"ON\". \n";
+
+		_LACT__CHECK_ALARM;
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
+	// ...
+	{
+		alarm_id = ALID__SERVO_STATE_ACT;
+
+		alarm_title  = title;
+		alarm_title += "Servo가 Off 상태 입니다 !";
+
+		alarm_msg = "Servo state must be \"ON\". \n";
+
+		_LACT__RETRY_ABORT;
 		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
 	}
 
@@ -937,6 +950,36 @@ int CObj__PSK::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_alarm)
 
 			Fnc__APP_LOG(log_msg);
 			Fnc__ACT_MSG(log_msg);
+		}
+	}
+
+	if(seq_flag > 0)
+	{
+LOOP_RETRY:
+
+		if(sCH__MON_SERVO_STATE->Check__DATA(STR__ON) < 0)
+		{
+			if(mode.CompareNoCase(sMODE__ERROR_RESET) != 0)
+			{
+				int alarm_id = ALID__SERVO_STATE_ACT;
+				CString alm_msg;
+				CString alm_bff;
+				CString r_act;
+
+				alm_bff.Format("\"%s\" 명령울 수행 할 수 없습니다 ! \n", mode);
+				alm_msg += alm_bff;
+
+				alm_bff.Format(" * %s <- \"%s\" ! \n", 
+								sCH__MON_SERVO_STATE->Get__CHANNEL_NAME(),
+								sCH__MON_SERVO_STATE->Get__STRING());
+				alm_msg += alm_bff;
+
+				p_alarm->Popup__ALARM_With_MESSAGE(alarm_id, alm_msg, r_act);
+
+				if(r_act.CompareNoCase(ACT__RETRY) == 0)		goto LOOP_RETRY;
+
+				seq_flag = -1;
+			}
 		}
 	}
 

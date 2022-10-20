@@ -91,7 +91,10 @@ LOOP_CHECK:
 int  CObj__LPx_SYS
 ::Call__LOAD(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm)
 {
-	int r_flag = Fnc__LOAD(p_variable,p_alarm);
+	int r_flag = Alarm_Check__ARM_NOT_RETRACTED(p_alarm);
+	if(r_flag < 0)		return r_flag;
+
+	r_flag = Fnc__LOAD(p_variable,p_alarm);
 
 	if(r_flag > 0)
 	{
@@ -200,8 +203,10 @@ int  CObj__LPx_SYS
 int  CObj__LPx_SYS
 ::Call__UNLOAD(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm)
 {
+	/*
 	int r_flag = Alarm_Check__ARM_NOT_RETRACTED(p_alarm);
 	if(r_flag < 0)		return r_flag;
+	*/
 
 	return Fnc__UNLOAD(p_variable,p_alarm);
 }
@@ -415,6 +420,9 @@ int  CObj__LPx_SYS
 int  CObj__LPx_SYS
 ::Call__RLSUNLOAD(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm)
 {
+	int r_flag = Alarm_Check__ARM_NOT_RETRACTED(p_alarm);
+	if(r_flag < 0)		return r_flag;
+
 	return Fnc__RLSUNLOAD(p_variable,p_alarm);
 }
 int  CObj__LPx_SYS

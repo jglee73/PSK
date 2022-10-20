@@ -65,7 +65,7 @@ void CObj__PSK
 
 			if(sCH__MON_SERVO_STATE->Check__DATA(STR__ON) < 0)
 			{
-				int alarm_id = ALID__SERVO_STATE;
+				int alarm_id = ALID__SERVO_STATE_POST;
 				CString alm_msg;
 				CString r_act;
 

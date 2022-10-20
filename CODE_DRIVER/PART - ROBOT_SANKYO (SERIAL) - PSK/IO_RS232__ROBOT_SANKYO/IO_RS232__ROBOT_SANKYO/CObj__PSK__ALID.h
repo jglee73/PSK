@@ -15,8 +15,10 @@
 #define  ALID__MAPPING_DISABLE_CONFIG_ALARM				13
 
 #define  ALID__ERROR_STATE								15
-#define  ALID__SERVO_STATE								16
-#define  ALID__RB_FAN_STATE								17
+#define  ALID__RB_FAN_STATE								16
+
+#define  ALID__SERVO_STATE_POST							21
+#define  ALID__SERVO_STATE_ACT							22
 
 // ...
 #define  ALID__ATMRB_1_COMMAND_FAILED					101

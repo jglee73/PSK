@@ -4,6 +4,9 @@
 // ...
 #define _CFG__CHM_GAUGE_SIZE			2
 
+#define _CFG__PMx_SLOT_VLV_SIZE			10
+#define _CFG__LLx_SLOT_VLV_SIZE			4
+
 
 // ...
 #define  STR__ENABLE				"ENABLE"

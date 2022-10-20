@@ -142,11 +142,6 @@ int  CObj__CHM_STD
 		{
 			Fnc__PUMP_FAST_VLV__OPEN(p_variable, p_alarm);
 			
-			if(dCH__PARA_BALLAST_CTRL_ACTIVE->Check__DATA(STR__ON) > 0)
-			{
-				Fnc__PUMP_BALLAST_VLV__OPEN(p_alarm);
-			}
-
 			str_log.Format("Already Pump Status.. Current-Pressure [%f]/[%f], VAC_Sns[%s]", cur__press,cfg__press,STR__VAC);
 			Fnc__LOG(str_log);
 			return 1;
@@ -287,13 +282,6 @@ int  CObj__CHM_STD
 		if(r_flag < 0)			return r_flag;
 	}
 
-	// Ballast Valve ...
-	if(dCH__PARA_BALLAST_CTRL_ACTIVE->Check__DATA(STR__ON) > 0)
-	{
-		Fnc__LOG("Ballast Valve Open !");
-		Fnc__PUMP_BALLAST_VLV__OPEN(p_alarm);
-	}
-	
 	Update__PUMP_VLV_STS(p_variable, p_alarm);
 	return 1;
 }

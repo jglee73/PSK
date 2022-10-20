@@ -64,6 +64,7 @@
 #define  STR__ODD					"ODD"
 #define  STR__EVEN					"EVEN"
 
+#define  STR__SAME_PATH			    "SAME.PATH"
 #define  STR__SAME_PROCESS		    "SAME.PROCESS"
 #define  STR__ONLY_PROCESSED		"ONLY.PROCESSED"
 #define  STR__MAPPED				"MAPPED"

@@ -30,8 +30,8 @@ int  CObj__PSK
 int  CObj__PSK
 ::Fnc__AL_INIT(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
 {
-	if(dCH__MON_AL_MATERIAL_STATUS->Check__DATA(STR__NONE) < 0)
-	{
+	//if(dCH__MON_AL_MATERIAL_STATUS->Check__DATA(STR__NONE) < 0)
+	//{
 		// Chuck.On ...
 		{
 			doCH__AL_COMMAND->Set__DATA(_AL_MODE__CHUCK_ON);
@@ -39,7 +39,7 @@ int  CObj__PSK
 			int r_flag = _Wait__AL_ACTION(p_variable, p_alarm);
 			if(r_flag < 0)			return -11;
 		}
-	}
+	//}
 
 	// ALIGNER.CTRL ...
 	{

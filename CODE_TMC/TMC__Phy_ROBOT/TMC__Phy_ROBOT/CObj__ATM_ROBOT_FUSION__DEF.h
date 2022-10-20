@@ -57,28 +57,7 @@
 
 
 // ...
-#define  ARM_A						"A"
-#define  ARM_B						"B"
-#define  ARM_AB						"AB"
-
-#define  STR__LP1					"LP1"
-#define  STR__LP2					"LP2"
-#define  STR__LP3					"LP3"
-#define  STR__LP4					"LP4"
-#define  STR__LP5					"LP5"
-
-#define  STR__AL1					"AL1"
-#define  STR__AL2					"AL2"
-
-#define  STR__ST1					"ST1"
-#define  STR__ST2					"ST2"
-
-#define  STR__VIS1					"VIS1"
-
-#define  STR__BUFF1					"BUFF1"
-#define  STR__BUFF2                 "BUFF2"
-
-#define  STR__ABSENT				"ABSENT"
-#define  STR__PRESENT				"PRESENT"
-#define  STR__CROSSED				"CROSSED"
+#define  _ARM_A						"A"
+#define  _ARM_B						"B"
+#define  _ARM_AB					"AB"
 

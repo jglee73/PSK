@@ -70,7 +70,7 @@ int CObj__PSK
 int CObj__PSK
 ::Drv__SEND_COMMAND(const CString& var_name, 
 			        const CString& str_cmmd, 
-					const CString& str_para)
+					const CString& str_para, bool Wait_flag)
 {
 	// ...
 	CString str__log;
@@ -105,7 +105,7 @@ int CObj__PSK
 
 	str__log.Format("RECV <= [%s], r_flag [%d] \n", str__send_data, r_flag);
 	Fnc__DRV_LOG(str__log);
-
+	if (Wait_flag == true) 	Sleep(500);// 20220921 for Aligner Chuckon/off after wait 500ms(from :holdings)
 	if(r_flag >= 0)
 	{
 		m_nCommState = ONLINE;
@@ -194,8 +194,8 @@ int  CObj__PSK::Update__ROBOT_STATE(const CString& str_data)
 			else if(ch == '1')			ch_data = STR__WAFER;
 			else						ch_data = STR__UNKNOWN;
 
-				 if(i == 5)				str__a_gripper_sts = ch_data;
-			else if(i == 6)				str__b_gripper_sts = ch_data;
+				 if(i == 5)				str__b_gripper_sts = ch_data;
+			else if(i == 6)				str__a_gripper_sts = ch_data;
 
 			continue;
 		}

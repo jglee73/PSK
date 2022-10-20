@@ -45,7 +45,7 @@ int CObj__CHM_STD::__DEFINE__VERSION_HISTORY(version)
 
 // ...
 #define  MON_ID__IO_MONITOR					1
-#define  MON_ID__BALLAST_CONTROL			3
+#define  MON_ID__BALLAST_CONTROL			2
 
 // ...
 #define APP_DSP__CLOSE_OPEN					"UNKNOWN  CLOSE  OPEN"
@@ -79,6 +79,11 @@ int CObj__CHM_STD::__DEFINE__VARIABLE_STD(p_variable)
 
 	// MON ...
 	{
+		str_name = "MON.PUMPING_SEQ.ACTIVE";
+		STD__ADD_DIGITAL(str_name, "OFF ON");
+		LINK__VAR_DIGITAL_CTRL(dCH__MON_PUMPING_SEQ_ACTIVE, str_name);
+
+		//
 		str_name = "OTR.OUT.MON.OBJ.STATUS";
 		STD__ADD_STRING_WITH_COMMENT(str_name,"");
 		LINK__VAR_STRING_CTRL(sCH__OBJ_STATUS,str_name);
@@ -245,9 +250,9 @@ int CObj__CHM_STD::__DEFINE__VARIABLE_STD(p_variable)
 		LINK__VAR_DIGITAL_CTRL(dCH__CFG_TM_BALLAST_MODE,str_name);
 
 		//
-		str_name = "CFG.aTM.BALLAST.N2.VALUE";	
-		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mtorr", 0, 10, 100, "");
-		LINK__VAR_ANALOG_CTRL(aCH__CFG_TM_BALLAST_N2_VALUE,str_name);
+		str_name = "CFG.aTM.BALLAST.N2.PRESSURE.mTORR";	
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mtorr", 0, 10, 3000, "");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_TM_BALLAST_N2_PRESSURE_mTORR, str_name);
 
 		str_name = "CFG.aTM.BALLAST.N2.P.GAIN";
 		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "val", 3, 0.001, 100.00, "");
@@ -260,6 +265,15 @@ int CObj__CHM_STD::__DEFINE__VARIABLE_STD(p_variable)
 		str_name = "CFG.aTM.BALLAST.N2.D.GAIN";
 		STD__ADD_ANALOG_WITH_X_OPTION(str_name,	"val", 3, 0.001, 100.00, "");
 		LINK__VAR_ANALOG_CTRL(aCH__CFG_TM_BALLAST_N2_D_GAIN,str_name);
+
+		//
+		str_name = "CFG.TM.BALLAST.IDLE.FLOW";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO YES", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_TM_BALLAST_IDLE_FLOW, str_name);
+
+		str_name = "CFG.TM.BALLAST.TRANSFER.FLOW";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO YES", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_TM_BALLAST_TRANSFER_FLOW, str_name);
 	}
 
 	// ...
@@ -493,6 +507,8 @@ int CObj__CHM_STD::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 	CString def_name;
 	CString def_data;
 	CString str_name;
+
+	CString ch_name;
 	CString obj_name;
 	CString var_name;
 
@@ -705,17 +721,51 @@ int CObj__CHM_STD::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 			}
 		}
 
-		// BALLAST ...
+		// BALLAST CONTROL  ...
 		{
-			def_name.Format("CH__IO_DO_BALLAST_VALVE_SET");
-			p_ext_obj_create->Get__DEF_CONST_DATA(def_name,def_data);
-			p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(def_data, obj_name, var_name);
-			LINK__EXT_VAR_DIGITAL_CTRL(doEXT_CH__BALLAST_VALVE_SET, obj_name,var_name);
+			// DO.VALVE ...
+			{
+				def_name = "CH__IO_DO_BALLAST_VALVE_SET";
+				p_ext_obj_create->Get__DEF_CONST_DATA(def_name,def_data);
 
-			def_name.Format("CH__IO_AO_BALLAST_N2_SET");
-			p_ext_obj_create->Get__DEF_CONST_DATA(def_name,def_data);
-			p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(def_data, obj_name, var_name);
-			LINK__EXT_VAR_ANALOG_CTRL(aoEXT_CH__BALLAST_N2_SET, obj_name,var_name);
+				def_check = x_utility.Check__Link(def_data);
+				bActive__DO_BALLAST_VALVE_SET = def_check;
+				
+				if(def_check)
+				{
+					p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(def_data, obj_name,var_name);
+					LINK__EXT_VAR_DIGITAL_CTRL(doEXT_CH__DO_BALLAST_VALVE_SET, obj_name,var_name);
+				}	
+			}
+			
+			// AO.PRESSURE ...
+			{
+				def_name = "CH__IO_AO_BALLAST_PRESSURE_TORR";
+				p_ext_obj_create->Get__DEF_CONST_DATA(def_name,def_data);
+
+				def_check = x_utility.Check__Link(def_data);
+				bActive__AO_BALLAST_PRESSURE_TORR = def_check;
+
+				if(def_check)
+				{
+					p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(def_data, obj_name,var_name);
+					LINK__EXT_VAR_ANALOG_CTRL(aoEXT_CH__AO_BALLAST_PRESSURE_TORR, obj_name,var_name);
+				}
+			}
+			// AI.PRESSURE ...
+			{
+				def_name = "CH__IO_AI_BALLAST_PRESSURE_TORR";
+				p_ext_obj_create->Get__DEF_CONST_DATA(def_name,def_data);
+
+				def_check = x_utility.Check__Link(def_data);
+				bActive__AI_BALLAST_PRESSURE_TORR = def_check;
+
+				if(def_check)
+				{
+					p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(def_data, obj_name,var_name);
+					LINK__EXT_VAR_ANALOG_CTRL(aoEXT_CH__AI_BALLAST_PRESSURE_TORR, obj_name,var_name);
+				}
+			}
 		}
 	}
 
@@ -808,6 +858,43 @@ int CObj__CHM_STD::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		}
 	}
 
+	// PMx SLOT VALVE ...
+	{
+		def_name = "DATA_SIZE.PMx_SLOT_VLV";
+		p_ext_obj_create->Get__DEF_CONST_DATA(def_name,def_data);
+
+		iSIZE__PMx_SLOT_VLV = atoi(def_data);
+		if(iSIZE__PMx_SLOT_VLV > _CFG__PMx_SLOT_VLV_SIZE)			iSIZE__PMx_SLOT_VLV = _CFG__PMx_SLOT_VLV_SIZE;
+
+		for(int i=0; i<iSIZE__PMx_SLOT_VLV; i++)
+		{
+			def_name.Format("CH.PMx_SLOT_VLV.%1d", i+1);
+			p_ext_obj_create->Get__DEF_CONST_DATA(def_name, ch_name);
+
+			p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(ch_name, obj_name,var_name);
+			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__PMx_SLOT_VLV_X[i], obj_name,var_name);
+		}
+	}
+	// LLx SLOT VALVE ...
+	{
+		def_name = "DATA_SIZE.LLx_SLOT_VLV";
+		p_ext_obj_create->Get__DEF_CONST_DATA(def_name,def_data);
+
+		p_ext_obj_create->Get__DEF_CONST_DATA(def_name,def_data);
+
+		iSIZE__LLx_SLOT_VLV = atoi(def_data);
+		if(iSIZE__LLx_SLOT_VLV > _CFG__LLx_SLOT_VLV_SIZE)			iSIZE__LLx_SLOT_VLV = _CFG__LLx_SLOT_VLV_SIZE;
+
+		for(int i=0; i<iSIZE__LLx_SLOT_VLV; i++)
+		{
+			def_name.Format("CH.LLx_SLOT_VLV.%1d", i+1);
+			p_ext_obj_create->Get__DEF_CONST_DATA(def_name, ch_name);
+
+			p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(ch_name, obj_name,var_name);
+			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__LLx_SLOT_VLV_X[i], obj_name,var_name);
+		}
+	}
+
 	// ...
 	{
 		SCX__SEQ_INFO x_seq_info;
@@ -855,6 +942,11 @@ int CObj__CHM_STD::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 	// ...
 	int flag = -1;
 
+	if(dCH__PARA_BALLAST_CTRL_ACTIVE->Set__DATA(STR__ON) > 0)
+	{
+		Fnc__BALLAST_CLOSE();
+	}
+
 	// ...
 	{
 		IF__CTRL_MODE(sMODE__INIT)
@@ -875,9 +967,12 @@ int CObj__CHM_STD::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 		}
 		ELSE_IF__CTRL_MODE(sMODE__PUMP)
 		{
+			dCH__MON_PUMPING_SEQ_ACTIVE->Set__DATA(STR__ON);
 			sCH__PRESSURE_CTRL_FLAG->Set__DATA("PUMP");
 
 			flag = Call__PUMP(p_variable,p_alarm);
+
+			dCH__MON_PUMPING_SEQ_ACTIVE->Set__DATA(STR__OFF);
 		}
 		ELSE_IF__CTRL_MODE(sMODE__VENT)
 		{
@@ -919,6 +1014,7 @@ int CObj__CHM_STD::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 
 int CObj__CHM_STD::__CALL__MONITORING(id,p_variable,p_alarm)
 {
+
 	switch(id)
 	{
 		case MON_ID__IO_MONITOR:
@@ -932,3 +1028,4 @@ int CObj__CHM_STD::__CALL__MONITORING(id,p_variable,p_alarm)
 
 	return 1;
 }
+

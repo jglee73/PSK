@@ -169,9 +169,9 @@ int CObj__PSK
 		{
 			ch_data = dCH__PARA_RB_ARM_TYPE->Get__STRING();
 
-				 if(ch_data.CompareNoCase("A")  == 0)			str_arm = "01";
-			else if(ch_data.CompareNoCase("B")  == 0)			str_arm = "10";
-			else if(ch_data.CompareNoCase("AB") == 0)			str_arm = "11";
+				 if(ch_data.CompareNoCase(ARM_A)  == 0)			str_arm = "10";
+			else if(ch_data.CompareNoCase(ARM_B)  == 0)			str_arm = "01";
+			else if(ch_data.CompareNoCase(ARM_AB) == 0)			str_arm = "11";
 		}
 
 		str_speed.Format("%02d", (int) aCH__CFG_ROBOT_SPEED_PERCENT->Get__VALUE());
@@ -222,7 +222,7 @@ int CObj__PSK
 			return -101;
 		}
 
-		return Drv__SEND_COMMAND(var_name, str__cmmd,str__para);
+		return Drv__SEND_COMMAND(var_name, str__cmmd,str__para, false);
 	}
 
 	// INIT  MEASURE.START  CHUCK.ON  CHUCK.OFF  ROT.RELATIVE  ROT.ABSOLUTE  CAL
@@ -251,6 +251,7 @@ int CObj__PSK
 
 			str__para = str__angle_deg;
 			str__para += "00000";
+			return Drv__SEND_COMMAND(var_name, str__cmmd,str__para, true); // When Align VAC ON Wait 200ms
 		}
 		else if(set_data.CompareNoCase(_AL_MODE__CHUCK_OFF) == 0)
 		{
@@ -258,6 +259,7 @@ int CObj__PSK
 
 			str__para = str__angle_deg;
 			str__para += "00000";
+			return Drv__SEND_COMMAND(var_name, str__cmmd,str__para, true); // When Align VAC OFF Wait 200ms
 		}
 		else if(set_data.CompareNoCase("ROT.RELATIVE") == 0)
 		{
@@ -288,7 +290,7 @@ int CObj__PSK
 			return -101;
 		}
 
-		return Drv__SEND_COMMAND(var_name, str__cmmd,str__para);
+		return Drv__SEND_COMMAND(var_name, str__cmmd,str__para, false);
 	}
 
 	return -1;
