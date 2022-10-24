@@ -232,6 +232,15 @@ int CObj_Phy__ROBOT_ATM::__DEFINE__VARIABLE_STD(p_variable)
 
 	// ALIGN PARAMETER ...
 	{
+		str_name = "CFG.ALIGN.RETRY";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "count", 0, 1, 5, "");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_ALIGN_RETRY, str_name);
+
+		str_name = "CUR.ALIGN.RETRY";
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__CUR_ALIGN_RETRY, str_name);
+
+		//
 		str_name = "TARGET.PMx.MODE";
 		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "DISABLE  ENABLE","");
 		LINK__VAR_DIGITAL_CTRL(dCH__TARGET_PMx_MODE, str_name);
@@ -378,7 +387,7 @@ int CObj_Phy__ROBOT_ATM::__DEFINE__VARIABLE_STD(p_variable)
 
 		//
 		str_name = "ANI.ROTE.ARM";
-		STD__ADD_DIGITAL(str_name, "A B");
+		STD__ADD_DIGITAL(str_name, "A  B  AB");
 		LINK__VAR_DIGITAL_CTRL(dCH__ANI_ROTE_ARM, str_name);
 
 		//
@@ -419,7 +428,7 @@ int CObj_Phy__ROBOT_ATM::__DEFINE__VARIABLE_STD(p_variable)
 		LINK__VAR_DIGITAL_CTRL(dCH__CFG_DUAL_ARM_MOVING_AT_STx, str_name);
 
 		str_name = "CFG.DUAL_ARM_MOVING_AT_LLx";
-		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO YES", "");
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO", "");
 		LINK__VAR_DIGITAL_CTRL(dCH__CFG_DUAL_ARM_MOVING_AT_LLx, str_name);
 	}
 

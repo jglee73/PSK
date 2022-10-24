@@ -203,7 +203,7 @@ int  CObj__DUAL_ARM_STD
 					{
 						if(dEXT_CH__BUFFER1__CFG_USE_FLAG->Check__DATA(STR__ENABLE) > 0)
 						{
-							if(Buffer1__Check_Empty__Slot_To_Process(slot_id) > 0)
+							if(Buffer1__Get_Empty__Slot_To_Process(slot_id) > 0)
 							{
 								bff_module = MODULE__BUFFER1;
 								bff_slot.Format("%1d", slot_id);
@@ -214,7 +214,7 @@ int  CObj__DUAL_ARM_STD
 					{
 						if(dEXT_CH__BUFFER2__CFG_USE_FLAG->Check__DATA(STR__ENABLE) > 0)
 						{
-							if(Buffer2__Check_Empty__Slot_To_Process(slot_id) > 0)
+							if(Buffer2__Get_Empty__Slot_To_Process(slot_id) > 0)
 							{
 								bff_module = MODULE__BUFFER2;
 								bff_slot.Format("%1d", slot_id);

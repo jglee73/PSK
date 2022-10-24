@@ -1,0 +1,13 @@
+
+# CTC 
+1. EFEM Robot이 Dual Arm으로 Wafer를 LPx, STx로 Pick & Place 하는 기능 추가함.
+  "CTC Config - Dual Arm Pick & Place 항목 추가.jpg" 참고
+2. Manual Move 또는 Scheduling 시에 Align를 몇 번 반복 할지? 설정하는 기능을 추가함.
+  "CTC Config - Align Retry 항목 추가.jpg" 참고
+
+# TMC
+1. Simulation Mode에서 Load Port 관련 Loading 동작이 정상적으로 안되는 문제 Patch함. 
+
+# PMC
+1. Venting 진행시 APC Close Position 확인하는 기능 추가함.
+

@@ -8,6 +8,7 @@ extern int  Macro__Check_PMC_ID(const int pmc_id,const CStringArray& l_pmc_id);
 extern int  Macro__Analyze_Title(const CString& title,CString& str_ptn,CString& str_slot);
 extern int  Macro__Analyze_Title_Info(const CString& title,int& wfr_ptn,int& wfr_slot);
 
+extern int  Macro__Check_Equal__Any_Integer(const int cmp_data,const CUIntArray& l_data);
 extern int  Macro__Check_Equal__Any_String(const CString& cmp_data,const CStringArray& l_data);
 extern int  Macro__Check_Equal__Any_String(const CStringArray& l_data1,const CStringArray& l_data2);
 extern int  Macro__Check_Equal__All_String(const CStringArray& l_data1,const CStringArray& l_data2);

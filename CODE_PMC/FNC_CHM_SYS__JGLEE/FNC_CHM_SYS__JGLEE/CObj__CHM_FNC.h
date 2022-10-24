@@ -199,11 +199,11 @@ private:
 	int Call__VAC_VLV__EXHAUST_OPEN(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm);
 	int Call__VAC_VLV__EXHAUST_CLOSE(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm);
 
-	int Call__VAC_VLV__APC_CLOSE();
-	int Call__VAC_VLV__APC_OPEN();
-	int Call__VAC_VLV__APC_POSITION(const double set_pos);
+	int Call__VAC_VLV__APC_CLOSE(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm);
+	int Call__VAC_VLV__APC_OPEN(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm);
+	int Call__VAC_VLV__APC_POSITION(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm, const double set_pos);
 
-	int Call__VAC_VLV__APC_BALLAST_CTRL(const bool active_xfer);
+	int Call__VAC_VLV__APC_BALLAST_CTRL(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm, const bool active_xfer);
 	int Run__VAC_VLV__APC_BALLAST_CTRL(const bool active_xfer);
 
 	// OBJ : PHY_VAC_VLV ...
@@ -394,7 +394,7 @@ private:
 
 
 	// OBJ_VAT.CTRL ...
-	int VAT__CALL_OBJECT(const CString& obj_mode);
+	int VAT__CALL_OBJECT(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm, const CString& obj_mode);
 	int VAT__RUN_OBJECT(const CString& obj_mode);
 	//
 

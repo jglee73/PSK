@@ -263,7 +263,7 @@ int CObj__DUAL_ARM_STD::__DEFINE__VARIABLE_STD(p_variable)
 		LINK__VAR_DIGITAL_CTRL(xCH__CFG_DB_STx_TRANSFER_MODE, str_name);
 
 		str_name = "SCH_DB.CFG.BUFFER.TRANSFER.MODE";
-		STD__ADD_DIGITAL_WITH_X_OPTION(str_name,"Before_Process After_Process","");
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name,"After_Process","");
 		LINK__VAR_DIGITAL_CTRL(xCH__SCH_DB_STx_TRANSFER_MODE, str_name);
 
 		//
@@ -961,6 +961,13 @@ int CObj__DUAL_ARM_STD::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		LINK__EXT_VAR_DIGITAL_CTRL(xCH__ATM_RB__ANI_TRG_MOVE, db_name, "ANI.TRG.MOVE");
 
 		//
+		str_name = "CFG.ALIGN.RETRY";
+		LINK__EXT_VAR_ANALOG_CTRL(aCH__ATM_RB__CFG_ALIGN_RETRY, db_name,str_name);
+
+		str_name = "CUR.ALIGN.RETRY";
+		LINK__EXT_VAR_STRING_CTRL(sCH__ATM_RB__CUR_ALIGN_RETRY, db_name,str_name);
+
+		//
 		LINK__EXT_VAR_DIGITAL_CTRL(xCH__ATM_RB__TARGET_LLx_MODE, db_name, "TARGET.LLx.MODE");
 		LINK__EXT_VAR_DIGITAL_CTRL(xCH__ATM_RB__TARGET_LLx_SLOT_CHECK, db_name, "TARGET.LLx.SLOT.CHECK");
 
@@ -974,6 +981,9 @@ int CObj__DUAL_ARM_STD::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		LINK__EXT_VAR_STRING_CTRL(xCH__ATM_RB__TARGET_LLx_SLOT_SET_ALL, db_name, "TARGET.LLx.SLOT.SET");
 
 		//
+		LINK__EXT_VAR_DIGITAL_CTRL(xCH__ATM_RB__TARGET_PMx_MODE, db_name, "TARGET.PMx.MODE");
+
+		//
 		LINK__EXT_VAR_DIGITAL_CTRL(xCH__ATM_RB__CFG_A_ARM_USE_MODE, db_name,"CFG.A.ARM.USE.FLAG");
 		LINK__EXT_VAR_DIGITAL_CTRL(xCH__ATM_RB__CFG_B_ARM_USE_MODE, db_name,"CFG.B.ARM.USE.FLAG");
 
@@ -981,8 +991,18 @@ int CObj__DUAL_ARM_STD::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		str_name = "CFG.LLx_CTRL.ONLY_INPUT_OUTPUT.MODE";
 		LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__CFG_LLx_CTRL_ONLY_INPUT_OUTPUT_MODE, db_name,str_name);
 
+		//
 		str_name = "CFG.DUAL_ARM_MOVING_AT_THE_SAME_TIME";
 		LINK__EXT_VAR_DIGITAL_CTRL(dCH__ATM_RB__CFG_DUAL_ARM_MOVING_AT_THE_SAME_TIME, db_name,str_name);
+
+		str_name = "CFG.DUAL_ARM_MOVING_AT_LPx";
+		LINK__EXT_VAR_DIGITAL_CTRL(dCH__ATM_RB__CFG_DUAL_ARM_MOVING_AT_LPx, db_name,str_name);
+
+		str_name = "CFG.DUAL_ARM_MOVING_AT_STx";
+		LINK__EXT_VAR_DIGITAL_CTRL(dCH__ATM_RB__CFG_DUAL_ARM_MOVING_AT_STx, db_name,str_name);
+
+		str_name = "CFG.DUAL_ARM_MOVING_AT_LLx";
+		LINK__EXT_VAR_DIGITAL_CTRL(dCH__ATM_RB__CFG_DUAL_ARM_MOVING_AT_LLx, db_name,str_name);
 
 		// LLx : CONTRAINT ...
 		str_name = "CFG.LL.CONSTRAINT.1";
@@ -1296,7 +1316,7 @@ int CObj__DUAL_ARM_STD::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 
 	try
 	{
-		IF__CTRL_MODE(sMODE__MAINT_PICK)					flag = Call__MAINT_PICK(p_variable, p_alarm);
+			 IF__CTRL_MODE(sMODE__MAINT_PICK)					flag = Call__MAINT_PICK(p_variable, p_alarm);
 		ELSE_IF__CTRL_MODE(sMODE__MAINT_PLACE)					flag = Call__MAINT_PLACE(p_variable, p_alarm);
 
 		ELSE_IF__CTRL_MODE(sMODE__CLEAR)						flag = Call__CLEAR(p_variable, p_alarm);

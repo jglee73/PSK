@@ -4,6 +4,8 @@
 // ...
 #define  ARM_A						"A"
 #define  ARM_B						"B"
+#define  ARM_AB						"AB"
+
 #define  STR__A						"A"
 #define  STR__B						"B"
 

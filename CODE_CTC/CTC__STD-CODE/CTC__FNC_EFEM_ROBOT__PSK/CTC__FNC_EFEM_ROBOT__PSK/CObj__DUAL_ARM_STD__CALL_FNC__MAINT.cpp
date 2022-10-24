@@ -164,16 +164,20 @@ LOOP_RETRY:
 			CString lb_slot;
 			CString lb_name = SCH__Get_LBx_To_PLACE(lb_slot);
 
-			if(arm_type.CompareNoCase("A") == 0)
+			if(arm_type.CompareNoCase(ARM_A) == 0)
 			{
 				xCH__ATM_RB__TARGET_LLx_NAME_SET_OF_ARM_A->Set__DATA(lb_name);
 				xCH__ATM_RB__TARGET_LLx_SLOT_SET_OF_ARM_A->Set__DATA(lb_slot);
 			}
-			else if(arm_type.CompareNoCase("B") == 0)
+			else if(arm_type.CompareNoCase(ARM_B) == 0)
 			{
 				xCH__ATM_RB__TARGET_LLx_NAME_SET_OF_ARM_B->Set__DATA(lb_name);
 				xCH__ATM_RB__TARGET_LLx_SLOT_SET_OF_ARM_B->Set__DATA(lb_slot);
 			}
+		}
+		else if(xCH__ATM_RB__TARGET_PMx_MODE->Check__DATA(STR__ENABLE) > 0)
+		{
+
 		}
 		else
 		{
@@ -244,19 +248,28 @@ int  CObj__DUAL_ARM_STD
 
 		switch(i)
 		{
-		case 0:		para_arm    = para_data;		break;
-		case 1:		para_module = para_data;		break;
-		case 2:		para_slot   = para_data;		break;
+			case 0:		para_arm    = para_data;		break;
+			case 1:		para_module = para_data;		break;
+			case 2:		para_slot   = para_data;		break;
 		}
 	}
 
 	if(MANUAL_MOVE__Check_System_Module_Error(-1,
-		para_arm,
-		para_module,
-		para_slot,
-		p_alarm) < 0)
+											  para_arm,
+											  para_module,
+											  para_slot,
+											  p_alarm) < 0)
 	{
 		return -1;
+	}
+
+	// Init : Align Parameter ...
+	{
+		xCH__ATM_RB__TARGET_LLx_NAME_SET_OF_ARM_A->Set__DATA("");
+		xCH__ATM_RB__TARGET_LLx_SLOT_SET_OF_ARM_A->Set__DATA("");
+		
+		xCH__ATM_RB__TARGET_LLx_NAME_SET_OF_ARM_B->Set__DATA("");
+		xCH__ATM_RB__TARGET_LLx_SLOT_SET_OF_ARM_B->Set__DATA("");
 	}
 
 	if(para_module.CompareNoCase(MODULE__AL1) == 0)
@@ -276,6 +289,7 @@ int  CObj__DUAL_ARM_STD
 	DECLARE__EXT_CTRL(p_variable);
 
 	CString log_id = "Seq__MAINT_PLACE()";
+	CString ch_data;
 
 	// ...
 LOOP_RETRY:
@@ -428,27 +442,35 @@ LOOP_RETRY:
 				}
 			}
 		}
+		else if(xCH__ATM_RB__TARGET_PMx_MODE->Check__DATA(STR__ENABLE) > 0)
+		{
+
+		}
 
 		if(active__ll_align)
 		{
-			if(AL1__Is_Available() < 0)
-			{
-				return -1;
-			}
-			if(AL1__Check_Empty__All_Slot() < 0)
-			{
-				return -1;
-			}
+			int cur_count = (int) aCH__ATM_RB__CFG_ALIGN_RETRY->Get__VALUE();
 
-			// ...
-			CString sch_module;
-			CString al_name = "AL1";
-			CString al_slot = "1";
+			ch_data.Format("%1d", cur_count);
+			sCH__ATM_RB__CUR_ALIGN_RETRY->Set__DATA(ch_data);
 
-			sch_module.Format("%s-%s", al_name,al_slot);
-
-			// Place ...
+			// Align_Retry ...
+			while(cur_count > 0)
 			{
+				cur_count--;
+
+				// ...
+				if(AL1__Is_Available() < 0)					return -1;
+				if(AL1__Check_Empty__All_Slot() < 0)		return -1;
+
+				// ...
+				CString sch_module;
+				CString al_name = "AL1";
+				CString al_slot = "1";
+
+				sch_module.Format("%s-%s", al_name,al_slot);
+
+				// Place ...
 				if(SCH__PLACE_TO(false,
 								 p_variable,
 								 p_alarm,
@@ -459,13 +481,11 @@ LOOP_RETRY:
 				{
 					return -1;
 				}
-			}
+	
+				xCH__ATM_RB__TARGET_LLx_NAME_SET_ALL->Set__DATA(para_module);
+				xCH__ATM_RB__TARGET_LLx_SLOT_SET_ALL->Set__DATA(para_slot);
 
-			xCH__ATM_RB__TARGET_LLx_NAME_SET_ALL->Set__DATA(para_module);
-			xCH__ATM_RB__TARGET_LLx_SLOT_SET_ALL->Set__DATA(para_slot);
-
-			// Pick ...
-			{
+				// Pick ...
 				if(SCH__PICK_FROM(false,
 								  p_variable,
 								  p_alarm,
@@ -476,6 +496,9 @@ LOOP_RETRY:
 				{
 					return -1;
 				}
+
+				ch_data.Format("%1d", cur_count);
+				sCH__ATM_RB__CUR_ALIGN_RETRY->Set__DATA(ch_data);
 			}		
 		}
 	}

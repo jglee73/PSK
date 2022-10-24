@@ -25,8 +25,6 @@ private:
 	//  EXTERNAL PROPERTY
 
 	// IO Channel ...
-
-	//
 	CString sCH_Name__DO_VENT_FAST_VLV;
 	CX__VAR_DIGITAL_CTRL doEXT_CH__DO_VENT_FAST_VLV;
 
@@ -66,6 +64,12 @@ private:
 
 	bool bActive__DRY_PUMP_VAC_SNS;
 	CX__VAR_DIGITAL_CTRL dEXT_CH__DRY_PUMP_VAC_SNS;
+	//
+
+	// LINK_OBJ.TMP ...
+	bool bActive__TMP_LINK;
+
+	CX__VAR_DIGITAL_CTRL dEXT_CH__TMP_LINK__ACTIVE_INTERLOCK_SKIP_FORELINE_VAC;
 	//
 
 

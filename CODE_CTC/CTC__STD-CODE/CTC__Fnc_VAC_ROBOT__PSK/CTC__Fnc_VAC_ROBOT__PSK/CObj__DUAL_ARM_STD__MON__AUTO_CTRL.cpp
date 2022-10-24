@@ -4432,7 +4432,7 @@ _AUTO_CTRL__RB_PMx_WITH_DUAL_TYPE(CII_OBJECT__VARIABLE *p_variable,
 				}
 				else if(arm_type.CompareNoCase(_ARM__B) == 0)
 				{
-					if(xCH__VAC_RB__SLOT02_STATUS->Check__DATA(STR__MAPPED) < 0)			active__wafer_constraint = true;
+					if(xCH__VAC_RB__SLOT02_STATUS->Check__DATA(STR__MAPPED) > 0)			active__wafer_constraint = true;
 				}
 			}
 
@@ -6342,43 +6342,30 @@ _SCH_CHECK__PMo_RB(const bool active__pm_constaint)
 					continue;
 				}
 			}
-			
+		
+			if((dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PATH) > 0)
+			|| (dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PROCESS) > 0))
+			{
+				int pmc__step_count = xSCH_MATERIAL_CTRL->SCH_DB_INFO__Get_Current_Step_Count(sch_name);
+
+				if(VAC_RB__Check_Occupied__A_Arm() > 0)
+				{
+					CString check_arm = _ARM__A;
+
+					int arm__step_count = xSCH_MATERIAL_CTRL->SCH_DB_INFO__Get_Current_Step_Count(check_arm);
+					if(arm__step_count != pmc__step_count)			continue;
+				}
+				if(VAC_RB__Check_Occupied__B_Arm() > 0)
+				{
+					CString check_arm = _ARM__B;
+
+					int arm__step_count = xSCH_MATERIAL_CTRL->SCH_DB_INFO__Get_Current_Step_Count(check_arm);
+					if(arm__step_count != pmc__step_count)			continue;
+				}
+			}
+
 			return 1;
 		}
-	}
-
-	// ...
-	CString sch_name;
-	CString pm_name;
-	CString pm_slot = "1";
-
-	for(int i=0; i<iPMx_SIZE; i++)
-	{
-		pm_name.Format("PM%1d",i+1);
-		sch_name.Format("%s-%s", pm_name,pm_slot);
-
-		if(PMx__Check_Empty__SlotStatus(i) > 0)
-		{
-			continue;
-		}
-		if(PMx__Is_Idle(i) < 0)
-		{
-			continue;
-		}
-
-		if(xSCH_MATERIAL_CTRL->Check__NEXT_PROCESS(sch_name) > 0)
-		{
-			continue;
-		}
-
-		if(active__pm_constaint)
-		{
-			if(!VAC_RB__Check_Empty__Arm_Type_With_PMx_Constraint(empty_arm, pm_name))
-			{
-				continue;
-			}
-		}
-		return 1;
 	}
 	
 	return -1;
@@ -6628,7 +6615,6 @@ _AUTO_CTRL__PMo_RB_WITH_DUAL_TYPE(CII_OBJECT__VARIABLE *p_variable,
 				continue;
 			}
 
-			/*
 			if((dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PATH) > 0)
 			|| (dCH__VAC_RB__CFG_PMx_To_PMx_CONSTRAINT->Check__DATA(STR__SAME_PROCESS) > 0))
 			{
@@ -6649,7 +6635,6 @@ _AUTO_CTRL__PMo_RB_WITH_DUAL_TYPE(CII_OBJECT__VARIABLE *p_variable,
 					if(arm__step_count != pmc__step_count)			continue;
 				}
 			}
-			*/
 
 			int pm_index = pm_id - 1;
 			l__pm_index.Add(pm_index);

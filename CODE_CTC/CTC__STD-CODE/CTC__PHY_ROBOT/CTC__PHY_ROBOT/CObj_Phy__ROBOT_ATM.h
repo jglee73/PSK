@@ -63,6 +63,9 @@ private:
 	CX__VAR_DIGITAL_CTRL dCH__PARA_POS;
 
 	//
+	CX__VAR_ANALOG_CTRL  aCH__CFG_ALIGN_RETRY;
+	CX__VAR_STRING_CTRL  sCH__CUR_ALIGN_RETRY;
+
 	CX__VAR_DIGITAL_CTRL dCH__TARGET_PMx_MODE;
 
 	CX__VAR_DIGITAL_CTRL dCH__TARGET_LLx_MODE;
@@ -287,6 +290,7 @@ private:
 	void Update__MATERIAL_INFO();
 
 	void Report__MATERIAL_INFO(const CString& mode);
+	void _Report__MATERIAL_INFO(const CString& mode, const CString& arm_type);
 	void _Report__LPx_MATERIAL_INFO(const CString& mode, const CString& arm_type,const int lp_id,const int lp_slot, const bool active_wfr);
 	void _Report__ALx_MATERIAL_INFO(const CString& mode, const CString& arm_type,const int al_id,const int al_slot, const int lp_id,const int lp_slot);
 	void _Report__MDx_MATERIAL_INFO(const CString& mode, const CString& arm_type,const CString& md_id,const CString& md_slot, const int lp_id,const int lp_slot);

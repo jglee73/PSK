@@ -719,14 +719,13 @@ int CObj__CHM_FNC::__DEFINE__ALARM(p_alarm)
 
 	// ...
 	{
-		alarm_id = ALID__APC_VALVE_CLOSE_CONDITION_OCCUR;
+		alarm_id = ALID__APC_VALVE_CLOSE_TIMEOUT;
 		iLIST_ALID__PART.Add(alarm_id);
 
 		alarm_title  = title;
-		alarm_title += "APC Valve Close Condition Occur.";
+		alarm_title += "APC Valve Close Error !.";
 
-		alarm_msg  = "Now.. Chamber Pressure is higher than (CM2 SW1) or (CM2 SW2) Config Value..\n";
-		alarm_msg += "For Safety, APC Valve Will be Closed !!\n";
+		alarm_msg = "APC's valve가 Close 상태인지? 확인하세요. \n";
 
 		l_act.RemoveAll();
 		l_act.Add("CHECK");

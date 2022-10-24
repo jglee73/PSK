@@ -998,8 +998,10 @@ int  CObj_Opr__MAINT_MODE::Call__TOOL_CLEAR(CII_OBJECT__VARIABLE *p_variable)
 //-------------------------------------------------------------------------
 int  CObj_Opr__MAINT_MODE::
 Fnc__ATM_RB__Manual_Move_To(CII_OBJECT__VARIABLE *p_variable,
-							const CString& s_module,const CString& s_slot,
-							CString& t_module,CString& t_slot)
+							const CString& s_module,
+							const CString& s_slot,
+							CString& t_module,
+							CString& t_slot)
 {
 	DECLARE__EXT_CTRL(p_variable);
 
@@ -1186,6 +1188,7 @@ int  CObj_Opr__MAINT_MODE
 
 	if(active__al_retry)
 	{
+		/*
 		if((str_module.CompareNoCase("LBI") == 0)
 		|| (str_module.CompareNoCase("LBA") == 0)
 		|| (str_module.CompareNoCase("LBB") == 0)
@@ -1204,6 +1207,7 @@ int  CObj_Opr__MAINT_MODE
 				return -1;
 			}
 		}
+		*/
 	}
 
 	// ...
@@ -1238,7 +1242,7 @@ int  CObj_Opr__MAINT_MODE
 					break;
 
 				case 1:		
-					str_slot   = l_para[i];		
+					str_slot = l_para[i];		
 					break;
 			}
 		}

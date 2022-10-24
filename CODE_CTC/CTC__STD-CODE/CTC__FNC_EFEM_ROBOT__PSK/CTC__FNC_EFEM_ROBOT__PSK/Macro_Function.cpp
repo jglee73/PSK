@@ -112,6 +112,17 @@ int  Macro__Analyze_Title_Info(const CString& title,int& wfr_ptn,int& wfr_slot)
 	return 1;
 }
 
+int  Macro__Check_Equal__Any_Integer(const int cmp_data, const CUIntArray& l_data)
+{	
+	int i_limit = l_data.GetSize();
+
+	for(int i=0; i<i_limit; i++)
+	{
+		if(cmp_data == l_data[i])		return 1;
+	}
+	return -1;
+}
+
 int  Macro__Check_Equal__Any_String(const CString& cmp_data,const CStringArray& l_data)
 {	
 	int i_limit = l_data.GetSize();

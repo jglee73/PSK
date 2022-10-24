@@ -33,11 +33,39 @@ SCH__PICK_MODULE(CII_OBJECT__VARIABLE *p_variable,
 				 CII_OBJECT__ALARM *p_alarm,
 				 const CString& log_id,
 				 const bool ex_flag,
-				 const CString& arm_type,const CString& para_module,const CString& para_slot,
+				 const CString& arm_type,
+				 const CString& para_module,
+				 const CString& para_slot,
 				 const CString& from_sch_module,
 				 const int maint_flag)
 {
 	CString fnc_id = "SCH__PICK_MODULE()";
+
+	// ...
+	CStringArray l__check_arm;
+	CStringArray l__trg_name;
+	CUIntArray   l__trg_slot;
+
+	if(arm_type.CompareNoCase(ARM_AB) == 0)
+	{
+		int slot_id = atoi(para_slot);
+		
+		l__check_arm.Add(ARM_A);
+		l__trg_name.Add(para_module);
+		l__trg_slot.Add(slot_id);
+
+		l__check_arm.Add(ARM_B);
+		l__trg_name.Add(para_module);
+		l__trg_slot.Add(slot_id + 1);
+	}
+	else
+	{
+		int slot_id = atoi(para_slot);
+
+		l__check_arm.Add(arm_type);
+		l__trg_name.Add(para_module);
+		l__trg_slot.Add(slot_id);		
+	}
 
 	// ...
 	{
@@ -64,9 +92,21 @@ SCH__PICK_MODULE(CII_OBJECT__VARIABLE *p_variable,
 
 	if(maint_flag < 0)
 	{
-		Datalog__Picking_Material(arm_type,para_module,para_slot,ex_flag);
+		int k_limit = l__check_arm.GetSize();
+		for(int k=0; k<k_limit; k++)
+		{
+			CString check_arm = l__check_arm[k];
+			CString str__trg_name = l__trg_name[k];
+			CString str__trg_slot;
 
-		xSCH_MATERIAL_CTRL->Transfer_Start__To_MODULE(from_sch_module,arm_type);
+			int trg_slot = l__trg_slot[k];
+			str__trg_slot.Format("%1d", trg_slot);
+
+			CString str__sch_name;
+			str__sch_name.Format("%s-%s", str__trg_name,str__trg_slot);
+
+			xSCH_MATERIAL_CTRL->Transfer_Start__To_MODULE(str__sch_name, check_arm);
+		}
 	}
 
 	iLBx_FRONT_FLAG = -1;
@@ -90,9 +130,21 @@ SCH__PICK_MODULE(CII_OBJECT__VARIABLE *p_variable,
 
 	if(maint_flag < 0)
 	{
-		Datalog__Picked_Material(arm_type,para_module,para_slot,ex_flag);
+		int k_limit = l__check_arm.GetSize();
+		for(int k=0; k<k_limit; k++)
+		{
+			CString check_arm = l__check_arm[k];
+			CString str__trg_name = l__trg_name[k];
+			CString str__trg_slot;
 
-		xSCH_MATERIAL_CTRL->Transfer_End__To_MODULE(from_sch_module,arm_type);
+			int trg_slot = l__trg_slot[k];
+			str__trg_slot.Format("%1d", trg_slot);
+
+			CString str__sch_name;
+			str__sch_name.Format("%s-%s", str__trg_name,str__trg_slot);
+
+			xSCH_MATERIAL_CTRL->Transfer_End__To_MODULE(str__sch_name, check_arm);
+		}
 	}
 
 	if(SCH__CHECK_PICK_MODULE__COMPLETE(p_variable,ex_flag,para_module,para_slot,maint_flag) < 0)
@@ -100,24 +152,22 @@ SCH__PICK_MODULE(CII_OBJECT__VARIABLE *p_variable,
 	
 	}
 
-	// ...
+	// STx Check ...
+	if((para_module.CompareNoCase(MODULE__BUFFER1) == 0)
+	|| (para_module.CompareNoCase(MODULE__BUFFER2) == 0))
 	{
-		if((para_module.CompareNoCase(MODULE__BUFFER1) == 0)
-		|| (para_module.CompareNoCase(MODULE__BUFFER2) == 0))
+		if(para_module.CompareNoCase(MODULE__BUFFER1) == 0)
 		{
-			if(para_module.CompareNoCase(MODULE__BUFFER1) == 0)
+			if(Buffer1__Check_Empty__All_Slot() > 0)
 			{
-				if(Buffer1__Check_Empty__All_Slot() > 0)
-				{
-					xEXT_CH__BUFFER1__APP_CUR_LOTID->Set__DATA("");
-				}
+				xEXT_CH__BUFFER1__APP_CUR_LOTID->Set__DATA("");
 			}
-			else
+		}
+		else
+		{
+			if(Buffer2__Check_Empty__All_Slot() > 0)
 			{
-				if(Buffer2__Check_Empty__All_Slot() > 0)
-				{
-					xEXT_CH__BUFFER2__APP_CUR_LOTID->Set__DATA("");
-				}
+				xEXT_CH__BUFFER2__APP_CUR_LOTID->Set__DATA("");
 			}
 		}
 	}
@@ -185,6 +235,32 @@ _SCH__PLACE_MODULE(CII_OBJECT__VARIABLE *p_variable,
 		xAPP_LOG_CTRL->WRITE__LOG(log_msg);
 	}
 
+	// ...
+	CStringArray l__arm_type;
+	CStringArray l__trg_module;
+	CUIntArray   l__trg_slot;
+
+	if(arm_type.CompareNoCase(ARM_AB) == 0)
+	{
+		int slot_id = atoi(para_slot);
+
+		l__arm_type.Add(ARM_A);
+		l__trg_module.Add(para_module);
+		l__trg_slot.Add(slot_id);
+
+		l__arm_type.Add(ARM_B);
+		l__trg_module.Add(para_module);
+		l__trg_slot.Add(slot_id + 1);
+	}
+	else
+	{
+		int slot_id = atoi(para_slot);
+
+		l__arm_type.Add(arm_type);
+		l__trg_module.Add(para_module);
+		l__trg_slot.Add(slot_id);
+	}
+
 	if(Get__LLx_INDEX(para_module) >= 0)
 	{
 		bool active__ll_align = false;
@@ -193,7 +269,7 @@ _SCH__PLACE_MODULE(CII_OBJECT__VARIABLE *p_variable,
 		{
 			if(xCH__ATM_RB__TARGET_LLx_SLOT_CHECK->Check__DATA(STR__ENABLE) > 0)
 			{
-				if(arm_type.CompareNoCase("A") == 0)
+				if(arm_type.CompareNoCase(ARM_A) == 0)
 				{
 					if((xCH__ATM_RB__TARGET_LLx_NAME_SET_OF_ARM_A->Check__DATA(para_module) < 0)
 					|| (xCH__ATM_RB__TARGET_LLx_SLOT_SET_OF_ARM_A->Check__DATA(para_slot)   < 0))
@@ -201,7 +277,7 @@ _SCH__PLACE_MODULE(CII_OBJECT__VARIABLE *p_variable,
 						active__ll_align = true;
 					}
 				}
-				else if(arm_type.CompareNoCase("B") == 0)
+				else if(arm_type.CompareNoCase(ARM_B) == 0)
 				{
 					if((xCH__ATM_RB__TARGET_LLx_NAME_SET_OF_ARM_B->Check__DATA(para_module) < 0)
 					|| (xCH__ATM_RB__TARGET_LLx_SLOT_SET_OF_ARM_B->Check__DATA(para_slot)   < 0))
@@ -212,14 +288,14 @@ _SCH__PLACE_MODULE(CII_OBJECT__VARIABLE *p_variable,
 			}
 			else
 			{
-				if(arm_type.CompareNoCase("A") == 0)
+				if(arm_type.CompareNoCase(ARM_A) == 0)
 				{
 					if(xCH__ATM_RB__TARGET_LLx_NAME_SET_OF_ARM_A->Check__DATA(para_module) < 0)
 					{
 						active__ll_align = true;
 					}
 				}
-				else if(arm_type.CompareNoCase("B") == 0)
+				else if(arm_type.CompareNoCase(ARM_B) == 0)
 				{
 					if(xCH__ATM_RB__TARGET_LLx_NAME_SET_OF_ARM_B->Check__DATA(para_module) < 0)
 					{
@@ -228,66 +304,67 @@ _SCH__PLACE_MODULE(CII_OBJECT__VARIABLE *p_variable,
 				}
 			}
 		}
+		else if(xCH__ATM_RB__TARGET_PMx_MODE->Check__DATA(STR__ENABLE) > 0)
+		{
+			
+		}
 
 		if(active__ll_align)
 		{
-			if(AL1__Is_Available() < 0)
+			// Align_Retry ...
 			{
-				return -1;
-			}
-			if(AL1__Check_Empty__All_Slot() < 0)
-			{
-				return -1;
-			}
+				if(AL1__Is_Available() < 0)					return -1;
+				if(AL1__Check_Empty__All_Slot() < 0)		return -1;
 
-			// ...
-			CString sch_module;
-			CString al_name = "AL1";
-			CString al_slot = "1";
+				// ...
+				CString sch_module;
+				CString al_name = "AL1";
+				CString al_slot = "1";
 
-			sch_module.Format("%s-%s", al_name,al_slot);
+				sch_module.Format("%s-%s", al_name,al_slot);
 
-			// Place ...
-			{
-				bool active__auto_mode = true;
-				if(maint_flag > 0)		active__auto_mode = false;
-
-				if(SCH__PLACE_TO(active__auto_mode,
-								 p_variable,
-								 p_alarm, 
-								 false, 
-								 arm_type, 
-								 al_name, 
-								 al_slot) < 0)
+				// Place ...
 				{
-					return -1;
+					bool active__auto_mode = true;
+					if(maint_flag > 0)		active__auto_mode = false;
+
+					if(SCH__PLACE_TO(active__auto_mode,
+									 p_variable,
+									 p_alarm, 
+									 false, 
+									 arm_type, 
+									 al_name, 
+									 al_slot) < 0)
+					{
+						return -1;
+					}
+
+					xSCH_MATERIAL_CTRL->Place__To_MODULE(arm_type,sch_module);
+					xSCH_MATERIAL_CTRL->Set__MATERIAL_STATUS(sch_module, "ALIGNED");
 				}
 
-				xSCH_MATERIAL_CTRL->Place__To_MODULE(arm_type,sch_module);
-				xSCH_MATERIAL_CTRL->Set__MATERIAL_STATUS(sch_module, "ALIGNED");
-			}
+				xCH__ATM_RB__TARGET_LLx_NAME_SET_ALL->Set__DATA(para_module);
+				xCH__ATM_RB__TARGET_LLx_SLOT_SET_ALL->Set__DATA(para_slot);
 
-			xCH__ATM_RB__TARGET_LLx_NAME_SET_ALL->Set__DATA(para_module);
-			xCH__ATM_RB__TARGET_LLx_SLOT_SET_ALL->Set__DATA(para_slot);
-
-			// Pick ...
-			{
-				bool active__auto_mode = true;
-				if(maint_flag > 0)		active__auto_mode = false;
-
-				if(SCH__PICK_FROM(active__auto_mode,
-								  p_variable, 
-								  p_alarm, 
-								  false, 
-								  arm_type, 
-								  al_name, 
-								  al_slot) < 0)
+				// Pick ...
 				{
-					return -1;
-				}
+					bool active__auto_mode = true;
+					if(maint_flag > 0)		active__auto_mode = false;
 
-				xSCH_MATERIAL_CTRL->Pick__From_MODULE(sch_module,arm_type);
-			}		
+					if(SCH__PICK_FROM(active__auto_mode,
+									  p_variable, 
+									  p_alarm, 
+									  false, 
+									  arm_type, 
+									  al_name, 
+									  al_slot) < 0)
+					{
+						return -1;
+					}
+
+					xSCH_MATERIAL_CTRL->Pick__From_MODULE(sch_module,arm_type);
+				}
+			}
 		}
 	}
 
@@ -323,12 +400,20 @@ _SCH__PLACE_MODULE(CII_OBJECT__VARIABLE *p_variable,
 
 	if(maint_flag < 0)
 	{
-		Datalog__Placing_Material(arm_type,
-									para_module,
-									para_slot,
-									ex_flag);
+		int k_limit = l__arm_type.GetSize();
+		for(int k=0; k<k_limit; k++)
+		{
+			CString src_arm    = l__arm_type[k];
+			CString trg_module = l__trg_module[k];
 
-		xSCH_MATERIAL_CTRL->Transfer_Start__To_MODULE(arm_type,to_sch_module);	
+			CString trg_slot;
+			trg_slot.Format("%1d", l__trg_slot[k]);
+
+			CString sch_name;
+			sch_name.Format("%s-%s", trg_module,trg_slot);
+
+			xSCH_MATERIAL_CTRL->Transfer_Start__To_MODULE(src_arm, sch_name);
+		}
 	}
 
 	iLBx_FRONT_FLAG = -1;
@@ -358,12 +443,20 @@ _SCH__PLACE_MODULE(CII_OBJECT__VARIABLE *p_variable,
 
 	if(maint_flag < 0)
 	{
-		Datalog__Placed_Material(arm_type,
-									para_module,
-									para_slot,
-									ex_flag);
+		int k_limit = l__arm_type.GetSize();
+		for(int k=0; k<k_limit; k++)
+		{
+			CString src_arm    = l__arm_type[k];
+			CString trg_module = l__trg_module[k];
 
-		xSCH_MATERIAL_CTRL->Transfer_End__To_MODULE(arm_type,to_sch_module);
+			CString trg_slot;
+			trg_slot.Format("%1d", l__trg_slot[k]);
+
+			CString sch_name;
+			sch_name.Format("%s-%s", trg_module,trg_slot);
+
+			xSCH_MATERIAL_CTRL->Transfer_End__To_MODULE(src_arm, sch_name);
+		}
 	}
 
 	if(SCH__CHECK_PLACE_MODULE__COMPLETE(p_variable,
@@ -543,6 +636,28 @@ _SCH__PICK_FROM(CII_OBJECT__VARIABLE *p_variable,
 		flag = Call__ROBOT_OBJ("XPICK", l_para);
 	}
 
+	// ...
+	CStringArray l__arm_type;
+	CUIntArray   l__slot_id;
+
+	if(arm_type.CompareNoCase(ARM_AB) == 0)
+	{
+		int slot_id = atoi(str_slot);
+
+		l__arm_type.Add(ARM_A);
+		l__slot_id.Add(slot_id);
+
+		l__arm_type.Add(ARM_B);
+		l__slot_id.Add(slot_id + 1);
+	}
+	else
+	{
+		int slot_id = atoi(str_slot);
+
+		l__arm_type.Add(arm_type);
+		l__slot_id.Add(slot_id);
+	}
+
 	if(flag < 0)
 	{
 		// ...
@@ -580,156 +695,47 @@ _SCH__PICK_FROM(CII_OBJECT__VARIABLE *p_variable,
 			if(r_act.CompareNoCase(STR__YES) == 0)
 			{
 				// Module -> Arm
+				
+				int k_limit = l__arm_type.GetSize();
+				int k;
 
-				// ....
-				CString slot_status;
-				CString slot_title;
-				int check_flag = -1;
-
-				int ll_i = Get__LLx_INDEX(str_module);
-				int slot_index = atoi(str_slot) - 1;
-
-				if(str_module.CompareNoCase(MODULE__AL1) == 0)
+				for(k=0; k<k_limit; k++)
 				{
-					check_flag = 1;
+					CString check_arm = l__arm_type[k];
+					int check_slot_id = l__slot_id[k];
 
-					//
-					xCH__AL1__SLOT01_STATUS->Get__DATA(slot_status);
-					xCH__AL1__SLOT01_TITLE->Get__DATA(slot_title);
+					// ....
+					CString slot_status;
+					CString slot_title;
+					int check_flag = -1;
 
-					xCH__AL1__SLOT01_STATUS->Set__DATA(STR__NONE);
-					xCH__AL1__SLOT01_TITLE->Set__DATA("");
-				}
-				else if(ll_i >= 0)
-				{
-					int slot_size = iLLx_SLOT_MAX[ll_i];
+					int ll_i = Get__LLx_INDEX(str_module);
+					int slot_index = check_slot_id - 1;
 
-					if((slot_index >= 0)
-					&& (slot_index <  slot_size))	
-					{
-						check_flag = 1;
-						
-						xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Get__DATA(slot_status);
-						xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Get__DATA(slot_title);
-
-						xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Set__DATA(STR__NONE);
-						xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Set__DATA("");
-					}
-				}
-				else if(str_module.CompareNoCase(MODULE__BUFFER1) == 0)
-				{
-					if((slot_index >= 0)
-					&& (slot_index <  CFG_LP__SLOT_MAX))
-					{
-						check_flag = 1;
-
-						//
-						xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
-						xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
-
-						xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Set__DATA(STR__NONE);
-						xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Set__DATA("");
-					}
-				}
-				else if(str_module.CompareNoCase(MODULE__BUFFER2) == 0)
-				{
-					if((slot_index >= 0)
-					&& (slot_index <  CFG_LP__SLOT_MAX))
-					{
-						check_flag = 1;
-
-						//
-						xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
-						xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
-
-						xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Set__DATA(STR__NONE);
-						xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Set__DATA("");
-					}
-				}
-				else
-				{
-					int lp_index = SCH__Get_LPx_INDEX(str_module);
-
-					if(lp_index >= 0)
-					{
-						if((slot_index >= 0)
-						&& (slot_index <  CFG_LP__SLOT_MAX))
-						{
-							check_flag = 1;
-
-							//
-							xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Get__DATA(slot_status);
-
-							xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Set__DATA(STR__NONE);
-						}
-					}
-				}
-
-				if(check_flag > 0)
-				{
-					if(arm_type.CompareNoCase(STR__A) == 0)
-					{
-						xCH__ATM_RB__SLOT01_STATUS->Set__DATA(slot_status);	
-						xCH__ATM_RB__SLOT01_TITLE->Set__DATA(slot_title);
-					}	
-					else if(arm_type.CompareNoCase(STR__B) == 0)
-					{
-						xCH__ATM_RB__SLOT02_STATUS->Set__DATA(slot_status);	
-						xCH__ATM_RB__SLOT02_TITLE->Set__DATA(slot_title);
-					}	
-				}
-			}
-			else if(r_act.CompareNoCase(STR__NO) == 0)
-			{
-				// Arm -> Module
-
-				// ....
-				CString slot_status;
-				CString slot_title;
-				int check_flag = -1;
-
-				int ll_i = Get__LLx_INDEX(str_module);
-				int slot_index = atoi(str_slot) - 1;
-
-				if(arm_type.CompareNoCase(STR__A) == 0)
-				{
-					check_flag = 1;
-
-					//
-					xCH__ATM_RB__SLOT01_STATUS->Get__DATA(slot_status);	
-					xCH__ATM_RB__SLOT01_TITLE->Get__DATA(slot_title);
-
-					xCH__ATM_RB__SLOT01_STATUS->Set__DATA(STR__NONE);	
-					xCH__ATM_RB__SLOT01_TITLE->Set__DATA("");
-				}
-				else if(arm_type.CompareNoCase(STR__B) == 0)
-				{
-					check_flag = 1;
-
-					//
-					xCH__ATM_RB__SLOT02_STATUS->Get__DATA(slot_status);	
-					xCH__ATM_RB__SLOT02_TITLE->Get__DATA(slot_title);
-
-					xCH__ATM_RB__SLOT02_STATUS->Set__DATA(STR__NONE);	
-					xCH__ATM_RB__SLOT02_TITLE->Set__DATA("");
-				}
-
-				if(check_flag > 0)
-				{
 					if(str_module.CompareNoCase(MODULE__AL1) == 0)
 					{
-						xCH__AL1__SLOT01_STATUS->Set__DATA(slot_status);
-						xCH__AL1__SLOT01_TITLE->Set__DATA(slot_title);
+						check_flag = 1;
+
+						xCH__AL1__SLOT01_STATUS->Get__DATA(slot_status);
+						xCH__AL1__SLOT01_TITLE->Get__DATA(slot_title);
+
+						xCH__AL1__SLOT01_STATUS->Set__DATA(STR__NONE);
+						xCH__AL1__SLOT01_TITLE->Set__DATA("");
 					}
 					else if(ll_i >= 0)
 					{
-						int slot_max = iLLx_SLOT_MAX[ll_i];
+						int slot_size = iLLx_SLOT_MAX[ll_i];
 
 						if((slot_index >= 0)
-						&& (slot_index <  slot_max))	
+						&& (slot_index <  slot_size))	
 						{
-							xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Set__DATA(slot_status);
-							xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Set__DATA(slot_title);
+							check_flag = 1;
+						
+							xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Get__DATA(slot_status);
+							xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Get__DATA(slot_title);
+
+							xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Set__DATA(STR__NONE);
+							xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Set__DATA("");
 						}
 					}
 					else if(str_module.CompareNoCase(MODULE__BUFFER1) == 0)
@@ -737,8 +743,13 @@ _SCH__PICK_FROM(CII_OBJECT__VARIABLE *p_variable,
 						if((slot_index >= 0)
 						&& (slot_index <  CFG_LP__SLOT_MAX))
 						{
-							xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Set__DATA(slot_status);
-							xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Set__DATA(slot_title);
+							check_flag = 1;
+
+							xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
+							xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
+
+							xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Set__DATA(STR__NONE);
+							xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Set__DATA("");
 						}
 					}
 					else if(str_module.CompareNoCase(MODULE__BUFFER2) == 0)
@@ -746,20 +757,136 @@ _SCH__PICK_FROM(CII_OBJECT__VARIABLE *p_variable,
 						if((slot_index >= 0)
 						&& (slot_index <  CFG_LP__SLOT_MAX))
 						{
-							xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Set__DATA(slot_status);
-							xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Set__DATA(slot_title);
+							check_flag = 1;
+
+							xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
+							xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
+
+							xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Set__DATA(STR__NONE);
+							xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Set__DATA("");
 						}
 					}
 					else
 					{
 						int lp_index = SCH__Get_LPx_INDEX(str_module);
-
+	
 						if(lp_index >= 0)
 						{
 							if((slot_index >= 0)
 							&& (slot_index <  CFG_LP__SLOT_MAX))
 							{
-								xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Set__DATA(slot_status);
+								check_flag = 1;
+
+								xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Get__DATA(slot_status);
+	
+								xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Set__DATA(STR__NONE);
+							}
+						}
+					}
+
+					if(check_flag > 0)
+					{
+						if(check_arm.CompareNoCase(ARM_A) == 0)
+						{
+							xCH__ATM_RB__SLOT01_STATUS->Set__DATA(slot_status);	
+							xCH__ATM_RB__SLOT01_TITLE->Set__DATA(slot_title);
+						}		
+						else if(check_arm.CompareNoCase(ARM_B) == 0)
+						{
+							xCH__ATM_RB__SLOT02_STATUS->Set__DATA(slot_status);	
+							xCH__ATM_RB__SLOT02_TITLE->Set__DATA(slot_title);
+						}	
+					}
+				}
+			}
+			else if(r_act.CompareNoCase(STR__NO) == 0)
+			{
+				// Arm -> Module
+
+				int k_limit = l__arm_type.GetSize();
+				int k;
+
+				for(k=0; k<k_limit; k++)
+				{
+					CString check_arm = l__arm_type[k];
+					int check_slot_id = l__slot_id[k];
+
+					// ....
+					CString slot_status;
+					CString slot_title;
+					int check_flag = -1;
+
+					int ll_i = Get__LLx_INDEX(str_module);
+					int slot_index = check_slot_id - 1;
+	
+					if(check_arm.CompareNoCase(ARM_A) == 0)
+					{
+						check_flag = 1;
+
+						xCH__ATM_RB__SLOT01_STATUS->Get__DATA(slot_status);	
+						xCH__ATM_RB__SLOT01_TITLE->Get__DATA(slot_title);
+
+						xCH__ATM_RB__SLOT01_STATUS->Set__DATA(STR__NONE);	
+						xCH__ATM_RB__SLOT01_TITLE->Set__DATA("");
+					}
+					else if(check_arm.CompareNoCase(ARM_B) == 0)
+					{
+						check_flag = 1;
+
+						xCH__ATM_RB__SLOT02_STATUS->Get__DATA(slot_status);	
+						xCH__ATM_RB__SLOT02_TITLE->Get__DATA(slot_title);
+
+						xCH__ATM_RB__SLOT02_STATUS->Set__DATA(STR__NONE);	
+						xCH__ATM_RB__SLOT02_TITLE->Set__DATA("");
+					}
+
+					if(check_flag > 0)
+					{
+						if(str_module.CompareNoCase(MODULE__AL1) == 0)
+						{
+							xCH__AL1__SLOT01_STATUS->Set__DATA(slot_status);
+							xCH__AL1__SLOT01_TITLE->Set__DATA(slot_title);
+						}
+						else if(ll_i >= 0)
+						{
+							int slot_max = iLLx_SLOT_MAX[ll_i];
+
+							if((slot_index >= 0)
+							&& (slot_index <  slot_max))	
+							{
+								xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Set__DATA(slot_status);
+							xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Set__DATA(slot_title);
+							}
+						}
+						else if(str_module.CompareNoCase(MODULE__BUFFER1) == 0)
+						{
+							if((slot_index >= 0)
+							&& (slot_index <  CFG_LP__SLOT_MAX))
+							{
+								xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Set__DATA(slot_status);
+								xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Set__DATA(slot_title);
+							}
+						}
+						else if(str_module.CompareNoCase(MODULE__BUFFER2) == 0)
+						{
+							if((slot_index >= 0)
+							&& (slot_index <  CFG_LP__SLOT_MAX))
+							{
+								xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Set__DATA(slot_status);
+								xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Set__DATA(slot_title);
+							}
+						}
+						else
+						{
+							int lp_index = SCH__Get_LPx_INDEX(str_module);
+
+							if(lp_index >= 0)
+							{
+								if((slot_index >= 0)
+								&& (slot_index <  CFG_LP__SLOT_MAX))
+								{
+									xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Set__DATA(slot_status);
+								}
 							}
 						}
 					}
@@ -793,142 +920,150 @@ _SCH__PICK_FROM(CII_OBJECT__VARIABLE *p_variable,
 LOOP__RETRY_CHECK:
 
 		// Material Pick : Check ...
-		CString slot_status;
-		CString slot_title;
-		int check_flag = -1;
 
-		int ll_i = Get__LLx_INDEX(str_module);
-		int slot_index = atoi(str_slot) - 1;
+		int k_limit = l__arm_type.GetSize();
+		int k;
 
-		if(str_module.CompareNoCase(MODULE__AL1) == 0)
+		for(k=0; k<k_limit; k++)
 		{
-			check_flag = 1;
+			CString check_arm = l__arm_type[k];
+			int check_slot_id = l__slot_id[k];
 
-			if(slot_index == 0)
-			{
-				xCH__AL1__SLOT01_STATUS->Get__DATA(slot_status);
-				xCH__AL1__SLOT01_TITLE->Get__DATA(slot_title);
-			}
-			else if(slot_index == 1)
-			{
-				xCH__AL1__SLOT02_STATUS->Get__DATA(slot_status);
-				xCH__AL1__SLOT02_TITLE->Get__DATA(slot_title);
-			}
-			else 
-			{
-				slot_status = "UNKNOWN";
-				slot_title  = "??";
-			}
-		}
-		else if(ll_i >= 0)
-		{
-			int slot_max = iLLx_SLOT_MAX[ll_i];
+			// ...
+			CString slot_status;
+			CString slot_title;
+			int check_flag = -1;
 
-			if((slot_index >= 0)
-			&& (slot_index <  slot_max))	
+			int ll_i = Get__LLx_INDEX(str_module);
+			int slot_index = check_slot_id - 1;
+
+			if(str_module.CompareNoCase(MODULE__AL1) == 0)
 			{
 				check_flag = 1;
+	
+				if(slot_index == 0)
+				{
+					xCH__AL1__SLOT01_STATUS->Get__DATA(slot_status);
+					xCH__AL1__SLOT01_TITLE->Get__DATA(slot_title);
+				}
+				else if(slot_index == 1)
+				{
+					xCH__AL1__SLOT02_STATUS->Get__DATA(slot_status);
+					xCH__AL1__SLOT02_TITLE->Get__DATA(slot_title);
+				}
+				else 
+				{
+					slot_status = "UNKNOWN";
+					slot_title  = "??";
+				}
+			}
+			else if(ll_i >= 0)
+			{
+				int slot_max = iLLx_SLOT_MAX[ll_i];
+
+				if((slot_index >= 0)
+				&& (slot_index <  slot_max))	
+				{
+					check_flag = 1;
 				
-				xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Get__DATA(slot_status);
-				xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Get__DATA(slot_title);
+					xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Get__DATA(slot_status);
+					xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Get__DATA(slot_title);
+				}
 			}
-		}
-		else if(str_module.CompareNoCase(MODULE__BUFFER1) == 0)
-		{
-			if((slot_index >= 0)
-			&& (slot_index <  CFG_LP__SLOT_MAX))
-			{
-				check_flag = 1;
-
-				//
-				xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
-				xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
-			}
-		}
-		else if(str_module.CompareNoCase(MODULE__BUFFER2) == 0)
-		{
-			if((slot_index >= 0)
-			&& (slot_index <  CFG_LP__SLOT_MAX))
-			{
-				check_flag = 1;
-
-				//
-				xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
-				xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
-			}
-		}
-		else
-		{
-			int lp_index = SCH__Get_LPx_INDEX(str_module);
-
-			if(lp_index >= 0)
+			else if(str_module.CompareNoCase(MODULE__BUFFER1) == 0)
 			{
 				if((slot_index >= 0)
 				&& (slot_index <  CFG_LP__SLOT_MAX))
 				{
 					check_flag = 1;
 
-					//
-					xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Get__DATA(slot_status);
-					slot_title.Format("%1d", slot_index+1);
+					xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
+					xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
 				}
 			}
-		}
-
-		if(check_flag > 0)
-		{
-			CString arm_status;
-			CString arm_title;
-
-			if(arm_type.CompareNoCase(STR__A) == 0)
+			else if(str_module.CompareNoCase(MODULE__BUFFER2) == 0)
 			{
-				xCH__ATM_RB__SLOT01_STATUS->Get__DATA(arm_status);	
-				xCH__ATM_RB__SLOT01_TITLE->Get__DATA(arm_title);
-			}	
-			else if(arm_type.CompareNoCase(STR__B) == 0)
-			{
-				xCH__ATM_RB__SLOT02_STATUS->Get__DATA(arm_status);	
-				xCH__ATM_RB__SLOT02_TITLE->Get__DATA(arm_title);
-			}	
-
-			if((arm_status.CompareNoCase(STR__NONE)  == 0)
-			|| (slot_status.CompareNoCase(STR__NONE) != 0))	
-			{
-				int alarm_id;
-				CString str_msg;
-				CString str_bff;
-				CString r_act;
-
-				alarm_id = ALID__PICK_ERROR__WAFER_MITMATCH;
-
-				str_bff.Format("아래와 같이 PICK 명령을 처리 후 Wafer 정보에 문제가 발생 했습니다. \n");
-				str_msg += str_bff;
-
-				str_bff.Format("   PICK 명령은 %s(%s) -> Arm(%s) 입니다. \n", 
-					str_module,str_slot, arm_type);
-				str_msg += str_bff;
-
-				str_bff.Format("   현재, GUI Wafer 상태는 Robot(%s) <- %s(%s)이고 %s(%s) <- %s(%s)입니다. \n",
-					arm_type, arm_status,arm_title,
-					str_module,str_slot, slot_status,slot_title);
-				str_msg += str_bff;
-
-				str_msg += "GUI 정보와 실제 Wafer가 일치하는지 확인 부탁합니다.\n";
-				str_msg += "   1. 만약, PICK 명령이 제대로 수행되지 않았다면 \n";
-				str_msg += "      ABORT를 선택하시고 JOB를 Abort해 주십시요. \n";
-				str_msg += "      Robot은 Pause 됩니다. \n";
-				str_msg += "   2. 실제 Wafer가 PICK 명령처럼 정상처리 되었다면, RETRY 선택하십시요. \n";
-				str_msg += "      GUI 정보가 모두 정상이면 정상적으로 JOB을 진행할 것입니다. \n";
-
-				p_alarm->Popup__ALARM_With_MESSAGE(alarm_id,str_msg,r_act);
-
-				if(r_act.CompareNoCase(STR__RETRY) == 0)
+				if((slot_index >= 0)
+				&& (slot_index <  CFG_LP__SLOT_MAX))
 				{
-					goto LOOP__RETRY_CHECK;
-				}
+					check_flag = 1;
 
-				xCH__ATM_RB_PAUSE_FLAG->Set__DATA(STR__YES);
-				return -1;
+					xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
+					xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
+				}
+			}
+			else
+			{
+				int lp_index = SCH__Get_LPx_INDEX(str_module);
+
+				if(lp_index >= 0)
+				{
+					if((slot_index >= 0)
+					&& (slot_index <  CFG_LP__SLOT_MAX))
+					{
+						check_flag = 1;
+
+						xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Get__DATA(slot_status);
+						slot_title.Format("%1d", slot_index+1);
+					}
+				}
+			}
+
+			if(check_flag > 0)
+			{
+				CString arm_status;
+				CString arm_title;
+
+				if(check_arm.CompareNoCase(ARM_A) == 0)
+				{
+					xCH__ATM_RB__SLOT01_STATUS->Get__DATA(arm_status);	
+					xCH__ATM_RB__SLOT01_TITLE->Get__DATA(arm_title);
+				}		
+				else if(check_arm.CompareNoCase(ARM_B) == 0)
+				{
+					xCH__ATM_RB__SLOT02_STATUS->Get__DATA(arm_status);	
+					xCH__ATM_RB__SLOT02_TITLE->Get__DATA(arm_title);
+				}	
+
+				if((arm_status.CompareNoCase(STR__NONE)  == 0)
+				|| (slot_status.CompareNoCase(STR__NONE) != 0))	
+				{
+					int alarm_id;
+					CString str_msg;
+					CString str_bff;
+					CString r_act;
+
+					alarm_id = ALID__PICK_ERROR__WAFER_MITMATCH;
+	
+					str_bff.Format("아래와 같이 PICK 명령을 처리 후 Wafer 정보에 문제가 발생 했습니다. \n");
+					str_msg += str_bff;
+
+					str_bff.Format("   PICK 명령은 %s(%s) -> Arm(%s) 입니다. \n", 
+									str_module,str_slot, arm_type);
+					str_msg += str_bff;
+
+					str_bff.Format("   현재, GUI Wafer 상태는 Robot(%s) <- %s(%s)이고 %s(%s) <- %s(%s)입니다. \n",
+									arm_type, arm_status,arm_title,
+									str_module,str_slot, slot_status,slot_title);
+					str_msg += str_bff;
+
+					str_msg += "GUI 정보와 실제 Wafer가 일치하는지 확인 부탁합니다.\n";
+					str_msg += "   1. 만약, PICK 명령이 제대로 수행되지 않았다면 \n";
+					str_msg += "      ABORT를 선택하시고 JOB를 Abort해 주십시요. \n";
+					str_msg += "      Robot은 Pause 됩니다. \n";
+					str_msg += "   2. 실제 Wafer가 PICK 명령처럼 정상처리 되었다면, RETRY 선택하십시요. \n";
+					str_msg += "      GUI 정보가 모두 정상이면 정상적으로 JOB을 진행할 것입니다. \n";
+
+					p_alarm->Popup__ALARM_With_MESSAGE(alarm_id,str_msg,r_act);
+
+					if(r_act.CompareNoCase(STR__RETRY) == 0)
+					{
+						goto LOOP__RETRY_CHECK;
+					}
+	
+					xCH__ATM_RB_PAUSE_FLAG->Set__DATA(STR__YES);
+					return -1;
+				}
 			}
 		}
 	}
@@ -1019,6 +1154,10 @@ _SCH__PLACE_TO(CII_OBJECT__VARIABLE *p_variable,
 				}
 			}
 		}
+		else if(xCH__ATM_RB__TARGET_PMx_MODE->Check__DATA(STR__ENABLE) > 0)
+		{
+
+		}
 
 		if(active__ll_align)
 		{
@@ -1073,6 +1212,28 @@ _SCH__PLACE_TO(CII_OBJECT__VARIABLE *p_variable,
 		flag = Call__ROBOT_OBJ(ATM_CMMD__XPLACE, l_para);	
 	}
 
+	// ...
+	CStringArray l__arm_type;
+	CUIntArray   l__slot_id;
+
+	if(arm_type.CompareNoCase(ARM_AB) == 0)
+	{
+		int slot_id = atoi(str_slot);
+
+		l__arm_type.Add(ARM_A);
+		l__slot_id.Add(slot_id);
+
+		l__arm_type.Add(ARM_B);
+		l__slot_id.Add(slot_id + 1);
+	}
+	else
+	{
+		int slot_id = atoi(str_slot);
+
+		l__arm_type.Add(arm_type);
+		l__slot_id.Add(slot_id);
+	}
+
 	if(flag < 0)
 	{
 		// ...
@@ -1085,9 +1246,9 @@ _SCH__PLACE_TO(CII_OBJECT__VARIABLE *p_variable,
 			alarm_id = ALID__MOVE_ERROR__WAFER_CONFIRM;
 
 			str_bff.Format("Wafer가 Arm[%s]에서 %s[%s]으로 이동 되었나요?\n",
-				arm_type,
-				str_module,
-				str_slot);
+							arm_type,
+							str_module,
+							str_slot);
 			str_msg += str_bff;
 
 			str_bff.Format("GUI상의 Wafer 정보와 실제 Wafer가 일치하는지 확인하십시요.\n");
@@ -1111,42 +1272,135 @@ _SCH__PLACE_TO(CII_OBJECT__VARIABLE *p_variable,
 			{
 				// Arm -> Module
 
-				// ....
-				CString slot_status;
-				CString slot_title;
-				int check_flag = -1;
+				int k_limit = l__arm_type.GetSize();
+				int k;
 
-				int slot_index = atoi(str_slot) - 1;
-
-				if(arm_type.CompareNoCase(STR__A) == 0)
+				for(k=0; k<k_limit; k++)
 				{
-					check_flag = 1;
+					CString check_arm = l__arm_type[k];
+					int check_slot_id = l__slot_id[k];
 
-					//
-					xCH__ATM_RB__SLOT01_STATUS->Get__DATA(slot_status);	
-					xCH__ATM_RB__SLOT01_TITLE->Get__DATA(slot_title);
+					// ....
+					CString slot_status;
+					CString slot_title;
+					int check_flag = -1;
 
-					xCH__ATM_RB__SLOT01_STATUS->Set__DATA(STR__NONE);	
-					xCH__ATM_RB__SLOT01_TITLE->Set__DATA("");
-				}	
-				else if(arm_type.CompareNoCase(STR__B) == 0)
+					int slot_index = check_slot_id - 1;
+
+					if(check_arm.CompareNoCase(ARM_A) == 0)
+					{
+						check_flag = 1;
+
+						xCH__ATM_RB__SLOT01_STATUS->Get__DATA(slot_status);	
+						xCH__ATM_RB__SLOT01_TITLE->Get__DATA(slot_title);
+
+						xCH__ATM_RB__SLOT01_STATUS->Set__DATA(STR__NONE);	
+						xCH__ATM_RB__SLOT01_TITLE->Set__DATA("");
+					}	
+					else if(check_arm.CompareNoCase(ARM_B) == 0)
+					{
+						check_flag = 1;
+
+						xCH__ATM_RB__SLOT02_STATUS->Get__DATA(slot_status);	
+						xCH__ATM_RB__SLOT02_TITLE->Get__DATA(slot_title);
+
+						xCH__ATM_RB__SLOT02_STATUS->Set__DATA(STR__NONE);	
+						xCH__ATM_RB__SLOT02_TITLE->Set__DATA("");
+					}	
+
+					if(check_flag > 0)
+					{
+						if(str_module.CompareNoCase(MODULE__AL1) == 0)
+						{
+							xCH__AL1__SLOT01_STATUS->Set__DATA(slot_status);
+							xCH__AL1__SLOT01_TITLE->Set__DATA(slot_title);
+						}
+						else if(str_module.CompareNoCase(MODULE__LBA) == 0)
+						{
+							int ll_i = _LLx_INDEX__LBA;
+							int slot_max = iLLx_SLOT_MAX[ll_i];
+
+							if((slot_index >= 0)
+							&& (slot_index <  slot_max))	
+							{
+								xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Set__DATA(slot_status);
+								xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Set__DATA(slot_title);
+							}
+						}
+						else if(str_module.CompareNoCase(MODULE__LBB) == 0)
+						{
+							int ll_i = _LLx_INDEX__LBB;
+							int slot_max = iLLx_SLOT_MAX[ll_i];
+
+							if((slot_index >= 0)
+							&& (slot_index <  slot_max))	
+							{
+								xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Set__DATA(slot_status);
+								xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Set__DATA(slot_title);
+							}
+						}
+						else if(str_module.CompareNoCase(MODULE__BUFFER1) == 0)
+						{
+							if((slot_index >= 0)
+							&& (slot_index <  CFG_LP__SLOT_MAX))
+							{
+								xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Set__DATA(slot_status);
+								xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Set__DATA(slot_title);
+							}
+						}
+						else if(str_module.CompareNoCase(MODULE__BUFFER2) == 0)
+						{
+							if((slot_index >= 0)
+							&& (slot_index <  CFG_LP__SLOT_MAX))
+							{
+								xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Set__DATA(slot_status);
+								xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Set__DATA(slot_title);
+							}
+						}
+						else
+						{
+							int lp_index = SCH__Get_LPx_INDEX(str_module);
+
+							if(lp_index >= 0)
+							{
+								if((slot_index >= 0)
+								&& (slot_index <  CFG_LP__SLOT_MAX))
+								{
+									xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Set__DATA(slot_status);
+								}
+							}
+						}
+					}
+				}
+			}
+			else if(r_act.CompareNoCase(STR__NO) == 0)
+			{
+				// Module -> Arm
+
+				int k_limit = l__arm_type.GetSize();
+				int k;
+
+				for(k=0; k<k_limit; k++)
 				{
-					check_flag = 1;
+					CString check_arm = l__arm_type[k];
+					int check_slot_id = l__slot_id[k];
 
-					//
-					xCH__ATM_RB__SLOT02_STATUS->Get__DATA(slot_status);	
-					xCH__ATM_RB__SLOT02_TITLE->Get__DATA(slot_title);
+					// ....
+					CString slot_status;
+					CString slot_title;
+					int check_flag = -1;
 
-					xCH__ATM_RB__SLOT02_STATUS->Set__DATA(STR__NONE);	
-					xCH__ATM_RB__SLOT02_TITLE->Set__DATA("");
-				}	
+					int slot_index = check_slot_id - 1;
 
-				if(check_flag > 0)
-				{
 					if(str_module.CompareNoCase(MODULE__AL1) == 0)
 					{
-						xCH__AL1__SLOT01_STATUS->Set__DATA(slot_status);
-						xCH__AL1__SLOT01_TITLE->Set__DATA(slot_title);
+						check_flag = 1;
+	
+						xCH__AL1__SLOT01_STATUS->Get__DATA(slot_status);
+						xCH__AL1__SLOT01_TITLE->Get__DATA(slot_title);
+
+						xCH__AL1__SLOT01_STATUS->Set__DATA(STR__NONE);
+						xCH__AL1__SLOT01_TITLE->Set__DATA("");
 					}
 					else if(str_module.CompareNoCase(MODULE__LBA) == 0)
 					{
@@ -1156,8 +1410,13 @@ _SCH__PLACE_TO(CII_OBJECT__VARIABLE *p_variable,
 						if((slot_index >= 0)
 						&& (slot_index <  slot_max))	
 						{
-							xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Set__DATA(slot_status);
-							xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Set__DATA(slot_title);
+							check_flag = 1;
+							
+							xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Get__DATA(slot_status);
+							xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Get__DATA(slot_title);
+
+							xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Set__DATA(STR__NONE);
+							xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Set__DATA("");
 						}
 					}
 					else if(str_module.CompareNoCase(MODULE__LBB) == 0)
@@ -1168,8 +1427,13 @@ _SCH__PLACE_TO(CII_OBJECT__VARIABLE *p_variable,
 						if((slot_index >= 0)
 						&& (slot_index <  slot_max))	
 						{
-							xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Set__DATA(slot_status);
-							xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Set__DATA(slot_title);
+							check_flag = 1;
+
+							xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Get__DATA(slot_status);
+							xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Get__DATA(slot_title);
+
+							xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Set__DATA(STR__NONE);
+							xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Set__DATA("");
 						}
 					}
 					else if(str_module.CompareNoCase(MODULE__BUFFER1) == 0)
@@ -1177,8 +1441,13 @@ _SCH__PLACE_TO(CII_OBJECT__VARIABLE *p_variable,
 						if((slot_index >= 0)
 						&& (slot_index <  CFG_LP__SLOT_MAX))
 						{
-							xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Set__DATA(slot_status);
-							xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Set__DATA(slot_title);
+							check_flag = 1;
+
+							xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
+							xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
+
+							xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Set__DATA(STR__NONE);
+							xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Set__DATA("");
 						}
 					}
 					else if(str_module.CompareNoCase(MODULE__BUFFER2) == 0)
@@ -1186,8 +1455,13 @@ _SCH__PLACE_TO(CII_OBJECT__VARIABLE *p_variable,
 						if((slot_index >= 0)
 						&& (slot_index <  CFG_LP__SLOT_MAX))
 						{
-							xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Set__DATA(slot_status);
-							xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Set__DATA(slot_title);
+							check_flag = 1;
+
+							xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
+							xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
+
+							xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Set__DATA(STR__NONE);
+							xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Set__DATA("");
 						}
 					}
 					else
@@ -1199,129 +1473,28 @@ _SCH__PLACE_TO(CII_OBJECT__VARIABLE *p_variable,
 							if((slot_index >= 0)
 							&& (slot_index <  CFG_LP__SLOT_MAX))
 							{
-								xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Set__DATA(slot_status);
+								check_flag = 1;
+
+								xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Get__DATA(slot_status);
+
+								xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Set__DATA(STR__NONE);
 							}
 						}
 					}
-				}
-			}
-			else if(r_act.CompareNoCase(STR__NO) == 0)
-			{
-				// Module -> Arm
 
-				// ....
-				CString slot_status;
-				CString slot_title;
-				int check_flag = -1;
-
-				int slot_index = atoi(str_slot) - 1;
-
-				if(str_module.CompareNoCase(MODULE__AL1) == 0)
-				{
-					check_flag = 1;
-
-					//
-					xCH__AL1__SLOT01_STATUS->Get__DATA(slot_status);
-					xCH__AL1__SLOT01_TITLE->Get__DATA(slot_title);
-
-					xCH__AL1__SLOT01_STATUS->Set__DATA(STR__NONE);
-					xCH__AL1__SLOT01_TITLE->Set__DATA("");
-				}
-				else if(str_module.CompareNoCase(MODULE__LBA) == 0)
-				{
-					int ll_i = _LLx_INDEX__LBA;
-					int slot_max = iLLx_SLOT_MAX[ll_i];
-
-					if((slot_index >= 0)
-					&& (slot_index <  slot_max))	
-					{
-						check_flag = 1;
-						
-						xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Get__DATA(slot_status);
-						xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Get__DATA(slot_title);
-
-						xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Set__DATA(STR__NONE);
-						xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Set__DATA("");
-					}
-				}
-				else if(str_module.CompareNoCase(MODULE__LBB) == 0)
-				{
-					int ll_i = _LLx_INDEX__LBB;
-					int slot_max = iLLx_SLOT_MAX[ll_i];
-
-					if((slot_index >= 0)
-					&& (slot_index <  slot_max))	
-					{
-						check_flag = 1;
-
-						xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Get__DATA(slot_status);
-						xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Get__DATA(slot_title);
-
-						xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Set__DATA(STR__NONE);
-						xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Set__DATA("");
-					}
-				}
-				else if(str_module.CompareNoCase(MODULE__BUFFER1) == 0)
-				{
-					if((slot_index >= 0)
-					&& (slot_index <  CFG_LP__SLOT_MAX))
-					{
-						check_flag = 1;
-
-						//
-						xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
-						xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
-
-						xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Set__DATA(STR__NONE);
-						xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Set__DATA("");
-					}
-				}
-				else if(str_module.CompareNoCase(MODULE__BUFFER2) == 0)
-				{
-					if((slot_index >= 0)
-					&& (slot_index <  CFG_LP__SLOT_MAX))
-					{
-						check_flag = 1;
-
-						//
-						xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
-						xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
-
-						xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Set__DATA(STR__NONE);
-						xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Set__DATA("");
-					}
-				}
-				else
-				{
-					int lp_index = SCH__Get_LPx_INDEX(str_module);
-
-					if(lp_index >= 0)
-					{
-						if((slot_index >= 0)
-						&& (slot_index <  CFG_LP__SLOT_MAX))
+					if(check_flag > 0)
+					{	
+						if(check_arm.CompareNoCase(ARM_A) == 0)
 						{
-							check_flag = 1;
-
-							//
-							xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Get__DATA(slot_status);
-
-							xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Set__DATA(STR__NONE);
+							xCH__ATM_RB__SLOT01_STATUS->Set__DATA(slot_status);	
+							xCH__ATM_RB__SLOT01_TITLE->Set__DATA(slot_title);
+						}	
+						else if(check_arm.CompareNoCase(ARM_B) == 0)
+						{
+							xCH__ATM_RB__SLOT02_STATUS->Set__DATA(slot_status);	
+							xCH__ATM_RB__SLOT02_TITLE->Set__DATA(slot_title);
 						}
 					}
-				}
-
-				if(check_flag > 0)
-				{
-					if(arm_type.CompareNoCase(STR__A) == 0)
-					{
-						xCH__ATM_RB__SLOT01_STATUS->Set__DATA(slot_status);	
-						xCH__ATM_RB__SLOT01_TITLE->Set__DATA(slot_title);
-					}	
-					else if(arm_type.CompareNoCase(STR__B) == 0)
-					{
-						xCH__ATM_RB__SLOT02_STATUS->Set__DATA(slot_status);	
-						xCH__ATM_RB__SLOT02_TITLE->Set__DATA(slot_title);
-					}	
 				}
 			}
 		}
@@ -1351,161 +1524,164 @@ _SCH__PLACE_TO(CII_OBJECT__VARIABLE *p_variable,
 	{
 LOOP__RETRY_CHECK:
 
-		// Material Place : Check ...
-		CString slot_status;
-		CString slot_title;
-		int check_flag = -1;
+		// ...
+		int k_limit = l__arm_type.GetSize();
+		int k;
 
-		int slot_index = atoi(str_slot) - 1;
-
-		if(str_module.CompareNoCase(MODULE__AL1) == 0)
+		for(k=0; k<k_limit; k++)
 		{
-			check_flag = 1;
+			CString check_arm = l__arm_type[k];
+			int check_slot_id = l__slot_id[k];
 
-			if(slot_index == 0)
-			{
-				xCH__AL1__SLOT01_STATUS->Get__DATA(slot_status);
-				xCH__AL1__SLOT01_TITLE->Get__DATA(slot_title);
-			}
-			else if(slot_index == 1)
-			{
-				xCH__AL1__SLOT02_STATUS->Get__DATA(slot_status);
-				xCH__AL1__SLOT02_TITLE->Get__DATA(slot_title);
-			}
-			else
-			{
-				slot_status = "UNKNOWN";
-				slot_title  = "??";
-			}
-		}
-		else if(str_module.CompareNoCase(MODULE__LBA) == 0)
-		{
-			int ll_i = _LLx_INDEX__LBA;
-			int slot_max = iLLx_SLOT_MAX[ll_i];
+			// Material Place : Check ...
+			CString slot_status;
+			CString slot_title;
+			int check_flag = -1;
+	
+			int slot_index = check_slot_id - 1;
 
-			if((slot_index >= 0)
-			&& (slot_index <  slot_max))	
+			if(str_module.CompareNoCase(MODULE__AL1) == 0)
 			{
 				check_flag = 1;
 
-				xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Get__DATA(slot_status);
-				xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Get__DATA(slot_title);
+				if(slot_index == 0)
+				{
+					xCH__AL1__SLOT01_STATUS->Get__DATA(slot_status);
+					xCH__AL1__SLOT01_TITLE->Get__DATA(slot_title);
+				}
+				else if(slot_index == 1)
+				{
+					xCH__AL1__SLOT02_STATUS->Get__DATA(slot_status);
+					xCH__AL1__SLOT02_TITLE->Get__DATA(slot_title);
+				}
+				else
+				{
+					slot_status = "UNKNOWN";
+					slot_title  = "??";
+				}
 			}
-		}
-		else if(str_module.CompareNoCase(MODULE__LBB) == 0)
-		{
-			int ll_i = _LLx_INDEX__LBB;
-			int slot_max = iLLx_SLOT_MAX[ll_i];
-
-			if((slot_index >= 0)
-			&& (slot_index <  slot_max))	
+			else if(str_module.CompareNoCase(MODULE__LBA) == 0)
 			{
-				check_flag = 1;
+				int ll_i = _LLx_INDEX__LBA;
+				int slot_max = iLLx_SLOT_MAX[ll_i];
 
-				xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Get__DATA(slot_status);
-				xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Get__DATA(slot_title);
-			}
-		}
-		else if(str_module.CompareNoCase(MODULE__BUFFER1) == 0)
-		{
-			if((slot_index >= 0)
-			&& (slot_index <  CFG_LP__SLOT_MAX))
-			{
-				check_flag = 1;
-
-				//
-				xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
-				xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
-			}
-		}
-		else if(str_module.CompareNoCase(MODULE__BUFFER2) == 0)
-		{
-			if((slot_index >= 0)
-			&& (slot_index <  CFG_LP__SLOT_MAX))
-			{
-				check_flag = 1;
-
-				//
-				xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
-				xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
-			}
-		}
-		else
-		{
-			int lp_index = SCH__Get_LPx_INDEX(str_module);
-
-			if(lp_index >= 0)
-			{
 				if((slot_index >= 0)
-					&& (slot_index <  CFG_LP__SLOT_MAX))
+				&& (slot_index <  slot_max))	
 				{
 					check_flag = 1;
 
-					//
-					xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Get__DATA(slot_status);
-					slot_title.Format("%1d", slot_index+1);
+					xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Get__DATA(slot_status);
+					xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Get__DATA(slot_title);
 				}
 			}
-		}
-
-		if(check_flag > 0)
-		{
-			CString arm_status;
-			CString arm_title;
-
-			if(arm_type.CompareNoCase(STR__A) == 0)
+			else if(str_module.CompareNoCase(MODULE__LBB) == 0)
 			{
-				xCH__ATM_RB__SLOT01_STATUS->Get__DATA(arm_status);	
-				xCH__ATM_RB__SLOT01_TITLE->Get__DATA(arm_title);
-			}	
-			else if(arm_type.CompareNoCase(STR__B) == 0)
-			{
-				xCH__ATM_RB__SLOT02_STATUS->Get__DATA(arm_status);	
-				xCH__ATM_RB__SLOT02_TITLE->Get__DATA(arm_title);
-			}	
+				int ll_i = _LLx_INDEX__LBB;
+				int	slot_max = iLLx_SLOT_MAX[ll_i];
 
-			if((arm_status.CompareNoCase(STR__NONE)  != 0)
-			|| (slot_status.CompareNoCase(STR__NONE) == 0))	
-			{
-				// ...
-				int alarm_id;
-				CString str_msg;
-				CString str_bff;
-				CString r_act;
-
-				alarm_id = ALID__PLACE_ERROR__WAFER_MITMATCH;
-
-				str_bff.Format("아래와 같이 PLACE 명령을 처리 후 Wafer 정보에 문제가 발생 했습니다. \n");
-				str_msg += str_bff;
-
-				str_bff.Format("   PLACE 명령은 Arm(%s) -> %s(%s) 입니다. \n", 
-					arm_type, str_module,str_slot);
-				str_msg += str_bff;
-
-				str_bff.Format("   현재, GUI Wafer 상태는 Robot(%s) <- %s(%s)이고 %s(%s) <- %s(%s)입니다. \n",
-					arm_type, arm_status,arm_title,
-					str_module,str_slot, slot_status,slot_title);
-				str_msg += str_bff;
-
-				str_msg += "GUI 정보와 실제 Wafer가 일치하는지 확인 부탁합니다.\n";
-				str_msg += "   1. 만약, PLACE 명령이 제대로 수행되지 않았다면 \n";
-				str_msg += "      ABORT를 선택하시고 JOB를 Abort해 주십시요. \n";
-				str_msg += "      Robot은 Pause 됩니다. \n";
-				str_msg += "   2. 실제 Wafer가 PICK 명령처럼 정상처리 되었다면, RETRY 선택하십시요. \n";
-				str_msg += "      GUI 정보가 모두 정상이면 정상적으로 JOB을 진행할 것입니다. \n";
-
-				p_alarm->Popup__ALARM_With_MESSAGE(alarm_id,str_msg,r_act);
-
-				if(r_act.CompareNoCase(STR__RETRY) == 0)
+				if((slot_index >= 0)
+				&& (slot_index <  slot_max))	
 				{
-					goto LOOP__RETRY_CHECK;
+					check_flag = 1;
+
+					xEXT_CH__LLx__SLOT_STATUS[ll_i][slot_index]->Get__DATA(slot_status);
+					xEXT_CH__LLx__SLOT_TITLE[ll_i][slot_index]->Get__DATA(slot_title);
 				}
-
-				// ...
+			}
+			else if(str_module.CompareNoCase(MODULE__BUFFER1) == 0)
+			{
+				if((slot_index >= 0)
+				&& (slot_index <  CFG_LP__SLOT_MAX))
 				{
+					check_flag = 1;
+
+					xEXT_CH__BUFFER1__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
+					xEXT_CH__BUFFER1__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
+				}
+			}
+			else if(str_module.CompareNoCase(MODULE__BUFFER2) == 0)
+			{
+				if((slot_index >= 0)
+				&& (slot_index <  CFG_LP__SLOT_MAX))
+				{
+					check_flag = 1;
+
+					xEXT_CH__BUFFER2__SLOT_STATUS[slot_index]->Get__DATA(slot_status);
+					xEXT_CH__BUFFER2__SLOT_TITLE[slot_index]->Get__DATA(slot_title);
+				}
+			}
+			else
+			{
+				int lp_index = SCH__Get_LPx_INDEX(str_module);
+
+				if(lp_index >= 0)
+				{
+					if((slot_index >= 0) 
+					&& (slot_index <  CFG_LP__SLOT_MAX))
+					{
+						check_flag = 1;
+
+						xCH__LPx__SLOT_STATUS[lp_index][slot_index]->Get__DATA(slot_status);
+						slot_title.Format("%1d", slot_index+1);
+					}
+				}
+			}
+
+			if(check_flag > 0)
+			{
+				CString arm_status;
+				CString arm_title;
+
+				if(check_arm.CompareNoCase(ARM_A) == 0)
+				{
+					xCH__ATM_RB__SLOT01_STATUS->Get__DATA(arm_status);	
+					xCH__ATM_RB__SLOT01_TITLE->Get__DATA(arm_title);
+				}	
+				else if(check_arm.CompareNoCase(ARM_B) == 0)
+				{
+					xCH__ATM_RB__SLOT02_STATUS->Get__DATA(arm_status);	
+					xCH__ATM_RB__SLOT02_TITLE->Get__DATA(arm_title);
+				}	
+
+				if((arm_status.CompareNoCase(STR__NONE)  != 0)
+				|| (slot_status.CompareNoCase(STR__NONE) == 0))	
+				{
+					int alarm_id;
+					CString str_msg;
+					CString str_bff;
+					CString r_act;
+
+					alarm_id = ALID__PLACE_ERROR__WAFER_MITMATCH;
+
+					str_bff.Format("아래와 같이 PLACE 명령을 처리 후 Wafer 정보에 문제가 발생 했습니다. \n");
+					str_msg += str_bff;
+
+					str_bff.Format("   PLACE 명령은 Arm(%s) -> %s(%s) 입니다. \n", 
+									arm_type, str_module,str_slot);
+					str_msg += str_bff;
+
+					str_bff.Format("   현재, GUI Wafer 상태는 Robot(%s) <- %s(%s)이고 %s(%s) <- %s(%s)입니다. \n",
+									arm_type, arm_status,arm_title,
+									str_module,str_slot, slot_status,slot_title);
+					str_msg += str_bff;
+
+					str_msg += "GUI 정보와 실제 Wafer가 일치하는지 확인 부탁합니다.\n";
+					str_msg += "   1. 만약, PLACE 명령이 제대로 수행되지 않았다면 \n";
+					str_msg += "      ABORT를 선택하시고 JOB를 Abort해 주십시요. \n";
+					str_msg += "      Robot은 Pause 됩니다. \n";
+					str_msg += "   2. 실제 Wafer가 PICK 명령처럼 정상처리 되었다면, RETRY 선택하십시요. \n";
+					str_msg += "      GUI 정보가 모두 정상이면 정상적으로 JOB을 진행할 것입니다. \n";
+
+					p_alarm->Popup__ALARM_With_MESSAGE(alarm_id,str_msg,r_act);
+
+					if(r_act.CompareNoCase(STR__RETRY) == 0)
+					{
+						goto LOOP__RETRY_CHECK;
+					}
+
 					xCH__ATM_RB_PAUSE_FLAG->Set__DATA(STR__YES);
+					return -1;
 				}
-				return -1;
 			}
 		}
 	}
@@ -1691,8 +1867,9 @@ SCH__CHECK_PLACE_MODULE__READY(CII_OBJECT__VARIABLE* p_variable,
 int  CObj__DUAL_ARM_STD:: 
 SCH__CHECK_PLACE_MODULE__COMPLETE(CII_OBJECT__VARIABLE* p_variable,
 								  const bool ex_flag,
-								  const CString& arm_type,
-								  const CString& para_module,const CString& para_slot,
+								  const CString& robot_arm,
+								  const CString& para_module,
+								  const CString& para_slot,
 								  const int maint_flag)
 {
 	DECLARE__EXT_CTRL(p_variable);

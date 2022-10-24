@@ -186,6 +186,9 @@ private:
 	CX__VAR_DIGITAL_CTRL xCH__ATM_RB__ANI_TRG_MOVE;
 
 	//
+	CX__VAR_ANALOG_CTRL  aCH__ATM_RB__CFG_ALIGN_RETRY;
+	CX__VAR_STRING_CTRL  sCH__ATM_RB__CUR_ALIGN_RETRY;
+
 	CX__VAR_DIGITAL_CTRL xCH__ATM_RB__TARGET_LLx_MODE;
 	CX__VAR_DIGITAL_CTRL xCH__ATM_RB__TARGET_LLx_SLOT_CHECK;
 
@@ -199,6 +202,9 @@ private:
 	CX__VAR_STRING_CTRL  xCH__ATM_RB__TARGET_LLx_SLOT_SET_ALL;
 
 	//
+	CX__VAR_DIGITAL_CTRL xCH__ATM_RB__TARGET_PMx_MODE;
+
+	//
 	CX__VAR_STRING_CTRL  xCH__ATM_RB__SCH_STS_TO_LLx[CFG_LLx_LIMIT];
 
 	CX__VAR_DIGITAL_CTRL xCH__ATM_RB__CFG_A_ARM_USE_MODE;
@@ -206,6 +212,10 @@ private:
 
 	// LLx : Scheduler - Dual Only Input & Output ...
 	CX__VAR_DIGITAL_CTRL dCH__ATM_RB__CFG_DUAL_ARM_MOVING_AT_THE_SAME_TIME;
+
+	CX__VAR_DIGITAL_CTRL dCH__ATM_RB__CFG_DUAL_ARM_MOVING_AT_LPx;
+	CX__VAR_DIGITAL_CTRL dCH__ATM_RB__CFG_DUAL_ARM_MOVING_AT_STx;
+	CX__VAR_DIGITAL_CTRL dCH__ATM_RB__CFG_DUAL_ARM_MOVING_AT_LLx;
 
 	// LLx : CONTRAINT ...
 	CX__VAR_DIGITAL_CTRL dCH__ATM_RB__CFG_LL_CONSTRAINT_1;
@@ -380,12 +390,8 @@ private:
 	//
 	int  CHECK__ROBOT_MAP(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 
-	int  AUTO_CTRL__LPi_AL(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
+	int  AUTO_CTRL__LPi_RB(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 	int  AUTO_CTRL__RB_AL(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
-
-	int  AUTO_CTRL__LPi_BUFFERx(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
-	int  Fnc__LPi_BUFFERx(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
-	int  AUTO_CTRL__BUFFERx_AL(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 
 	int  AUTO_CTRL__RB_LBi__ONLY_MODE(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 	int  AUTO_CTRL__RB_LBi__ALL_MODE(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
@@ -397,10 +403,20 @@ private:
 	int  AUTO_CTRL__LBo_LPo(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 	int  AUTO_CTRL__RB_LPo(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 
+	int  _Get__ARM_LIST_TO_PLACE_LPx(bool& active__dual_arm, CStringArray& l__arm_type);
+	int  _Get__ARM_LIST_TO_PLACE_STx(bool& active__dual_arm, 
+									 CStringArray& l__arm_type,
+									 CStringArray& l__arm_lotid,
+									 CStringArray& l__stx_name, 
+									 CUIntArray& l__stx_slot);
+
+	int  _Get__ARM_LIST_TO_PICK_STx(CStringArray& l__stx_name, 
+									CUIntArray& l__stx_slot);
+	int  _Check__SLOT_COUNT_TO_PICK_STx(const double ref_sec, const int max_check);
+
+	int  AUTO_CTRL__LBo_RB(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 	int  AUTO_CTRL__RB_BUFFERx(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
-	int  AUTO_CTRL__LBo_BUFFERx(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 	int  AUTO_CTRL__BUFFERx_RB(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
-	int  AUTO_CTRL__RB_LPo_IN_BUFFER_MODE(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 
 	void AUTO_CTRL__LBi_VENT(CII_OBJECT__VARIABLE *p_variable);
 	void AUTO_CTRL__LBo_PUMP(CII_OBJECT__VARIABLE *p_variable);
@@ -571,12 +587,12 @@ private:
 	int  SCH__ALIGN(CII_OBJECT__VARIABLE *p_variable,const CString& str_slot);
 
 	// ...
-	int  Fnc__PICK_LPi(CII_OBJECT__VARIABLE *p_variable,
-					   CII_OBJECT__ALARM *p_alarm,
-					   const int port_id,
-					   const int slot_id,
-					   const int ll_id,
-					   CString& arm_type);
+	int  Fnc__PICK_LPi_WITH_ARM(CII_OBJECT__VARIABLE *p_variable,
+							    CII_OBJECT__ALARM *p_alarm,
+							    const CString& robot_arm,
+								const int port_id,
+								const int slot_id,
+								const int ll_id);
 
 	int  Fnc__PICK_LPi_In_BUFFER_MODE(CII_OBJECT__VARIABLE *p_variable,
 										CII_OBJECT__ALARM *p_alarm,
@@ -678,9 +694,9 @@ private:
 	int  Fnc__LBo_To_LPx__ONLY_MODE(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 	int  Fnc__LBo_To_LPx__ALL_MODE(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 
-	int  Fnc__LBo_To_BUFFERx__ONLY_MODE(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
-	int  _Check__LBo_To_BUFFERx__ONLY_MODE(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
-	int  Fnc__LBo_To_BUFFERx__ALL_MODE(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
+	int  Fnc__LBo_To_RB__ONLY_MODE(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
+	int  _Check__LBo_To_RB__ONLY_MODE(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
+	int  Fnc__LBo_To_RB__ALL_MODE(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 
 	int  Fnc__LBo_To_RB(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 
@@ -775,11 +791,13 @@ private:
 	int  ATM_RB__Get_Occupied_Arm_Count();
 
 	int  ATM_RB__Check_Empty__Arm_Type();
+	int  ATM_RB__Check_Empty__Arm_Type(const CString& arm_type);
+	int  ATM_RB__Get_Empty__Arm_Type(CString& arm_type);
+
 	int  ATM_RB__Check_Occupied__Arm_Type();
 	int  ATM_RB__Check_Occupied__Arm_Type(const CString& arm_type);
 	int  ATM_RB__Check_Occupied__A_Arm();
 	int  ATM_RB__Check_Occupied__B_Arm();
-	int  ATM_RB__Get_Empty__Arm_Type(CString& arm_type);
 	int  ATM_RB__Get_Occupied__Arm_Type(CString& arm_type);
 	int  ATM_RB__Get_Occupied__Arm_Type(const int arm_index, CString& arm_type);
 	int  ATM_RB__Get_Occupied__Wfr_Title_Of_Arm_Type(const CString& arm_type, CString& wfr_title);
@@ -840,45 +858,36 @@ private:
 
 	// ...
 	int  Buffer1__Get_Occupied__Slot(int& slot_id,CString& title);
+	
+	int  Buffer1__Get_Empty__Slot_To_Process(int& slot_id);
+	int  Buffer1__Get_Empty__Slot_To_Process(CUIntArray& l__slot_id);	
 	int  Buffer1__Check_Empty_Slot(int& slot_id);
-	int  Buffer1__Get_Occupied__Slot_To_Process(CUIntArray& l_lp_id, CUIntArray& l_stx_slot_id);	
-	int  Buffer1__Check_Empty__Slot_To_Process(int& slot_id);
+
+	int  Buffer1__Get_Occupied__Slot_To_Process(int& slot_id);	
+	int  Buffer1__Get_Occupied__Slot_To_Process(CUIntArray& l__stx_slot_id);	
+
 	int  Buffer1__Check_Empty__All_Slot();
 	int  Buffer1__Check_Empty__Any_Slot();
-	int  Buffer1__Check_Wait_Sec(const int slot_id);
+	int  Buffer1__Check_Wait_Sec(const int slot_id, const double ref_sec = 0);
 	CString Buffer1__Get_LotID();
 
+	// ...
 	int  Buffer2__Get_Occupied__Slot(int& slot_id,CString& title);
+
+	int  Buffer2__Get_Empty__Slot_To_Process(int& slot_id);
+	int  Buffer2__Get_Empty__Slot_To_Process(CUIntArray& l__slot_id);
 	int  Buffer2__Check_Empty_Slot(int& slot_id);
+
 	int  Buffer2__Get_Occupied__Slot_To_Process(int& slot_id);
-	int  Buffer2__Check_Empty__Slot_To_Process(int& slot_id);
+	int  Buffer2__Get_Occupied__Slot_To_Process(CUIntArray& l__stx_slot_id);	
+
 	int  Buffer2__Check_Empty__All_Slot();
 	int  Buffer2__Check_Empty__Any_Slot();
-	int  Buffer2__Check_Wait_Sec(const int slot_id);
+	int  Buffer2__Check_Wait_Sec(const int slot_id, const double ref_sec = 0);
 	CString Buffer2__Get_LotID();
 
 	// ...
-	void Fnc__LOG_INFO(const CString& fnc_id,
-					   const CString& log_id,
-					   const CString& para_info);
-
-	void Datalog__Picking_Material(const CString& arm_type,
-									const CString& para_module,
-									const CString& para_slot,
-									const int ex_flag);
-	void Datalog__Picked_Material(const CString& arm_type,
-									const CString& para_module,
-									const CString& para_slot,
-									const int ex_flag);
-
-	void Datalog__Placing_Material(const CString& arm_type,
-									const CString& para_module,
-									const CString& para_slot,
-									const int ex_flag);
-	void Datalog__Placed_Material(const CString& arm_type,
-									const CString& para_module,
-									const CString& para_slot,
-									const int ex_flag);
+	void Fnc__LOG_INFO(const CString& fnc_id, const CString& log_id, const CString& para_info);
 
 	// ...
 	int _QUERY__GET_EMPTY_SLOT_OF_BUUFER(const int log_enable, CStringArray& l_info);

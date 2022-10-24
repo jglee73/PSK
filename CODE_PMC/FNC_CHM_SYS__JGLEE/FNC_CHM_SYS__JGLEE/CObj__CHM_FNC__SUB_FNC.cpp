@@ -2391,7 +2391,7 @@ Fnc__LEAK_CHECK__VAT_VLV_POS_MOVE(CII_OBJECT__VARIABLE *p_variable,
 	
 		sCH__OBJ_MSG->Set__DATA("2. TH/V OPEN ...");
 	
-		if(Call__VAC_VLV__APC_OPEN() < 0)
+		if(Call__VAC_VLV__APC_OPEN(p_variable, p_alarm) < 0)
 		{
 			return -2022;
 		}
@@ -2442,7 +2442,7 @@ Fnc__LEAK_CHECK__VAT_VLV_POS_MOVE(CII_OBJECT__VARIABLE *p_variable,
 				double apc__trg_pos = 90.0 - (i * 10.0);				
 
 				// VAT-POS Move ...
-				if(Call__VAC_VLV__APC_POSITION(apc__trg_pos) < 0)
+				if(Call__VAC_VLV__APC_POSITION(p_variable, p_alarm, apc__trg_pos) < 0)
 				{
 					return -2051;
 				}
@@ -2860,7 +2860,7 @@ int CObj__CHM_FNC
 	//  4. APC Ballast Pressure Control
 
 	// APC.OPEN ...
-	if(Call__VAC_VLV__APC_OPEN() < 0)
+	if(Call__VAC_VLV__APC_OPEN(p_variable, p_alarm) < 0)
 	{
 		log_msg = " * APC-OPEN is Aborted ...";
 
@@ -2878,7 +2878,7 @@ int CObj__CHM_FNC
 	}
 
 	// APC.BALLAST_POS - START ...
-	if(Call__VAC_VLV__APC_BALLAST_CTRL(active_xfer) < 0)
+	if(Call__VAC_VLV__APC_BALLAST_CTRL(p_variable, p_alarm, active_xfer) < 0)
 	{
 		log_msg = " * APC Ballast-Control is Aborted ... ";
 
@@ -2926,7 +2926,7 @@ int CObj__CHM_FNC
 	//  4. APC Ballast Pressure Control
 	
 	// APC.OPEN ...
-	if(Call__VAC_VLV__APC_OPEN() < 0)
+	if(Call__VAC_VLV__APC_OPEN(p_variable, p_alarm) < 0)
 	{
 		log_msg = " * APC-OPEN is Failed ... ";
 			
@@ -2944,7 +2944,7 @@ int CObj__CHM_FNC
 	}
 
 	// APC.BALLAST POST ...
-	if(Call__VAC_VLV__APC_BALLAST_CTRL(active_xfer) < 0)
+	if(Call__VAC_VLV__APC_BALLAST_CTRL(p_variable, p_alarm, active_xfer) < 0)
 	{
 		log_msg = " * APC Ballast-Control is Aborted ... ";
 
@@ -2980,7 +2980,7 @@ int CObj__CHM_FNC
 
 	sCH__TRANSFER_BALLAST_FLAG->Set__DATA("");
 
-	if(Call__VAC_VLV__APC_OPEN() < 0)
+	if(Call__VAC_VLV__APC_OPEN(p_variable, p_alarm) < 0)
 	{
 		return -11;
 	}
