@@ -1,0 +1,16 @@
+AWC 관련
+-. TMC__Phy_ROBOT : X, Y Log 남기는 구간 수정
+-. PART - ROBOT_PERSIMMON - PSK : X,Y 값 기준으로 R, T값 환산하여 저장하는 방식으로 내용 수정
+-. JGLEE__LOG_TMC : DA Log 확인을 위한 UI Page 수정
+
+ESC Drirver 수정
+-. Read 관련 함수 Parmater Pointer -> Reference관련 수정 (Read 시 Data 읽지 못하는 문제)
+-. Set Voltage시 초반 Leak Current Peak 문제로 Delay시간동안 Alarm 발생하지 않게 수정
+
+PM C, D Gas 명칭 수정
+-. Update파일(PMC_CONFIG_GAS_MFC)과 실제 Program Exe 파일 안에 내용 포함해서 수정
+Cl2 → H2
+BCl3 → He
+C4F8 → O2
+P-N2 → 4%H2N2
+O2 → N2
