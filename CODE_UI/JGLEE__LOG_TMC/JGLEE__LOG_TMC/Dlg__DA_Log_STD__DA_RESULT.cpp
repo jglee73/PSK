@@ -9,8 +9,8 @@
 #define _RST_COL__NUMBER						0
 #define _RST_COL__WFRID							1
 #define _RST_COL__MDx							2
-#define _RST_COL__OFF_R							3
-#define _RST_COL__OFF_T							4
+#define _RST_COL__OFF_01						3
+#define _RST_COL__OFF_02						4
 #define _RST_COL__LOTID							5
 #define _RST_COL__PPID							6
 #define _RST_COL__ARM_TYPE						7
@@ -24,12 +24,14 @@ void CDlg__DA_Log_STD
 	CStringArray l__col_name;
 	CUIntArray   l__col_width;
 
+	CString str_info;
+
 	// ...
 	{
 		l__col_name.RemoveAll();
 		l__col_width.RemoveAll();
 
-		int i_limit = 10;
+		int i_limit = 12;
 		int i;
 
 		for(i=0; i<i_limit; i++)
@@ -49,14 +51,20 @@ void CDlg__DA_Log_STD
 				l__col_name.Add("Module");
 				l__col_width.Add(60);
 			}
-			else if(i == _RST_COL__OFF_R)
+			else if(i == _RST_COL__OFF_01)
 			{
-				l__col_name.Add("Offset_R");
+				if(bActive__R_T_OFFSET)			str_info = "Offset_R (mm)";
+				else							str_info = "Offset_X (mm)";
+
+				l__col_name.Add(str_info);
 				l__col_width.Add(90);
 			}
-			else if(i == _RST_COL__OFF_T)
+			else if(i == _RST_COL__OFF_02)
 			{
-				l__col_name.Add("Offset_T");
+				if(bActive__R_T_OFFSET)			str_info = "Offset_T (deg)";
+				else							str_info = "Offset_Y (mm)";
+
+				l__col_name.Add(str_info);
 				l__col_width.Add(90);
 			}
 			else if(i == _RST_COL__LOTID)
@@ -130,13 +138,15 @@ void CDlg__DA_Log_STD
 				    const CStringArray& l_module,
 				    const CStringArray& l_off_r,
 				    const CStringArray& l_off_t,
+					const CStringArray& l_off_x,
+					const CStringArray& l_off_y,
 				    const CStringArray& l_lotid,
 					const CStringArray& l_ppid,
 					const CStringArray& l_arm_type,
 				    const CStringArray& l_arm_act,
 					const CStringArray& l_end_time)
 {
-	mDB_RT.Clear__RT();
+	mDB__OFFSET_PT.Clear__INFO();
 	p_table->DeleteAllItems();
 
 	// ...
@@ -221,13 +231,33 @@ void CDlg__DA_Log_STD
 			if(!check_mdx)		continue;
 		}
 
+		if(active__only_alarm > 0)
+		{
+			double cur__err_range = atof(l_off_r[i]);
+
+			/*
+			if(!bActive__R_T_OFFSET)
+			{
+				double x_mm = atof(l_off_x[i]);
+				double y_mm = atof(l_off_y[i]);
+
+				cur__err_range = sqrt(pow(x_mm, 2) + pow(y_mm, 2)); 
+			}
+			*/
+			
+			if(cur__err_range < 0)			cur__err_range = -cur__err_range;
+			if(cur__err_range < ref__err_range)			continue;
+		}
+
 		// ...
 		int active__end_check = -1;
 
 		CString item__wfrid;
 		CString item__mdx;
-		CString item__off_r;
-		CString item__off_t;
+		
+		CString item__off_01;
+		CString item__off_02;
+		
 		CString item__lotid;
 		CString item__ppid;
 		CString item__arm_type;
@@ -251,21 +281,15 @@ void CDlg__DA_Log_STD
 			{
 				item__mdx = l_module[i];
 			}
-			else if(k == _RST_COL__OFF_R)
+			else if(k == _RST_COL__OFF_01)
 			{
-				item__off_r = l_off_r[i];
+				if(bActive__R_T_OFFSET)			item__off_01 = l_off_r[i];
+				else							item__off_01 = l_off_x[i];
 			}
-			else if(k == _RST_COL__OFF_T)
+			else if(k == _RST_COL__OFF_02)
 			{
-				item__off_t = l_off_t[i];
-
-				if(active__only_alarm > 0)
-				{
-					double cur__err_range = atof(item__off_t);
-					if(cur__err_range < 0)		cur__err_range = -cur__err_range;
-
-					if(cur__err_range < ref__err_range)			break;
-				}
+				if(bActive__R_T_OFFSET)			item__off_02 = l_off_t[i];
+				else							item__off_02 = l_off_y[i];
 			}
 			else if(k == _RST_COL__LOTID)
 			{
@@ -304,8 +328,8 @@ void CDlg__DA_Log_STD
 				 if(k == _RST_COL__NUMBER)			str_item.Format("%02d", i+1);
 			else if(k == _RST_COL__WFRID)			str_item = item__wfrid;
 			else if(k == _RST_COL__MDx)				str_item = item__mdx;
-			else if(k == _RST_COL__OFF_R)			str_item = item__off_r;
-			else if(k == _RST_COL__OFF_T)			str_item = item__off_t;
+			else if(k == _RST_COL__OFF_01)			str_item = item__off_01;
+			else if(k == _RST_COL__OFF_02)			str_item = item__off_02;
 			else if(k == _RST_COL__LOTID)			str_item = item__lotid;
 			else if(k == _RST_COL__PPID)			str_item = item__ppid;	
 			else if(k == _RST_COL__ARM_TYPE)		str_item = item__arm_type;
@@ -318,6 +342,6 @@ void CDlg__DA_Log_STD
 		}
 
 		tbl_r++;
-		mDB_RT.Load__RT(item__off_r, item__off_t);
+		mDB__OFFSET_PT.Load__INFO(item__off_01, item__off_02);
 	}
 }

@@ -25,6 +25,9 @@ private:
 	int	 m_RetryCnt;
 
 	bool bActive__COMM_ONLINE;
+
+	bool bActive__Delay_Check;					  // KMS:20221024
+	SCX__ASYNC_TIMER_CTRL mCtrl__Delay_Timer;     // KMS:20221024
 	//
 
 
@@ -55,6 +58,9 @@ private:
 	// PARA ...
 	CX__VAR_ANALOG_CTRL  aCH__PARA_VOLTAGE_SET;
 
+	// MON...
+	CX__VAR_STRING_CTRL  sCH__MON_ESC_STABLE_DELAY_TIME;     // KMS
+
 	// INFO ...
 	CX__VAR_STRING_CTRL  sCH__INFO_POWER_STS;
 	CX__VAR_STRING_CTRL  sCH__INFO_HIGH_VOLTAGE_STS;
@@ -66,6 +72,7 @@ private:
 
 	// CFG ...
 	CX__VAR_ANALOG_CTRL  aCH__CFG_LEAK_CURRUNT_LIMIT;
+	CX__VAR_ANALOG_CTRL  aCH__CFG_STABLE_DELAY_SEC;     // KMS
 
 	CX__VAR_ANALOG_CTRL  aCH__CFG_RAMP_START_VOLTAGE;
 	CX__VAR_ANALOG_CTRL  aCH__CFG_RAMP_UP_TIME;
@@ -123,8 +130,8 @@ private:
 	int  _Fnc__Ramping_Ctrl(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm, const bool active_up);
 	int  _Fnc__Abort_Ctrl();
 
-	int _Send__Command(const CString& s_cmd, CString* r_data);
-	int _Get__HexToDec(const CString& str_hexa);
+	int  _Send__Command(const CString& s_cmd, CString& r_data);     // KMS:221018, CString µÚ Pointer -> Reference
+	int  _Get__HexToDec(const CString& str_hexa);
 	
 	// ...
 	void Mon__IO_MONITOR(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm);

@@ -7,7 +7,7 @@
 #include "CCommon_DEF.h"
 
 #include "Macro_Function.h"
-
+#define PI 3.14159265358979323846 // KMS:221024
 
 //------------------------------------------------------------------------------------
 void CObj_NET__VAC_PERSIMMON
@@ -123,104 +123,122 @@ int CObj_NET__VAC_PERSIMMON
 			// CEN ...
 			else if(i == 11)
 			{
-				double cur_deg = atof(ch_data) / 1000.0;
+				double cur_deg = atof(ch_data) / 1000.0;		// micron -> mm
 				
 				ch_data.Format("%.3f", cur_deg);
 				sCH__WCD__CSns_Offset_RadialValue->Set__DATA(ch_data);
 			}
 			else if(i == 12)
 			{
-				double cur_mm = atof(ch_data) / 1000.0;
+				double cur_mm = atof(ch_data) / 1000.0;			// millidegree -> degree
 
 				ch_data.Format("%.3f", cur_mm);
 				sCH__WCD__CSns_Offset_ThetaValue->Set__DATA(ch_data);
 			}
 			else if(i == 13)
 			{
-				double cur_mm = atof(ch_data) / 1000.0;
+				double cur_mm = atof(ch_data) / 1000.0;			// micron -> mm
 
 				ch_data.Format("%.3f", cur_mm);
 				sCH__WCD__CSns_Offset_X_Value->Set__DATA(ch_data);
 			}
 			else if(i == 14)
 			{
-				double cur_mm = atof(ch_data) / 1000.0;
+				double cur_mm = atof(ch_data) / 1000.0;			// micron -> mm
 
 				ch_data.Format("%.3f", cur_mm);
 				sCH__WCD__CSns_Offset_Y_Value->Set__DATA(ch_data);
 			}
 		}
 
-		/*
-		if(iSim_Flag > 0)
-		{
-			CString ch__da_deg = "000247";
-			CString ch__da_mm  = "-00025";
-			CString ch_data;
-
-			double cur_deg = atof(ch__da_deg) / 1000.0;
-			double cur_mm  = atof(ch__da_mm)  / 1000.0;
-
-			ch_data.Format("%.3f", cur_deg);
-			sCH__WCD__CSns_Offset_RadialValue->Set__DATA(ch_data);
-
-			ch_data.Format("%.3f", cur_mm);
-			sCH__WCD__CSns_Offset_ThetaValue->Set__DATA(ch_data);
-		}
-		*/
-
-		// ...
+		// R & T OFFSET ...
 		{
 			CString ch_data;
+
+			/*
+			double x_mm = atof(sCH__WCD__CSns_Offset_X_Value->Get__STRING());     // KMS : 221019 Calc X,Y -> R & T
+			double y_mm = atof(sCH__WCD__CSns_Offset_Y_Value->Get__STRING());     // KMS : 221019 Calc X,Y -> R & T
+
+			double result_the = atan2(y_mm,x_mm) * 180 / PI;       // KMS : 221019 Calc X,Y -> R & T
+			double result_rad = sqrt(pow(x_mm,2)+pow(y_mm,2));     // KMS : 221019 Calc X,Y -> R & T
+
+			ch_data.Format("%.3f", result_rad);	
+			sCH__DA_RESULT_R_OFFSET_MM->Set__DATA(ch_data);
+
+			ch_data.Format("%.3f", result_the);	
+			sCH__DA_RESULT_T_OFFSET_DEG->Set__DATA(ch_data);
+			*/
 
 			ch_data = sCH__WCD__CSns_Offset_RadialValue->Get__STRING();
-			sCH__DA_RESULT_R_OFFSET_DEG->Set__DATA(ch_data);
+			sCH__DA_RESULT_R_OFFSET_MM->Set__DATA(ch_data);
 
 			ch_data = sCH__WCD__CSns_Offset_ThetaValue->Get__STRING();
-			sCH__DA_RESULT_T_OFFSET_MM->Set__DATA(ch_data);
+			sCH__DA_RESULT_T_OFFSET_DEG->Set__DATA(ch_data);
+		}
+		// X & Y OFFSET ...
+		{
+			CString ch_data;
+
+			ch_data = sCH__WCD__CSns_Offset_X_Value->Get__STRING();
+			sCH__DA_RESULT_X_OFFSET_MM->Set__DATA(ch_data);
+
+			ch_data = sCH__WCD__CSns_Offset_Y_Value->Get__STRING();
+			sCH__DA_RESULT_Y_OFFSET_MM->Set__DATA(ch_data);
 		}
 
 		// Offset Result ...
 		{
 			log_msg += " * Offset Result ... \n";
 
-			// R
-			log_bff.Format(" ** %s <- [%s] \n", 
+			// R (micron)
+			log_bff.Format(" ** %s <- [%s] (mm) \n", 
 							sCH__WCD__CSns_Offset_RadialValue->Get__CHANNEL_NAME(),
 							sCH__WCD__CSns_Offset_RadialValue->Get__STRING());						
 			log_msg += log_bff;
 
-			// T
-			log_bff.Format(" ** %s <- [%s] \n", 
+			// T (millidegree)
+			log_bff.Format(" ** %s <- [%s] (deg) \n", 
 							sCH__WCD__CSns_Offset_ThetaValue->Get__CHANNEL_NAME(),
 							sCH__WCD__CSns_Offset_ThetaValue->Get__STRING());
 			log_msg += log_bff;
 
-			// X
-			log_bff.Format(" ** %s <- [%s] \n", 
+			// X (micron)
+			log_bff.Format(" ** %s <- [%s] (mm) \n", 
 							sCH__WCD__CSns_Offset_X_Value->Get__CHANNEL_NAME(),
 							sCH__WCD__CSns_Offset_X_Value->Get__STRING());						
 			log_msg += log_bff;
 
-			// Y
-			log_bff.Format(" ** %s <- [%s] \n", 
+			// Y (micron)
+			log_bff.Format(" ** %s <- [%s] (mm) \n", 
 							sCH__WCD__CSns_Offset_Y_Value->Get__CHANNEL_NAME(),
 							sCH__WCD__CSns_Offset_Y_Value->Get__STRING());
 			log_msg += log_bff;
 		}
 
-		// Report.Result ... 
+		// Result Report ... 
 		{
-			log_msg += " * Report Result ... \n";
+			log_msg += " * Result Report ... \n";
 
-			log_bff.Format(" ** %s <- [%s] \n", 
-							sCH__DA_RESULT_R_OFFSET_DEG->Get__CHANNEL_NAME(),
-							sCH__DA_RESULT_R_OFFSET_DEG->Get__STRING());
+			log_msg += " * R & T Offset \n";
+			log_bff.Format(" ** %s <- [%s] (mm) \n", 
+							sCH__DA_RESULT_R_OFFSET_MM->Get__CHANNEL_NAME(),
+							sCH__DA_RESULT_R_OFFSET_MM->Get__STRING());
 			log_msg += log_bff;
 
-			log_bff.Format(" ** %s <- [%s] \n", 
-							sCH__DA_RESULT_T_OFFSET_MM->Get__CHANNEL_NAME(),
-							sCH__DA_RESULT_T_OFFSET_MM->Get__STRING());
+			log_bff.Format(" ** %s <- [%s] (deg) \n", 
+							sCH__DA_RESULT_T_OFFSET_DEG->Get__CHANNEL_NAME(),
+							sCH__DA_RESULT_T_OFFSET_DEG->Get__STRING());
+			log_msg += log_bff;
+
+			log_msg += " * X & Y Offset \n";
+			log_bff.Format(" ** %s <- [%s] (mm) \n", 
+							sCH__DA_RESULT_X_OFFSET_MM->Get__CHANNEL_NAME(),
+							sCH__DA_RESULT_X_OFFSET_MM->Get__STRING());
+			log_msg += log_bff;
+
+			log_bff.Format(" ** %s <- [%s] (mm) \n", 
+							sCH__DA_RESULT_Y_OFFSET_MM->Get__CHANNEL_NAME(),
+							sCH__DA_RESULT_Y_OFFSET_MM->Get__STRING());
 			log_msg += log_bff;
 		}
 

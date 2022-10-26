@@ -69,12 +69,12 @@ void CDlg__Wafer_DA_Chart
 			}
 			else if(i == _TBL_COL__R_OFFSET)
 			{
-				l__col_name.Add("R (deg)");
+				l__col_name.Add("R (mm)");
 				l__col_width.Add(120);
 			}
 			else if(i == _TBL_COL__T_OFFSET)
 			{
-				l__col_name.Add("T (mm)");
+				l__col_name.Add("T (deg)");
 				l__col_width.Add(120);
 			}
 			else
@@ -210,16 +210,17 @@ _Add__Wafer_List(const CString& str_slotid,
 		}
 
 		// ...
-		CString str__t_off = l_t_offset[i];
+		CString str__r_off_mm  = l_r_offset[i];
+		CString str__t_off_deg = l_t_offset[i];
 
 		if(active__only_alarm > 0)
 		{
 			ref__err_range = atof(mStr__Error_Range);
 
-			double cur__t_off = atof(str__t_off);
-			if(cur__t_off < 0)		cur__t_off = -cur__t_off;
+			double cur__r_off_mm = atof(str__r_off_mm);
+			if(cur__r_off_mm < 0)		cur__r_off_mm = -cur__r_off_mm;
 
-			if(cur__t_off < ref__err_range)			continue;
+			if(cur__r_off_mm < ref__err_range)		continue;
 		}
 
 		// ...
@@ -231,8 +232,8 @@ _Add__Wafer_List(const CString& str_slotid,
 				 if(k == _TBL_COL__NUMBER)			str_item.Format("%1d", r_count + 1 + i_offset);
 			else if(k == _TBL_COL__SLOTID)			str_item = str_slotid;
 			else if(k == _TBL_COL__MODULE)			str_item = str_mdx;
-			else if(k == _TBL_COL__R_OFFSET)		str_item = l_r_offset[i];
-			else if(k == _TBL_COL__T_OFFSET)		str_item = str__t_off;
+			else if(k == _TBL_COL__R_OFFSET)		str_item = str__r_off_mm;
+			else if(k == _TBL_COL__T_OFFSET)		str_item = str__t_off_deg;
 			else									break;
 
 			if(k == 0)		p_table->InsertItem(r_count+i_offset, str_item, 0);

@@ -90,61 +90,61 @@ public:
 		LeaveCriticalSection(&mCS_LOCK);
 	}
 };
-class CDB__RT_POINT
+class CDB__OFFSET_POINT
 {
 private:
 	CRITICAL_SECTION mCS_LOCK;
 
-	CStringArray sList__R;
-	CStringArray sList__T;
+	CStringArray sList__P1;
+	CStringArray sList__P2;
 
 public:
-	CDB__RT_POINT()
+	CDB__OFFSET_POINT()
 	{
 		InitializeCriticalSection(&mCS_LOCK);
 
 	}
-	~CDB__RT_POINT()
+	~CDB__OFFSET_POINT()
 	{
 
 		DeleteCriticalSection(&mCS_LOCK);
 	}
 
-	void Load__RT(const CString& str_r,const CString& str_t)
+	void Load__INFO(const CString& str_p1, const CString& str_p2)
 	{
 		EnterCriticalSection(&mCS_LOCK);
 
 		// ...
 		{
-			sList__R.Add(str_r);
-			sList__T.Add(str_t);
+			sList__P1.Add(str_p1);
+			sList__P2.Add(str_p2);
 		}
 
 		LeaveCriticalSection(&mCS_LOCK);
 	}
-	int Get__RT(CStringArray& l_r,CStringArray& l_t)
+	int Get__INFO(CStringArray& l_p1, CStringArray& l_p2)
 	{
 		EnterCriticalSection(&mCS_LOCK);
 
 		// ...
 		{
-			l_r.RemoveAll();
-			l_t.RemoveAll();
+			l_p1.RemoveAll();
+			l_p2.RemoveAll();
 
-			l_r.Copy(sList__R);
-			l_t.Copy(sList__T);
+			l_p1.Copy(sList__P1);
+			l_p2.Copy(sList__P2);
 		}
 
 		LeaveCriticalSection(&mCS_LOCK);
 		return 1;
 	}
 
-	void Clear__RT()
+	void Clear__INFO()
 	{
 		EnterCriticalSection(&mCS_LOCK);
 
-		sList__R.RemoveAll();
-		sList__T.RemoveAll();
+		sList__P1.RemoveAll();
+		sList__P2.RemoveAll();
 
 		LeaveCriticalSection(&mCS_LOCK);
 	}
@@ -259,7 +259,7 @@ protected:
 	bool bCheck__LLx[_CFG__LLx_SIZE];
 
 	CDB__LOTID mDB_LOTID;
-	CDB__RT_POINT mDB_RT;
+	CDB__OFFSET_POINT mDB__OFFSET_PT;
 	
 	CStatic mDA_Chart;
 
@@ -282,6 +282,8 @@ protected:
 							const CStringArray& l_module,
 							const CStringArray& l_off_r,
 							const CStringArray& l_off_t,
+							const CStringArray& l_off_x,
+							const CStringArray& l_off_y,
 							const CStringArray& l_lotid,
 							const CStringArray& l_ppid,
 							const CStringArray& l_arm_type,
@@ -293,8 +295,12 @@ protected:
 						  const CString& file_portid);
 
 	void _Draw__DA_Chart(const int sel_index = -1);
-	int  _Get__XY_Of_RT(const double r_deg, 
-						const double t_mm,
+	int  _Get__XY_Of_RT(const double para_radius, 
+						const double para_degree,
+						int& p_x1,int& p_y1,
+						int& p_x2,int& p_y2);
+	int  _Get__XY_Of_XY(const double x_offset, 
+						const double y_offset,
 						int& p_x1,int& p_y1,
 						int& p_x2,int& p_y2);
 
@@ -310,6 +316,7 @@ protected:
 	int iRes__Point_R_Size;
 
 	bool bActive__LOG_PROC;
+	bool bActive__R_T_OFFSET;
 	//
 
 public:

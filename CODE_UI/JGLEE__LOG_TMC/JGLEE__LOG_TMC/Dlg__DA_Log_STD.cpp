@@ -415,25 +415,37 @@ void CDlg__DA_Log_STD::_Draw__DA_Chart(const int db_index)
 
 		// ...
 		{
-			CStringArray l_off_r;
-			CStringArray l_off_t;
+			CStringArray l_off_01;
+			CStringArray l_off_02;
 			
+			mDB__OFFSET_PT.Get__INFO(l_off_01, l_off_02);
+
+			// ...
 			int p_x1;
 			int p_y1;
 			int p_x2;
 			int p_y2;
 
-			mDB_RT.Get__RT(l_off_r,l_off_t);
-
-			int i_limit = l_off_r.GetSize();
+			// ...
+			int i_limit = l_off_01.GetSize();
 			int i;
 
 			for(i=0; i<i_limit; i++)
 			{
-				double r_deg = atof(l_off_r[i]);
-				double t_mm  = atof(l_off_t[i]);
+				if(bActive__R_T_OFFSET)
+				{
+					double r_mm  = atof(l_off_01[i]);
+					double t_deg = atof(l_off_02[i]);
 
-				_Get__XY_Of_RT(r_deg,t_mm, p_x1,p_y1, p_x2,p_y2);
+					_Get__XY_Of_RT(r_mm,t_deg, p_x1,p_y1, p_x2,p_y2);   
+				}
+				else
+				{
+					double x_pos = atof(l_off_01[i]);
+					double y_pos = atof(l_off_02[i]);
+
+					_Get__XY_Of_XY(x_pos,y_pos, p_x1,p_y1, p_x2,p_y2);   
+				}
 
 				if(i != sel_index)
 				{
@@ -445,17 +457,26 @@ void CDlg__DA_Log_STD::_Draw__DA_Chart(const int db_index)
 			{
 				i = sel_index;
 
-				double r_deg = atof(l_off_r[i]);
-				double t_mm  = atof(l_off_t[i]);
+				if(bActive__R_T_OFFSET)
+				{
+					double r_mm  = atof(l_off_01[i]);
+					double t_deg = atof(l_off_02[i]);
 
-				_Get__XY_Of_RT(r_deg,t_mm, p_x1,p_y1, p_x2,p_y2);
+					_Get__XY_Of_RT(r_mm,t_deg, p_x1,p_y1, p_x2,p_y2);
+				}
+				else
+				{
+					double x_pos = atof(l_off_01[i]);
+					double y_pos = atof(l_off_02[i]);
+
+					_Get__XY_Of_XY(x_pos,y_pos, p_x1,p_y1, p_x2,p_y2);   
+				}
 
 				// ...
 				{
 					CBrush* p_old_brush = p_dc->SelectObject(&brush_xxx);
 
 					p_dc->Rectangle(p_x1,p_y1, p_x2,p_y2);
-
 					p_dc->SelectObject(p_old_brush);
 				}
 			}
@@ -464,15 +485,30 @@ void CDlg__DA_Log_STD::_Draw__DA_Chart(const int db_index)
 		p_dc->SelectObject(p_old_pen);
 	}
 }
-int  CDlg__DA_Log_STD::_Get__XY_Of_RT(const double para_r_deg, 
-									  const double t_mm,
+int  CDlg__DA_Log_STD::_Get__XY_Of_RT(const double para_radius, 
+									  const double para_degree,
 									  int& p_x1,int& p_y1,
 									  int& p_x2,int& p_y2)
 {
-	double r_deg = para_r_deg * _DEF__PI / 180.0;
+	double theta_deg = para_degree * _DEF__PI / 180.0;
 
-	double v_x = t_mm * cos(r_deg);
-	double v_y = t_mm * sin(r_deg);
+	double v_x = para_radius * cos(theta_deg);
+	double v_y = para_radius * sin(theta_deg);
+
+	p_x1 = iRes__Center_X + ((v_x / (5.0 * dRes__Axis_Range)) * dRes__Center_R) - iRes__Point_R_Size;
+	p_y1 = iRes__Center_Y - ((v_y / (5.0 * dRes__Axis_Range)) * dRes__Center_R) - iRes__Point_R_Size;
+	p_x2 = p_x1 + (2 * iRes__Point_R_Size);
+	p_y2 = p_y1 + (2 * iRes__Point_R_Size);
+
+	return 1;
+}
+int  CDlg__DA_Log_STD::_Get__XY_Of_XY(const double x_offset, 
+									  const double y_offset,
+									  int& p_x1,int& p_y1,
+									  int& p_x2,int& p_y2)
+{
+	double v_x = x_offset;
+	double v_y = y_offset;
 
 	p_x1 = iRes__Center_X + ((v_x / (5.0 * dRes__Axis_Range)) * dRes__Center_R) - iRes__Point_R_Size;
 	p_y1 = iRes__Center_Y - ((v_y / (5.0 * dRes__Axis_Range)) * dRes__Center_R) - iRes__Point_R_Size;
@@ -547,7 +583,7 @@ _Update__Log_Date(const CString& dir_log,
 		mCtrl__Log_Result.DeleteAllItems();
 
 		mDB_LOTID.Clear__LOTID();
-		mDB_RT.Clear__RT();
+		mDB__OFFSET_PT.Clear__INFO();
 	}
 
 	// ...
@@ -788,6 +824,14 @@ int CDlg__DA_Log_STD
 
 		if(para_data.CompareNoCase("PROCESS") == 0)		bActive__LOG_PROC = true;
 		else											bActive__LOG_PROC = false;
+	}
+
+	// ...
+	{
+		pGObj_Res->pGOBJ_PARA_CTRL->Get_Constant_Data(pKEY__DATA_OFFSET_TYPE, para_data);
+
+		if(para_data.CompareNoCase("R_T") == 0)			bActive__R_T_OFFSET = true;
+		else											bActive__R_T_OFFSET = false;
 	}
 
 	if(iREAL_MODE < 0)

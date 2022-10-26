@@ -22,7 +22,8 @@ CObj__DA_Log_STD::~CObj__DA_Log_STD()
 void CObj__DA_Log_STD
 ::Get_Parameter(GObj__Parameter_Def* p_obj_para_def)
 {
-	p_obj_para_def->Register_Command(pKEY__DATA_LOG_TYPE, "ListBox", "PROCESS  MANUAL", "PROCESS");
+	p_obj_para_def->Register_Command(pKEY__DATA_LOG_TYPE,    "ListBox", "PROCESS  MANUAL", "PROCESS");
+	p_obj_para_def->Register_Command(pKEY__DATA_OFFSET_TYPE, "ListBox", "R_T  X_Y", "R_T");
 
 	p_obj_para_def->Register_Channel(pKEY__CH_AXIS_MAX);
 	p_obj_para_def->Register_Channel(pKEY__CH_ERR_RANGE);

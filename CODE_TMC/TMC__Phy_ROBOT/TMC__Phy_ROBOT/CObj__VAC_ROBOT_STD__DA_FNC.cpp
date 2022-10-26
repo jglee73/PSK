@@ -42,9 +42,6 @@ int  CObj__VAC_ROBOT_STD
 	else if(arm_type.CompareNoCase(_ARM_B)  == 0)		active__arm_b = true;
 
 	// ...
-	CString ch__r_off;
-	CString ch__t_off;
-
 	double cfg__soft_r = 0.0;
 	double cfg__hard_r = 0.0;
 	double cfg__soft_t = 0.0;
@@ -53,23 +50,22 @@ int  CObj__VAC_ROBOT_STD
 	CII__VAR_STRING_CTRL *pch__result_offset;
 
 	// ...
-	{
-		ch__r_off = sEXT_CH__ROBOT_DA_RESULT_R_OFFSET_DEG->Get__STRING();
-		ch__t_off = sEXT_CH__ROBOT_DA_RESULT_T_OFFSET_MM->Get__STRING();
-	}
+	CString ch__r_off_mm  = sEXT_CH__ROBOT_DA_RESULT_R_OFFSET_MM->Get__STRING();
+	CString ch__t_off_deg = sEXT_CH__ROBOT_DA_RESULT_T_OFFSET_DEG->Get__STRING();
 
+	// ...
 	int ll_i = Macro__CHECK_LLx_INDEX(stn_name);
 	int pm_i = Macro__CHECK_PMx_INDEX(stn_name);
 
 	if(active__arm_a)
 	{
-		sCH__MON_R_OFFSET_A_ARM__ROBOT->Set__DATA(ch__r_off);
-		sCH__MON_T_OFFSET_A_ARM__ROBOT->Set__DATA(ch__t_off);
+		sCH__MON_R_OFFSET_A_ARM__ROBOT->Set__DATA(ch__r_off_mm);
+		sCH__MON_T_OFFSET_A_ARM__ROBOT->Set__DATA(ch__t_off_deg);
 	}
 	else if(active__arm_b)
 	{
-		sCH__MON_R_OFFSET_B_ARM__ROBOT->Set__DATA(ch__r_off);
-		sCH__MON_T_OFFSET_B_ARM__ROBOT->Set__DATA(ch__t_off);
+		sCH__MON_R_OFFSET_B_ARM__ROBOT->Set__DATA(ch__r_off_mm);
+		sCH__MON_T_OFFSET_B_ARM__ROBOT->Set__DATA(ch__t_off_deg);
 	}
 
 	// CFG.DA_OFFSET ...
@@ -86,15 +82,15 @@ int  CObj__VAC_ROBOT_STD
 					{
 						pch__result_offset = sCH__MON_RESULT_OFFSET_PLACE__LLx_SLOT[ll_i][s_index].Get__PTR();
 
-						sCH__MON_R_OFFSET_PLACE__LLx_SLOT[ll_i][s_index]->Set__DATA(ch__r_off);
-						sCH__MON_T_OFFSET_PLACE__LLx_SLOT[ll_i][s_index]->Set__DATA(ch__t_off);
+						sCH__MON_R_OFFSET_PLACE__LLx_SLOT[ll_i][s_index]->Set__DATA(ch__r_off_mm);
+						sCH__MON_T_OFFSET_PLACE__LLx_SLOT[ll_i][s_index]->Set__DATA(ch__t_off_deg);
 					}
 					else
 					{
 						pch__result_offset = sCH__MON_RESULT_OFFSET_PICK__LLx_SLOT[ll_i][s_index].Get__PTR();
 
-						sCH__MON_R_OFFSET_PICK__LLx_SLOT[ll_i][s_index]->Set__DATA(ch__r_off);
-						sCH__MON_T_OFFSET_PICK__LLx_SLOT[ll_i][s_index]->Set__DATA(ch__t_off);
+						sCH__MON_R_OFFSET_PICK__LLx_SLOT[ll_i][s_index]->Set__DATA(ch__r_off_mm);
+						sCH__MON_T_OFFSET_PICK__LLx_SLOT[ll_i][s_index]->Set__DATA(ch__t_off_deg);
 					}
 				}
 			}
@@ -104,15 +100,15 @@ int  CObj__VAC_ROBOT_STD
 				{
 					pch__result_offset = sCH__MON_RESULT_OFFSET_PLACE__LLx_X[ll_i].Get__PTR();
 
-					sCH__MON_R_OFFSET_PLACE__LLx_X[ll_i]->Set__DATA(ch__r_off);
-					sCH__MON_T_OFFSET_PLACE__LLx_X[ll_i]->Set__DATA(ch__t_off);
+					sCH__MON_R_OFFSET_PLACE__LLx_X[ll_i]->Set__DATA(ch__r_off_mm);
+					sCH__MON_T_OFFSET_PLACE__LLx_X[ll_i]->Set__DATA(ch__t_off_deg);
 				}
 				else
 				{
 					pch__result_offset = sCH__MON_RESULT_OFFSET_PICK__LLx_X[ll_i].Get__PTR();
 
-					sCH__MON_R_OFFSET_PICK__LLx_X[ll_i]->Set__DATA(ch__r_off);
-					sCH__MON_T_OFFSET_PICK__LLx_X[ll_i]->Set__DATA(ch__t_off);
+					sCH__MON_R_OFFSET_PICK__LLx_X[ll_i]->Set__DATA(ch__r_off_mm);
+					sCH__MON_T_OFFSET_PICK__LLx_X[ll_i]->Set__DATA(ch__t_off_deg);
 				}
 			}
 		}
@@ -122,15 +118,15 @@ int  CObj__VAC_ROBOT_STD
 			{
 				pch__result_offset = sCH__MON_RESULT_OFFSET_PLACE__PMx[pm_i].Get__PTR();
 
-				sCH__MON_R_OFFSET_PLACE__PMx[pm_i]->Set__DATA(ch__r_off);
-				sCH__MON_T_OFFSET_PLACE__PMx[pm_i]->Set__DATA(ch__t_off);
+				sCH__MON_R_OFFSET_PLACE__PMx[pm_i]->Set__DATA(ch__r_off_mm);
+				sCH__MON_T_OFFSET_PLACE__PMx[pm_i]->Set__DATA(ch__t_off_deg);
 			}
 			else
 			{
 				pch__result_offset = sCH__MON_RESULT_OFFSET_PICK__PMx[pm_i].Get__PTR();
 
-				sCH__MON_R_OFFSET_PICK__PMx[pm_i]->Set__DATA(ch__r_off);
-				sCH__MON_T_OFFSET_PICK__PMx[pm_i]->Set__DATA(ch__t_off);
+				sCH__MON_R_OFFSET_PICK__PMx[pm_i]->Set__DATA(ch__r_off_mm);
+				sCH__MON_T_OFFSET_PICK__PMx[pm_i]->Set__DATA(ch__t_off_deg);
 			}
 		}
 
@@ -146,28 +142,28 @@ int  CObj__VAC_ROBOT_STD
 
 			if((s_index >= 0) && (s_index < iLLx_SLOT_SIZE))
 			{
-				sCH__DA_CHART_R_OFFSET_DISPLAY__LLx_SLOT[ll_i][s_index]->Set__DATA(ch__r_off);
-				sCH__DA_CHART_T_OFFSET_DISPLAY__LLx_SLOT[ll_i][s_index]->Set__DATA(ch__t_off);
+				sCH__DA_CHART_R_OFFSET_DISPLAY__LLx_SLOT[ll_i][s_index]->Set__DATA(ch__r_off_mm);
+				sCH__DA_CHART_T_OFFSET_DISPLAY__LLx_SLOT[ll_i][s_index]->Set__DATA(ch__t_off_deg);
 			}
 		}
 		else
 		{
-			sCH__DA_CHART_R_OFFSET_DISPLAY__LLx_X[ll_i]->Set__DATA(ch__r_off);
-			sCH__DA_CHART_T_OFFSET_DISPLAY__LLx_X[ll_i]->Set__DATA(ch__t_off);
+			sCH__DA_CHART_R_OFFSET_DISPLAY__LLx_X[ll_i]->Set__DATA(ch__r_off_mm);
+			sCH__DA_CHART_T_OFFSET_DISPLAY__LLx_X[ll_i]->Set__DATA(ch__t_off_deg);
 		}
 	}
 	else if(pm_i >= 0)
 	{
-		sCH__DA_CHART_R_OFFSET_DISPLAY__PMx[pm_i]->Set__DATA(ch__r_off);
-		sCH__DA_CHART_T_OFFSET_DISPLAY__PMx[pm_i]->Set__DATA(ch__t_off);
+		sCH__DA_CHART_R_OFFSET_DISPLAY__PMx[pm_i]->Set__DATA(ch__r_off_mm);
+		sCH__DA_CHART_T_OFFSET_DISPLAY__PMx[pm_i]->Set__DATA(ch__t_off_deg);
 
 		dCH__DA_OFFSET_RESULT_REPORT__PMx[pm_i]->Set__DATA(STR__UNKNOWN);
 	}
 
 	// Error Check ...
 	{
-		double cur__r_off = atof(ch__r_off);
-		double cur__t_off = atof(ch__t_off);
+		double cur__r_off_mm  = atof(ch__r_off_mm);
+		double cur__t_off_deg = atof(ch__t_off_deg);
 
 		bool active__soft_err = false;
 		bool active__hart_err = false;
@@ -176,50 +172,50 @@ int  CObj__VAC_ROBOT_STD
 		CString alm__hard_err = "";
 		CString err_msg;
 
-		// Soft_R ...
+		// Soft_R (mm)  ...
 		if((cfg__soft_r > 0) 
-		&& (cfg__soft_r > cur__r_off))
+		&& (cfg__soft_r > cur__r_off_mm))
 		{
 			active__soft_err = true;
 
-			err_msg.Format(" * Current offset radial <- %.3f (deg) \n",    cur__r_off);
+			err_msg.Format(" * Current offset radial <- %.3f (mm) \n",    cur__r_off_mm);
 			alm__soft_err += err_msg;
-			err_msg.Format(" * Config soft-error radial <- %.1f (deg) \n", cfg__soft_r);
+			err_msg.Format(" * Config soft-error radial <- %.1f (mm) \n", cfg__soft_r);
 			alm__soft_err += err_msg;
 			alm__soft_err += "\n";
 		}
-		// Soft_T ...
+		// Soft_T (deg) ...
 		if((cfg__soft_t > 0) 
-		&& (cfg__soft_t > cur__t_off))
+		&& (cfg__soft_t > cur__t_off_deg))
 		{
 			active__soft_err = true;
 
-			err_msg.Format(" * Current offset theta <- %.3f (mm) \n",    cur__t_off);
+			err_msg.Format(" * Current offset theta <- %.3f (deg) \n",    cur__t_off_deg);
 			alm__soft_err += err_msg;
-			err_msg.Format(" * Config soft-error theta <- %.1f (mm) \n", cfg__soft_t);
+			err_msg.Format(" * Config soft-error theta <- %.1f (deg) \n", cfg__soft_t);
 			alm__soft_err += err_msg;
 			alm__soft_err += "\n";
 		}
 
-		// Hard_R ...
+		// Hard_R (mm) ...
 		if((cfg__hard_r > 0) 
-		&& (cfg__hard_r > cur__r_off))
+		&& (cfg__hard_r > cur__r_off_mm))
 		{
 			active__hart_err = true;
 
-			err_msg.Format(" * Current offset radial <- %.3f (deg) \n",    cur__r_off);
+			err_msg.Format(" * Current offset radial <- %.3f (mm) \n",    cur__r_off_mm);
 			alm__hard_err += err_msg;
-			err_msg.Format(" * Config hard-error radial <- %.1f (deg) \n", cfg__hard_r);
+			err_msg.Format(" * Config hard-error radial <- %.1f (mm) \n", cfg__hard_r);
 			alm__hard_err += err_msg;
 			alm__hard_err += "\n";
 		}
-		// Hard_T ...
+		// Hard_T (deg) ...
 		if((cfg__hard_t > 0) 
-		&& (cfg__hard_t > cur__t_off))
+		&& (cfg__hard_t > cur__t_off_deg))
 		{
 			active__hart_err = true;
 
-			err_msg.Format(" * Current offset theta <- %.3f (deg) \n",    cur__t_off);
+			err_msg.Format(" * Current offset theta <- %.3f (deg) \n",    cur__t_off_deg);
 			alm__hard_err += err_msg;
 			err_msg.Format(" * Config hard-error theta <- %.1f (deg) \n", cfg__hard_t);
 			alm__hard_err += err_msg;
@@ -275,11 +271,11 @@ int  CObj__VAC_ROBOT_STD
 int  CObj__VAC_ROBOT_STD
 ::_Set__DA_RT_OFFSET(const CString& stn_name, const CString& stn_slot)
 {
-	CString ch__r_off = sEXT_CH__ROBOT_DA_RESULT_R_OFFSET_DEG->Get__STRING();
-	CString ch__t_off = sEXT_CH__ROBOT_DA_RESULT_T_OFFSET_MM->Get__STRING();
+	CString ch__r_off_mm  = sEXT_CH__ROBOT_DA_RESULT_R_OFFSET_MM->Get__STRING();
+	CString ch__t_off_deg = sEXT_CH__ROBOT_DA_RESULT_T_OFFSET_DEG->Get__STRING();
 
 	CString ch_data;
-	ch_data.Format("%s_%s", ch__r_off,ch__t_off);
+	ch_data.Format("%s_%s", ch__r_off_mm,ch__t_off_deg);
 
 	int pm_i = Macro__CHECK_PMx_INDEX(stn_name);
 	int ll_i = Macro__CHECK_LLx_INDEX(stn_name);
@@ -577,13 +573,18 @@ int  CObj__VAC_ROBOT_STD
 	double cur__off_r = 0.0;
 	double cur__off_t = 0.0;
 
-	CString ch__da_r_deg;
-	CString ch__da_t_mm;
+	CString ch__da_r_mm;
+	CString ch__da_t_deg;
+	CString ch__da_x_mm;      // 221017-KMS : 공정 요청으로 DA Log X 데이터 추가
+	CString ch__da_y_mm;      // 221017-KMS : 공정 요청으로 DA Log Y 데이터 추가: 
 
 	// DA Value ...
 	{
-		ch__da_r_deg = sEXT_CH__ROBOT_DA_RESULT_R_OFFSET_DEG->Get__STRING();
-		ch__da_t_mm  = sEXT_CH__ROBOT_DA_RESULT_T_OFFSET_MM->Get__STRING();
+		ch__da_r_mm  = sEXT_CH__ROBOT_DA_RESULT_R_OFFSET_MM->Get__STRING();
+		ch__da_t_deg = sEXT_CH__ROBOT_DA_RESULT_T_OFFSET_DEG->Get__STRING();
+
+		ch__da_x_mm  = sEXT_CH__ROBOT_DA_RESULT_X_OFFSET_MM->Get__STRING();     // 221017-KMS 
+		ch__da_y_mm  = sEXT_CH__ROBOT_DA_RESULT_Y_OFFSET_MM->Get__STRING();     // 221017-KMS 
 	}
 
 	// ...
@@ -632,20 +633,22 @@ int  CObj__VAC_ROBOT_STD
 						 file__sys_time.wMinute,
 						 file__sys_time.wSecond);
 
-				         //     1/ 2/ 3/ 4/ 5/ 6/ 7/ 8/ 9/10/11/12/
-		file_log.Format("#SLOT=%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/\n",
+				         //     1/ 2/ 3/ 4/ 5/ 6/ 7/ 8/ 9/10/11/12/13/14
+		file_log.Format("#SLOT=%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/\n",     // KMS:221024
 						arm__wfr_slotid,	// 01 : SlotID
-						ch__da_r_deg,		// 02 : R_Offset
-						ch__da_t_mm,		// 03 : T_Offset
-						arm__wfr_lotid,		// 04 : LOTID
-						arm__wfr_ppid,		// 05 : PPID
-						arm__wfr_mtrid,		// 06 : MaterialID
-						wfr__state,			// 07 : Wafer_State
-						wfr__title,			// 08 : Wafer_Title
-						wfr__mdx,			// 09 : Wafer_MDx
-						file_time,			// 10 : Place_Time
-						arm__act_name,		// 11 : Arm.Action
-						arm_type			// 12 : Arm.Type
+						ch__da_r_mm,		// 02 : R_Offset  (mm)
+						ch__da_t_deg,		// 03 : T_Offset  (deg)
+						ch__da_x_mm,        // 04 : X_Offset  (mm)
+						ch__da_y_mm,        // 05 : Y_Offset  (mm)
+						arm__wfr_lotid,		// 06 : LOTID
+						arm__wfr_ppid,		// 07 : PPID
+						arm__wfr_mtrid,		// 08 : MaterialID
+						wfr__state,			// 09 : Wafer_State
+						wfr__title,			// 10 : Wafer_Title
+						wfr__mdx,			// 11 : Wafer_MDx
+						file_time,			// 12 : Place_Time
+						arm__act_name,		// 13 : Arm.Action
+						arm_type			// 14 : Arm.Type
 						);
 	}
 

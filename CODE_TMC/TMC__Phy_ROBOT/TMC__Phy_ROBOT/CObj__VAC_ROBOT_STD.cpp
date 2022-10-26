@@ -46,7 +46,11 @@ int CObj__VAC_ROBOT_STD::__DEFINE__CONTROL_MODE(obj, l_mode)
 
 		ADD__CTRL_VAR(sMODE__TEACHED_CPTR_SAVE, "TEACHED_CPTR_SAVE");
 
+		//
 		ADD__CTRL_VAR(sMODE__TIME_TEST, "TIME_TEST");
+
+		ADD__CTRL_VAR(sMODE__TEST_RT_TO_XY, "TEST.RT_TO_XY");
+		ADD__CTRL_VAR(sMODE__TEST_XY_TO_RT, "TEST.XY_TO_RT");
 	}
 	return 1;
 }
@@ -161,7 +165,7 @@ int CObj__VAC_ROBOT_STD::__DEFINE__VARIABLE_STD(p_variable)
 		LINK__VAR_DIGITAL_CTRL(dCH__CFG_ARM_B_USE, str_name);
 	}
 
-	// MATERIAL CHANNEL -----
+	// MATERIAL CHANNEL ...
 	{
 		CString dsp_slot_sts;
 		p_variable->Get__STD_DESCRIPTION("STD_SLOT_STATUS", dsp_slot_sts);
@@ -232,26 +236,28 @@ int CObj__VAC_ROBOT_STD::__DEFINE__VARIABLE_STD(p_variable)
 
 	// ANIMATION CHANNEL -----
 	{	
-		// Robot
-		str_name = "OTR.OUT.MON.dACT.ARM";
-		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, APP_DSP__RB_ARM,"");
-		LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__ACT_ARM,str_name);
+		// Robot ...
+		{
+			str_name = "OTR.OUT.MON.dACT.ARM";
+			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, APP_DSP__RB_ARM,"");
+			LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__ACT_ARM,str_name);
 
-		str_name = "OTR.OUT.MON.dARM_A.ACT";
-		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, APP_DSP__ARM_STS_ANI,"");
-		LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__ARM_A_ACT,str_name);
+			str_name = "OTR.OUT.MON.dARM_A.ACT";
+			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, APP_DSP__ARM_STS_ANI,"");
+			LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__ARM_A_ACT,str_name);
 
-		str_name = "OTR.OUT.MON.dARM_B.ACT";
-		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, APP_DSP__ARM_STS_ANI,"");
-		LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__ARM_B_ACT,str_name);
+			str_name = "OTR.OUT.MON.dARM_B.ACT";
+			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, APP_DSP__ARM_STS_ANI,"");
+			LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__ARM_B_ACT,str_name);
 
-		str_name = "OTR.OUT.MON.dTRG.MOVE";
-		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, APP_DSP__RB_TARGET_MOVE,"");
-		LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__TRG_MOVE,str_name);
+			str_name = "OTR.OUT.MON.dTRG.MOVE";
+			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, APP_DSP__RB_TARGET_MOVE,"");
+			LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__TRG_MOVE,str_name);
 
-		str_name = "OTR.OUT.MON.dTRG.ROTATE";
-		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, APP_DSP__RB_TARGET_MOVE,"");
-		LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__TRG_ROTATE,str_name);
+			str_name = "OTR.OUT.MON.dTRG.ROTATE";
+			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, APP_DSP__RB_TARGET_MOVE,"");
+			LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__TRG_ROTATE,str_name);
+		}
 
 		p_variable->Get__DEF_CONST_DATA("PM_SIZE", def_data);
 		m_nPM_LIMIT = atoi(def_data);
@@ -460,21 +466,21 @@ int CObj__VAC_ROBOT_STD::__DEFINE__VARIABLE_STD(p_variable)
 						// Hard
 						{
 							str_name.Format("CFG.%s.%1d.R.OFFSET.HARD.ERROR", ll_name,slot);
-							STD__ADD_ANALOG_WITH_X_OPTION(str_name, "deg", 1, 0, 10, "");
+							STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 10, "");
 							LINK__VAR_ANALOG_CTRL(aCH__CFG__R_OFFSET_HARD_ERROR__LLx_SLOT[i][k], str_name);
 
 							str_name.Format("CFG.%s.%1d.T.OFFSET.HARD.ERROR", ll_name,slot);
-							STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 10, "");
+							STD__ADD_ANALOG_WITH_X_OPTION(str_name, "deg", 1, 0, 10, "");
 							LINK__VAR_ANALOG_CTRL(aCH__CFG__T_OFFSET_HARD_ERROR__LLx_SLOT[i][k], str_name);
 						}
 						// Soft
 						{
 							str_name.Format("CFG.%s.%1d.R.OFFSET.SOFT.ERROR", ll_name,slot);
-							STD__ADD_ANALOG_WITH_X_OPTION(str_name, "deg", 1, 0, 10, "");
+							STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 10, "");
 							LINK__VAR_ANALOG_CTRL(aCH__CFG__R_OFFSET_SOFT_ERROR__LLx_SLOT[i][k], str_name);
 
 							str_name.Format("CFG.%s.%1d.T.OFFSET.SOFT.ERROR", ll_name,slot);
-							STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 10, "");
+							STD__ADD_ANALOG_WITH_X_OPTION(str_name, "deg", 1, 0, 10, "");
 							LINK__VAR_ANALOG_CTRL(aCH__CFG__T_OFFSET_SOFT_ERROR__LLx_SLOT[i][k], str_name);
 						}
 					}
@@ -489,21 +495,21 @@ int CObj__VAC_ROBOT_STD::__DEFINE__VARIABLE_STD(p_variable)
 					// Hard
 					{	
 						str_name.Format("CFG.%s.R.OFFSET.HARD.ERROR", ll_name);
-						STD__ADD_ANALOG_WITH_X_OPTION(str_name, "deg", 1, 0, 10, "");
+						STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 10, "");
 						LINK__VAR_ANALOG_CTRL(aCH__CFG__R_OFFSET_HARD_ERROR__LLx_X[i], str_name);
 
 						str_name.Format("CFG.%s.T.OFFSET.HARD.ERROR", ll_name);
-						STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 10, "");
+						STD__ADD_ANALOG_WITH_X_OPTION(str_name, "deg", 1, 0, 10, "");
 						LINK__VAR_ANALOG_CTRL(aCH__CFG__T_OFFSET_HARD_ERROR__LLx_X[i], str_name);
 					}
 					// Soft
 					{
 						str_name.Format("CFG.%s.R.OFFSET.SOFT.ERROR", ll_name);
-						STD__ADD_ANALOG_WITH_X_OPTION(str_name, "deg", 1, 0, 10, "");
+						STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 10, "");
 						LINK__VAR_ANALOG_CTRL(aCH__CFG__R_OFFSET_SOFT_ERROR__LLx_X[i], str_name);
 
 						str_name.Format("CFG.%s.T.OFFSET.SOFT.ERROR", ll_name);
-						STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 10, "");
+						STD__ADD_ANALOG_WITH_X_OPTION(str_name, "deg", 1, 0, 10, "");
 						LINK__VAR_ANALOG_CTRL(aCH__CFG__T_OFFSET_SOFT_ERROR__LLx_X[i], str_name);
 					}
 				}
@@ -521,21 +527,21 @@ int CObj__VAC_ROBOT_STD::__DEFINE__VARIABLE_STD(p_variable)
 				// Hard
 				{
 					str_name.Format("CFG.%s.R.OFFSET.HARD.ERROR", pm_name);
-					STD__ADD_ANALOG_WITH_X_OPTION(str_name, "deg", 1, 0, 10, "");
+					STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 10, "");
 					LINK__VAR_ANALOG_CTRL(aCH__CFG__R_OFFSET_HARD_ERROR__PMx[i], str_name);
 
 					str_name.Format("CFG.%s.T.OFFSET.HARD.ERROR", pm_name);
-					STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 10, "");
+					STD__ADD_ANALOG_WITH_X_OPTION(str_name, "deg", 1, 0, 10, "");
 					LINK__VAR_ANALOG_CTRL(aCH__CFG__T_OFFSET_HARD_ERROR__PMx[i], str_name);
 				}
 				// Soft
 				{
 					str_name.Format("CFG.%s.R.OFFSET.SOFT.ERROR", pm_name);
-					STD__ADD_ANALOG_WITH_X_OPTION(str_name, "deg", 1, 0, 10, "");
+					STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 10, "");
 					LINK__VAR_ANALOG_CTRL(aCH__CFG__R_OFFSET_SOFT_ERROR__PMx[i], str_name);
 
 					str_name.Format("CFG.%s.T.OFFSET.SOFT.ERROR", pm_name);
-					STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 10, "");
+					STD__ADD_ANALOG_WITH_X_OPTION(str_name, "deg", 1, 0, 10, "");
 					LINK__VAR_ANALOG_CTRL(aCH__CFG__T_OFFSET_SOFT_ERROR__PMx[i], str_name);
 				}
 			}
@@ -777,6 +783,26 @@ int CObj__VAC_ROBOT_STD::__DEFINE__VARIABLE_STD(p_variable)
 				LINK__VAR_DIGITAL_CTRL(dCH__DA_OFFSET_RESULT_REPORT__PMx[i], str_name);
 			}
 		}
+	}
+
+	// TEST ...
+	{
+		str_name = "TEST.R_OFFSET.MM";
+		STD__ADD_STRING_WITH_X_OPTION(str_name, "");
+		LINK__VAR_STRING_CTRL(sCH__TEST_R_OFFSET_MM, str_name);
+
+		str_name = "TEST.T_OFFSET.DEG";
+		STD__ADD_STRING_WITH_X_OPTION(str_name, "");
+		LINK__VAR_STRING_CTRL(sCH__TEST_T_OFFSET_DEG, str_name);
+
+		//
+		str_name = "TEST.X_OFFSET.MM";
+		STD__ADD_STRING_WITH_X_OPTION(str_name, "");
+		LINK__VAR_STRING_CTRL(sCH__TEST_X_OFFSET_MM, str_name);
+
+		str_name = "TEST.Y_OFFSET.MM";
+		STD__ADD_STRING_WITH_X_OPTION(str_name, "");
+		LINK__VAR_STRING_CTRL(sCH__TEST_Y_OFFSET_MM, str_name);
 	}
 
 	// ...
@@ -1369,11 +1395,17 @@ int CObj__VAC_ROBOT_STD::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		}		
 		// DA Offset ...
 		{
-			str_name = "DA.RESULT.R_OFFSET.DEG";		// deg
-			LINK__EXT_VAR_STRING_CTRL(sEXT_CH__ROBOT_DA_RESULT_R_OFFSET_DEG, def_data,str_name);
+			str_name = "DA.RESULT.R_OFFSET.MM";			// mm
+			LINK__EXT_VAR_STRING_CTRL(sEXT_CH__ROBOT_DA_RESULT_R_OFFSET_MM, def_data,str_name);
 
-			str_name = "DA.RESULT.T_OFFSET.MM";			// mm
-			LINK__EXT_VAR_STRING_CTRL(sEXT_CH__ROBOT_DA_RESULT_T_OFFSET_MM, def_data,str_name); 
+			str_name = "DA.RESULT.T_OFFSET.DEG";		// degree
+			LINK__EXT_VAR_STRING_CTRL(sEXT_CH__ROBOT_DA_RESULT_T_OFFSET_DEG, def_data,str_name); 
+
+			str_name = "DA.RESULT.X_OFFSET.MM";			// mm
+			LINK__EXT_VAR_STRING_CTRL(sEXT_CH__ROBOT_DA_RESULT_X_OFFSET_MM, def_data,str_name);     // 221017:KMS
+
+			str_name = "DA.RESULT.Y_OFFSET.MM";			// mm
+			LINK__EXT_VAR_STRING_CTRL(sEXT_CH__ROBOT_DA_RESULT_Y_OFFSET_MM, def_data,str_name);     // 221017:KMS
 		}
 
 		// ARM_RNE.SENSOR ... 
@@ -1820,6 +1852,14 @@ int CObj__VAC_ROBOT_STD::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_alarm
 		ELSE_IF__CTRL_MODE(sMODE__TIME_TEST)
 		{
 			flag = Call__TIME_TEST(p_variable,p_alarm);
+		}
+		ELSE_IF__CTRL_MODE(sMODE__TEST_RT_TO_XY)
+		{
+			flag = Call__TEST_RT_TO_XY(p_variable,p_alarm);
+		}
+		ELSE_IF__CTRL_MODE(sMODE__TEST_XY_TO_RT)
+		{
+			flag = Call__TEST_XY_TO_RT(p_variable,p_alarm);
 		}
 	}
 

@@ -25,9 +25,9 @@ int CObj__APS_8301
 	{
 		s_cmmd = "*RV";
 
-		int r_val = _Send__Command(s_cmmd, &r_data);
+		int r_val = _Send__Command(s_cmmd, r_data);      // KMS:221018 (!전체 r_data 의 앞에 reference 제거)
 		if(r_val < 0)		return -1;
-
+		
 		read_data = r_data;
 		return 1;
 	}
@@ -35,7 +35,7 @@ int CObj__APS_8301
 	{
 		s_cmmd = "*RI";
 
-		int r_val = _Send__Command(s_cmmd, &r_data);
+		int r_val = _Send__Command(s_cmmd, r_data);      // KMS:221018
 		if(r_val < 0)		return -1;
 
 		read_data = r_data;
@@ -45,7 +45,7 @@ int CObj__APS_8301
 	{
 		s_cmmd = "*RS";
 
-		int r_val = _Send__Command(s_cmmd, &r_data);
+		int r_val = _Send__Command(s_cmmd, r_data);
 		if(r_val < 0)		return -1;
 
 		int r_hexa = _Get__HexToDec(r_data);
@@ -78,7 +78,7 @@ int CObj__APS_8301
 	{
 		s_cmmd = "*FV";
 
-		int r_val = _Send__Command(s_cmmd, &r_data);
+		int r_val = _Send__Command(s_cmmd, r_data);
 		if(r_val < 0)
 		{
 			read_data = "ERROR.1";
@@ -116,8 +116,8 @@ int CObj__APS_8301
 		else					s_sign = "+";
 
 		s_cmmd.Format("*SV%s%04.0f", s_sign,abs(set_data));
-
-		return _Send__Command(s_cmmd, &r_data);
+		
+		return _Send__Command(s_cmmd, r_data);
 	}
 	if(aoCH__ESC_CURRENT_LIMIT_SET->Check__VARIABLE_NAME(var_name) > 0)
 	{
@@ -126,13 +126,13 @@ int CObj__APS_8301
 
 		s_cmmd.Format("*SI%s%04.0f", s_sign,abs(set_data));
 
-		return _Send__Command(s_cmmd, &r_data);
+		return _Send__Command(s_cmmd, r_data);
 	}
 	if(aoCH__ESC_TIME_DELAY_SET->Check__VARIABLE_NAME(var_name) > 0)
 	{
 		s_cmmd.Format("*DT%%04.0f", abs(set_data));
 
-		return _Send__Command(s_cmmd, &r_data);
+		return _Send__Command(s_cmmd, r_data);
 	}
 	if(aoCH__ESC_RAMP_TIME_SET->Check__VARIABLE_NAME(var_name) > 0)
 	{
@@ -141,7 +141,7 @@ int CObj__APS_8301
 
 		s_cmmd.Format("*P%s%04.0f", s_sign,abs(set_data));
 
-		return _Send__Command(s_cmmd, &r_data);
+		return _Send__Command(s_cmmd, r_data);
 	}
 
 	return -1; 
@@ -158,27 +158,27 @@ int CObj__APS_8301
 		if(set_data.CompareNoCase(STR__ON) == 0)		s_cmmd = "*EP";
 		else											s_cmmd = "*DP";
 
-		return _Send__Command(s_cmmd, &r_data);
+		return _Send__Command(s_cmmd, r_data);
 	}
 	if(doCH__ESC_VOLTAGE_OUTPUT_SET->Check__VARIABLE_NAME(var_name) > 0)
 	{
 		if(set_data.CompareNoCase(STR__ON) == 0)		s_cmmd = "*EV";
 		else											s_cmmd = "*DV";
 
-		return _Send__Command(s_cmmd, &r_data);
+		return _Send__Command(s_cmmd, r_data);
 	}
 	if(doCH__ESC_DISCHARGE_MODE_SET->Check__VARIABLE_NAME(var_name) > 0)
 	{
 		if(set_data.CompareNoCase(STR__ON) == 0)		s_cmmd = "*ED";
 		else											s_cmmd = "*DD";
 
-		return _Send__Command(s_cmmd, &r_data);
+		return _Send__Command(s_cmmd, r_data);
 	}
 	if(doCH__ESC_ALARM_RESET_SET->Check__VARIABLE_NAME(var_name) > 0)
 	{
 		s_cmmd = "*RA";
 
-		return _Send__Command(s_cmmd, &r_data);
+		return _Send__Command(s_cmmd, r_data);
 	}
 
 	return -1;
@@ -194,14 +194,16 @@ int CObj__APS_8301
 
 //------------------------------------------------------------------------------------
 int CObj__APS_8301
-::_Send__Command(const CString& org_cmd, CString* r_data)
+::_Send__Command(const CString& org_cmd, CString& r_data)     // 221018 : Data Send Type change
 {
 	CString log_msg;
 	CString log_bff;
 
 	// ...
-	CString r_bff;
-	mX_Serial->CLEAR__BUFFER(&r_bff);
+	{
+		CString r_bff;
+		mX_Serial->CLEAR__BUFFER(&r_bff);
+	}
 
 	// ...
 	CString s_cmd;
@@ -221,7 +223,7 @@ int CObj__APS_8301
 	// ...
 	int cfg__to_msec = 500;
 
-	int r_len = mX_Serial->DATA__RECV(sTerm_Str, &s_cmd, cfg__to_msec);
+	int r_len = mX_Serial->DATA__RECV(sTerm_Str, &s_cmd, cfg__to_msec); // ??
 	if (r_len < 0)
 	{
 		// ...
@@ -237,7 +239,6 @@ int CObj__APS_8301
 		return -1;
 	}
 
-	// ...
 	bActive__COMM_ONLINE = true;
 
 	int s_index = s_cmd.Find(org_cmd);
@@ -256,19 +257,17 @@ int CObj__APS_8301
 		return -2;
 	}
 
-	CString ch_data = s_cmd.Mid(s_index + org_cmd.GetLength());
-	r_data = &ch_data;
+	r_data = s_cmd.Mid(s_index + org_cmd.GetLength());      // KMS:221018
 
 	// ...
 	{
 		log_msg = "Recv << \n";
 		log_bff.Format("%s\n", s_cmd);
 		log_msg += log_bff;
-		log_bff.Format("Data : %s\n", ch_data);
+		log_bff.Format("Data : %s\n", r_data);      // KMS:221018
 		log_msg += log_bff;
 
 		Write__DRV_LOG(log_msg);		
 	}
-
 	return 1;
 }

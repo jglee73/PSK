@@ -13,8 +13,12 @@ int  CDlg__DA_Log_STD
 	CStringArray l_portid;
 	CStringArray l_slotid;
 	CStringArray l_module;
+	
 	CStringArray l_off_r;
 	CStringArray l_off_t;
+	CStringArray l_off_x;
+	CStringArray l_off_y;
+	
 	CStringArray l_lotid;
 	CStringArray l_ppid;
 	CStringArray l_arm_type;
@@ -58,23 +62,27 @@ int  CDlg__DA_Log_STD
 				l_off_r.Add(str_para);
 			else if(k == 2)			// 03 : T_Offset
 				l_off_t.Add(str_para);
-			else if(k == 3)			// 04 : LOTID
+			else if(k == 3)			// 04 : X_Offset
+				l_off_x.Add(str_para);
+			else if(k == 4)			// 05 : Y_Offset
+				l_off_y.Add(str_para);
+			else if(k == 5)			// 06 : LOTID
 				l_lotid.Add(str_para);
-			else if(k == 4)			// 05 : PPID
+			else if(k == 6)			// 07 : PPID
 				l_ppid.Add(str_para);
-			else if(k == 5)			// 06 : MaterialID
+			else if(k == 7)			// 08 : MaterialID
 				;
-			else if(k == 6)			// 07 : Wafer_State
+			else if(k == 8)			// 09 : Wafer_State
 				;
-			else if(k == 7)			// 08 : Wafer_Title
+			else if(k == 9)			// 10 : Wafer_Title
 				;
-			else if(k == 8)			// 09 : Wafer_MDx
+			else if(k == 10)		// 11 : Wafer_MDx
 				l_module.Add(str_para);
-			else if(k == 9)			// 10 : End_Time
+			else if(k == 11)		// 12 : End_Time
 				l_end_time.Add(str_para);
-			else if(k == 10)		// 11 : Arm_Act
+			else if(k == 12)		// 13 : Arm_Act
 				l_arm_act.Add(str_para);
-			else if(k == 11)		// 12 : Arm_Type
+			else if(k == 13)		// 14 : Arm_Type
 				l_arm_type.Add(str_para);
 		}
 
@@ -84,8 +92,12 @@ int  CDlg__DA_Log_STD
 
 			l_slotid.SetSize(i_size);
 			l_module.SetSize(i_size);
+			
 			l_off_r.SetSize(i_size);
 			l_off_t.SetSize(i_size);
+			l_off_x.SetSize(i_size);
+			l_off_y.SetSize(i_size);
+
 			l_lotid.SetSize(i_size);
 			l_ppid.SetSize(i_size);
 
@@ -105,6 +117,8 @@ int  CDlg__DA_Log_STD
 						  l_module,
 					 	  l_off_r,
 						  l_off_t,
+						  l_off_x,
+						  l_off_y,
 						  l_lotid,
 						  l_ppid,
 						  l_arm_type,

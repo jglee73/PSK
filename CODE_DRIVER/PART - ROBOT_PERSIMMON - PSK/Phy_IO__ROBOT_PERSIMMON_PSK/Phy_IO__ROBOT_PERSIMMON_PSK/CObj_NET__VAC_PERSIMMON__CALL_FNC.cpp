@@ -72,8 +72,8 @@ int  CObj_NET__VAC_PERSIMMON
 	{
 		CString ch_data = "???";
 
-		sCH__DA_RESULT_R_OFFSET_DEG->Set__DATA(ch_data);
-		sCH__DA_RESULT_T_OFFSET_MM->Set__DATA(ch_data);
+		sCH__DA_RESULT_R_OFFSET_MM->Set__DATA(ch_data);
+		sCH__DA_RESULT_T_OFFSET_DEG->Set__DATA(ch_data);
 	}
 
 	return Fnc__PICK(p_variable,p_alarm, stn_name,arm_type,stn_slot);
@@ -155,8 +155,8 @@ int  CObj_NET__VAC_PERSIMMON
 	{
 		CString ch_data = "???";
 
-		sCH__DA_RESULT_R_OFFSET_DEG->Set__DATA(ch_data);
-		sCH__DA_RESULT_T_OFFSET_MM->Set__DATA(ch_data);
+		sCH__DA_RESULT_R_OFFSET_MM->Set__DATA(ch_data);
+		sCH__DA_RESULT_T_OFFSET_DEG->Set__DATA(ch_data);
 	}
 
 	return Fnc__PLACE(p_variable,p_alarm, stn_name,arm_type,stn_slot);
@@ -281,8 +281,8 @@ int  CObj_NET__VAC_PERSIMMON
 	{
 		CString ch_data = "???";
 
-		sCH__DA_RESULT_R_OFFSET_DEG->Set__DATA(ch_data);
-		sCH__DA_RESULT_T_OFFSET_MM->Set__DATA(ch_data);
+		sCH__DA_RESULT_R_OFFSET_MM->Set__DATA(ch_data);
+		sCH__DA_RESULT_T_OFFSET_DEG->Set__DATA(ch_data);
 	}
 
 	int r_flag = _Fnc__EXTEND_ACT(p_variable,p_alarm, act_pick, stn_name,arm_type,stn_slot);

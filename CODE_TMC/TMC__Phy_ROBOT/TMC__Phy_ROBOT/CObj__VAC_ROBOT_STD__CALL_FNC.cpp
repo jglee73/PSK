@@ -955,3 +955,84 @@ Call__TIME_TEST(CII_OBJECT__VARIABLE* p_variable,
 
 	return 1;
 }
+
+
+// ...
+#define  _DEF__PI						3.141592
+
+
+int  CObj__VAC_ROBOT_STD::
+Call__TEST_RT_TO_XY(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
+{
+	CString ch_data;
+
+	ch_data = sCH__TEST_R_OFFSET_MM->Get__STRING();
+	double para_mm = atof(ch_data);
+
+	ch_data = sCH__TEST_T_OFFSET_DEG->Get__STRING();
+	double para_deg = atof(ch_data);
+
+	double theta_deg = para_deg * _DEF__PI / 180.0;
+	double x_pos = para_mm * cos(theta_deg);
+	double y_pos = para_mm * sin(theta_deg);
+
+	ch_data.Format("%.3f", x_pos);	
+	sCH__TEST_X_OFFSET_MM->Set__DATA(ch_data);
+
+	ch_data.Format("%.3f", y_pos);	
+	sCH__TEST_Y_OFFSET_MM->Set__DATA(ch_data);
+
+	// ...
+	CString log_msg;
+	CString log_bff;
+
+	log_msg = "Call__TEST_RT_TO_XY() ... \n";
+
+	log_bff.Format(" (%s, %s) -> (%s, %s) \n",
+				   sCH__TEST_R_OFFSET_MM->Get__STRING(),
+				   sCH__TEST_T_OFFSET_DEG->Get__STRING(),
+				   sCH__TEST_X_OFFSET_MM->Get__STRING(),
+				   sCH__TEST_Y_OFFSET_MM->Get__STRING());
+	log_msg += log_bff;
+	log_msg += "\n";
+
+	printf(log_msg);
+	return 1;
+}
+int  CObj__VAC_ROBOT_STD::
+Call__TEST_XY_TO_RT(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
+{
+	CString ch_data;
+
+	ch_data = sCH__TEST_X_OFFSET_MM->Get__STRING();
+	double x_mm = atof(ch_data);
+
+	ch_data = sCH__TEST_Y_OFFSET_MM->Get__STRING();
+	double y_mm = atof(ch_data);
+
+	double r_mm  = sqrt(pow(x_mm,2)+pow(y_mm,2));
+	double t_deg = atan2(y_mm,x_mm) * 180 / _DEF__PI;
+
+	ch_data.Format("%.3f", r_mm);	
+	sCH__TEST_R_OFFSET_MM->Set__DATA(ch_data);
+
+	ch_data.Format("%.3f", t_deg);	
+	sCH__TEST_T_OFFSET_DEG->Set__DATA(ch_data);
+
+	// ...
+	CString log_msg;
+	CString log_bff;
+
+	log_msg = "Call__TEST_XY_TO_RT() ... \n";
+
+	log_bff.Format(" (%s, %s) -> (%s, %s) \n",
+					sCH__TEST_X_OFFSET_MM->Get__STRING(),
+					sCH__TEST_Y_OFFSET_MM->Get__STRING(),
+					sCH__TEST_R_OFFSET_MM->Get__STRING(),
+					sCH__TEST_T_OFFSET_DEG->Get__STRING());
+	log_msg += log_bff;
+	log_msg += "\n";
+
+	printf(log_msg);
+	return 1;
+}

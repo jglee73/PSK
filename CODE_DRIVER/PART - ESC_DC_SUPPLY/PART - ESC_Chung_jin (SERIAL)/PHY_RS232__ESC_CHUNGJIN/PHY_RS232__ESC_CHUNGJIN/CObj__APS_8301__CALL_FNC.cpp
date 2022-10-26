@@ -14,6 +14,11 @@ int  CObj__APS_8301
 	siCH__ESC_FIRMWARE_VER->Get__STRING();
 	doCH__ESC_DISCHARGE_MODE_SET->Set__DATA(STR__OFF);
 
+	// ...
+	{
+		bActive__Delay_Check = false;     // KMS:221024
+		mCtrl__Delay_Timer->STOP_ZERO();
+	}
 	return 1;
 }
 
@@ -30,6 +35,14 @@ int  CObj__APS_8301
 	doCH__ESC_POWER_SET->Set__DATA(STR__ON);
 	doCH__ESC_VOLTAGE_OUTPUT_SET->Set__DATA(STR__ON);
 
+	//.. When Start SV broke up Leak Current Peak for Prevent
+	{
+		bActive__Delay_Check = true;
+
+		mCtrl__Delay_Timer->STOP_ZERO();
+		mCtrl__Delay_Timer->START__COUNT_UP(9999);
+	}
+
 	return 1;
 }
 int  CObj__APS_8301
@@ -40,13 +53,18 @@ int  CObj__APS_8301
 	aoCH__ESC_TIME_DELAY_SET->Set__VALUE(0.0);
 	aoCH__ESC_VOLTAGE_SET->Set__VALUE(0.0);
 
+	// ...
+	{
+		bActive__Delay_Check = false;      // KMS:221024
+		mCtrl__Delay_Timer->STOP_ZERO();
+	}
 	return 1;
 }
 
 int  CObj__APS_8301
 ::Call__RAMP_UP(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
 {
-
+	
 	return _Fnc__Ramping_Ctrl(p_variable,p_alarm, true);
 }
 int  CObj__APS_8301

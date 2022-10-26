@@ -323,13 +323,22 @@ int CObj_NET__VAC_PERSIMMON::__DEFINE__VARIABLE_STD(p_variable)
 
 	// DA Offset ...
 	{
-		str_name = "DA.RESULT.R_OFFSET.DEG";	// deg
+		str_name = "DA.RESULT.R_OFFSET.MM";		// mm
 		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sCH__DA_RESULT_R_OFFSET_DEG, str_name);
+		LINK__VAR_STRING_CTRL(sCH__DA_RESULT_R_OFFSET_MM, str_name);
 
-		str_name = "DA.RESULT.T_OFFSET.MM";		// mm
+		str_name = "DA.RESULT.T_OFFSET.DEG";	// deg
 		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sCH__DA_RESULT_T_OFFSET_MM, str_name); 
+		LINK__VAR_STRING_CTRL(sCH__DA_RESULT_T_OFFSET_DEG, str_name); 
+
+		//
+		str_name = "DA.RESULT.X_OFFSET.MM";		// mm
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__DA_RESULT_X_OFFSET_MM, str_name);
+
+		str_name = "DA.RESULT.Y_OFFSET.MM";		// mm
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__DA_RESULT_Y_OFFSET_MM, str_name); 
 	}
 
 	// Simulation Channel ...
