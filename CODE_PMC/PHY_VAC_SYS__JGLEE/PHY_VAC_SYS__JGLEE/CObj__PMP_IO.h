@@ -24,6 +24,9 @@ private:
 	//
 	
 	//-------------------------------------------------------------------------
+	// OBJ ...
+	CX__VAR_STRING_CTRL  sCH__OBJ_MSG;
+
 	// MON.PART ...
 	CX__VAR_STRING_CTRL  sCH__MON_PART_DEF_TYPE;
 
@@ -71,6 +74,14 @@ private:
 	CString sMODE__INIT;
 	int Call__INIT(CII_OBJECT__VARIABLE *p_variable);
 
+	//
+	CString sMODE__LOCAL;
+	int Call__LOCAL(CII_OBJECT__VARIABLE *p_variable);
+
+	CString sMODE_REMOTE;
+	int Call__REMOTE(CII_OBJECT__VARIABLE *p_variable);
+
+	//
 	CString sMODE__PUMP_ON;
 	int Call__PUMP_ON(CII_OBJECT__VARIABLE *p_variable);
 

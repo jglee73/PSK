@@ -276,6 +276,16 @@ int CObj__MFC_IO::__DEFINE__VARIABLE_STD(p_variable)
 		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "YES NO", "");
 		LINK__VAR_DIGITAL_CTRL(dCH__CFG_MFC_USE, str_name);
 
+		//
+		str_name = "CFG.LEAK_CHECK.USE";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO YES", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_LEAK_CHECK_USE, str_name);
+
+		str_name = "REPORT.LEAK_CHECK.STATE";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "UNKNOWN  CHECK  NG  OK", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__REPORT_LEAK_CHECK_STATE, str_name);
+
+		//
 		str_name = "CFG.MFC.MIN.VALUE";
 		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sccm", 0, 0, 999999, "");
 		LINK__VAR_ANALOG_CTRL(aCH__CFG_MFC_MIN_VALUE, str_name);

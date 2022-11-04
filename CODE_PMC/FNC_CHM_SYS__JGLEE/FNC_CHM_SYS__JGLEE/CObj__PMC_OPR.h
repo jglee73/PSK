@@ -109,6 +109,7 @@ private:
 	CString sEXT_MODE__MAINT;
 	CString sEXT_MODE__PUMP;
 	CString sEXT_MODE__VENT;
+	
 	CString sEXT_MODE__LEAK_CHECK;
 	CString sEXT_MODE__PURGE;
 
@@ -146,9 +147,11 @@ private:
 	CString sMODE__VENT;
 	int Call__VENT(CII_OBJECT__VARIABLE *p_variable);
 
+	//
 	CString sMODE__LEAK_CHECK;
 	int Call__LEAK_CHECK(CII_OBJECT__VARIABLE *p_variable);
 
+	//
 	CString sMODE__AUTO_PM;
 	int Call__AUTO_PM(CII_OBJECT__VARIABLE *p_variable);
 

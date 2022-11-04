@@ -30,8 +30,9 @@
 
 #FNC_MODE		  PUMPING      	                            FNC_CHM		        LOW_VAC_PUMP
 #FNC_MODE		  VENTING						                        FNC_CHM		        VENTING
-#FNC_MODE		  LEAK_CHECK				                        FNC_CHM		        LEAK_CHECK
 #FNC_MODE		  PURGE							                        FNC_CHM		        PURGE
+#FNC_MODE		  LEAK_CHECK.CHM		                        FNC_CHM		        LEAK_CHECK.CHM
+#FNC_MODE		  LEAK_CHECK.GAS		                        FNC_CHM		        LEAK_CHECK.GAS
 
 #DEFINE_CONSTANT    CH.CATEGORY.LOCK                    DB_ETCHER+SYS.FNC.CATEGORY
 #DEFINE_CONSTANT    DATA.CATEGORY.LOCK                  VAC.AREA
@@ -139,7 +140,7 @@
 
 #FNC_MODE     OBJ_MODE__PUMP								            FNC_CHM			    LOW_VAC_PUMP
 #FNC_MODE     OBJ_MODE__VENT									          FNC_CHM			    VENTING
-#FNC_MODE     OBJ_MODE__LEAK_CHECK						          FNC_CHM			    LEAK_CHECK
+#FNC_MODE     OBJ_MODE__LEAK_CHECK						          FNC_CHM			    LEAK_CHECK.CHM
 #FNC_MODE     OBJ_MODE__PURGE								            FNC_CHM			    PURGE
 
 #FNC_MODE     OBJ_MODE__SLOT_OPEN        				        FNC_CHM   			SLOT.OPEN
@@ -202,6 +203,13 @@
 #DEFINE_CONSTANT    OBJ__TRANSFER                       FNC_TRANSFER
 
 #DEFINE_CONSTANT    OBJ__GAS_VALVE                      FNC_GAS_VLV_CTRL
+
+#DEFINE_CONSTANT   	OBJ__MFC_SIZE                       ##MFC_SIZE
+#DEFINE_CONSTANT    OBJ__MFC1                           PHY_MFC1
+#DEFINE_CONSTANT    OBJ__MFC2                           PHY_MFC2
+#DEFINE_CONSTANT    OBJ__MFC3                           PHY_MFC3
+#DEFINE_CONSTANT    OBJ__MFC4                           PHY_MFC4
+#DEFINE_CONSTANT    OBJ__MFC5                           PHY_MFC5
 
 #DEFINE_CONSTANT    OBJ__VAT			                      PHY_VAT
 #DEFINE_CONSTANT    OBJ__VAC_VALVE                      PHY_VAC_VLV

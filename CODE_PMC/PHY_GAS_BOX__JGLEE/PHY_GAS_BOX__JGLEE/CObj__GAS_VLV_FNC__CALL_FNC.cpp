@@ -175,11 +175,12 @@ int CObj__GAS_VLV_FNC::Call__FV_CLOSE(CII_OBJECT__VARIABLE *p_variable)
 }
 
 //
-int CObj__GAS_VLV_FNC::Call__MFC_CONTROL(CII_OBJECT__VARIABLE *p_variable)
+int CObj__GAS_VLV_FNC::Call__MFC_CONTROL(CII_OBJECT__VARIABLE *p_variable, const bool active__open_ctrl)
 {
 	CString var_data;
 	int db_index;
 
+	/*
 	// ...
 	{
 		CString log_msg;
@@ -199,14 +200,22 @@ int CObj__GAS_VLV_FNC::Call__MFC_CONTROL(CII_OBJECT__VARIABLE *p_variable)
 
 		printf(log_msg);
 	}
+	*/
 
 	// 1. MFC Number READ
+	if(sCH__PARA_MFC_INDEX->Check__DATA("") > 0)
 	{
 		dCH__PARA_MFC_TYPE->Get__DATA(var_data);
 		db_index = Get__MFC_INDEX(var_data);	
-
-		if(db_index < 0)	return OBJ_ABORT;
 	}
+	else
+	{
+		var_data = sCH__PARA_MFC_INDEX->Get__STRING();
+		db_index = atoi(var_data);
+	}
+
+	if(db_index < 0)				return -21;
+	if(db_index >= iMFC_SIZE)		return -22;
 
 	// 2. Shutoff OPEN, FRC Control
 	{
@@ -223,6 +232,11 @@ int CObj__GAS_VLV_FNC::Call__MFC_CONTROL(CII_OBJECT__VARIABLE *p_variable)
 		{
 			pOBJ_CTRL__DGF_VLV->Call__OBJECT(DGF_CMMD__CONTROL);
 		}
+	}
+
+	if(active__open_ctrl)
+	{
+		return pOBJ_CTRL__MFC[db_index]->Call__OBJECT(MFC_CMMD__OPEN);
 	}
 
 	// 3. MFC Setting ...

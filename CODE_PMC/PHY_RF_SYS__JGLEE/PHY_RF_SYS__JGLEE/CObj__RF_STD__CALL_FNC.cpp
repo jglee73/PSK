@@ -32,7 +32,7 @@ int CObj__RF_STD
 	}
 	else
 	{
-		sEXT_CH__RF_AO_SET_POWER->Set__DATA("0");
+		aEXT_CH__RF_AO_SET_POWER->Set__DATA("0");
 	}
 
 	if(bActive__RF_DO_POWER_CTRL)	
@@ -111,7 +111,7 @@ int CObj__RF_STD
 	}
 	else
 	{
-		sEXT_CH__RF_AO_SET_POWER->Set__DATA("0");
+		aEXT_CH__RF_AO_SET_POWER->Set__DATA("0");
 	}
 
 	if(bActive__RF_DO_POWER_CTRL)	
@@ -140,7 +140,7 @@ int CObj__RF_STD
 	}
 	else
 	{
-		sEXT_CH__RF_AO_SET_POWER->Set__DATA("0");
+		aEXT_CH__RF_AO_SET_POWER->Set__DATA("0");
 	}
 
 	return 1;
@@ -199,7 +199,7 @@ int CObj__RF_STD
 		else
 		{
 			str_data.Format("%.1f", set_power);		
-			sEXT_CH__RF_AO_SET_POWER->Set__DATA(str_data);;
+			aEXT_CH__RF_AO_SET_POWER->Set__DATA(str_data);;
 		}
 	}
 

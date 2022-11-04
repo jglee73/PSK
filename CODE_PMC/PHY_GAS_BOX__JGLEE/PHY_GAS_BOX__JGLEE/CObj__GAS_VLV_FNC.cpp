@@ -35,6 +35,7 @@ int CObj__GAS_VLV_FNC::__DEFINE__CONTROL_MODE(obj,l_mode)
 
 		ADD__CTRL_VAR(sMODE__MFC_CONTROL, "MFC_CONTROL");
 		ADD__CTRL_VAR(sMODE__MFC_CLOSE,   "MFC_CLOSE");
+		ADD__CTRL_VAR(sMODE__MFC_OPEN,    "MFC_OPEN");
 
 		ADD__CTRL_VAR(sMODE__GAS_LINE_PURGE, "GAS_LINE_PURGE");
 		ADD__CTRL_VAR(sMODE__CHM_LINE_PURGE, "CHM_LINE_PURGE");
@@ -88,6 +89,11 @@ int CObj__GAS_VLV_FNC::__DEFINE__VARIABLE_STD(p_variable)
 
 	// PARA ...
 	{
+		str_name = "PARA.MFC.INDEX";
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__PARA_MFC_INDEX, str_name);
+
+		//
 		str_name = "PARA.MFC.TYPE";
 		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "", "");
 		LINK__VAR_DIGITAL_CTRL(dCH__PARA_MFC_TYPE, str_name);
@@ -512,8 +518,9 @@ LOOP_RETRY:
 		ELSE_IF__CTRL_MODE(sMODE__FV_OPEN)					flag = Call__FV_OPEN(p_variable);
 		ELSE_IF__CTRL_MODE(sMODE__FV_CLOSE)					flag = Call__FV_CLOSE(p_variable);
 
-		ELSE_IF__CTRL_MODE(sMODE__MFC_CONTROL)				flag = Call__MFC_CONTROL(p_variable);
+		ELSE_IF__CTRL_MODE(sMODE__MFC_CONTROL)				flag = Call__MFC_CONTROL(p_variable, false);
 		ELSE_IF__CTRL_MODE(sMODE__MFC_CLOSE)				flag = Call__MFC_CLOSE(p_variable);
+		ELSE_IF__CTRL_MODE(sMODE__MFC_OPEN)					flag = Call__MFC_CONTROL(p_variable, true);
 
 		ELSE_IF__CTRL_MODE(sMODE__GAS_LINE_PURGE)			flag = Call__GAS_LINE_PURGE(p_variable);
 		ELSE_IF__CTRL_MODE(sMODE__CHM_LINE_PURGE)			flag = Call__CHM_LINE_PURGE(p_variable);
@@ -541,7 +548,11 @@ LOOP_RETRY:
 		sCH__OBJ_MSG->Set__DATA(log_msg);
 	}
 
-	dCH__PARA_INTERLOCK_SKIP->Set__DATA(STR__NO);
+	// ...
+	{
+		sCH__PARA_MFC_INDEX->Set__DATA("");
+		dCH__PARA_INTERLOCK_SKIP->Set__DATA(STR__NO);
+	}
 	return flag;
 }
 

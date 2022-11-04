@@ -83,7 +83,12 @@ int CObj__CHM_FNC
 	}
 	else
 	{
-		// Gas-Valve <- Proc_Ready
+		// Gas-Valve <- Close
+		if(bActive__GAS_CLOSE_SKIP)
+		{
+
+		}
+		else
 		{
 			if(pOBJ_CTRL__GAS_VLV->Call__OBJECT(CMMD_GAS__ALL_CLOSE) < 0)		return -101;
 		}
@@ -225,7 +230,7 @@ int CObj__CHM_FNC
 
 // ...
 int CObj__CHM_FNC
-::Call__LEAK_CHECK(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm)
+::Call__LEAK_CHECK(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm, const bool active__gas_leak)
 {
 	CString log_msg;
 	CString log_bff;
@@ -268,28 +273,65 @@ int CObj__CHM_FNC
 	}
 
 	// ...
-	int	flag = Fnc__LEAK_CHECK(p_variable,p_alarm, active__ctc_call);
+	int flag = -1;
 
-	if(flag < 0)
+	if(active__gas_leak)
 	{
-		log_msg.Format("Call__LEAK_CHECK : Fnc__LEAK_CHECK is Failed [%d] ...", flag);	
-		xLOG_CTRL->WRITE__LOG(log_msg);
-	}
-
-	if(flag > 0)
-	{
-		if(dCH__LEAK_CHECK__CFG_VAT_VLV_POS_MOVING->Check__DATA(STR__ENABLE) > 0)
+		for(int k=0; k<iDATA__MFC_SIZE; k++)
 		{
-			dCH__LEAK_CHECK__ACTIVE_VAT_VLV_POS_MOVING->Set__DATA(STR__ON);
+			dEXT_CH__REPORT_LEAK_CHECK_STATE_X[k]->Set__DATA(STR__UNKNOWN);
+		}
 
-			flag = Fnc__LEAK_CHECK__VAT_VLV_POS_MOVE(p_variable,p_alarm, active__ctc_call);
+		for(int k=0; k<iDATA__MFC_SIZE; k++)
+		{
+			if(dEXT_CH__CFG_MFC_USE_X[k]->Check__DATA(STR__YES) < 0)			continue;
+			if(dEXT_CH__CFG_LEAK_CHECK_USE_X[k]->Check__DATA(STR__YES) < 0)		continue;
+			
+			dEXT_CH__REPORT_LEAK_CHECK_STATE_X[k]->Set__DATA(STR__CHECK);
 
-			dCH__LEAK_CHECK__ACTIVE_VAT_VLV_POS_MOVING->Set__DATA(STR__OFF);
+			CString gas_name = sEXT_CH__CFG_GAS_NAME_X[k]->Get__STRING();
+
+			flag = Fnc__LEAK_CHECK(p_variable,p_alarm, active__ctc_call, true, k);
 
 			if(flag < 0)
 			{
-				log_msg.Format("Call__LEAK_CHECK : Fnc__LEAK_CHECK__VAT_VLV_POS_MOVE() <- Failed [%1d] ...", flag);
+				dEXT_CH__REPORT_LEAK_CHECK_STATE_X[k]->Set__DATA(STR__NG);
+
+				log_msg.Format("Call__LEAK_CHECK : Fnc__LEAK_CHECK is Failed [%d] ...", flag);	
 				xLOG_CTRL->WRITE__LOG(log_msg);
+				break;
+			}
+			else
+			{
+				dEXT_CH__REPORT_LEAK_CHECK_STATE_X[k]->Set__DATA(STR__OK);
+			}
+		}
+	}
+	else
+	{
+		flag = Fnc__LEAK_CHECK(p_variable,p_alarm, active__ctc_call, false);
+
+		if(flag < 0)
+		{
+			log_msg.Format("Call__LEAK_CHECK : Fnc__LEAK_CHECK is Failed [%d] ...", flag);	
+			xLOG_CTRL->WRITE__LOG(log_msg);
+		}
+
+		if(flag > 0)
+		{
+			if(dCH__LEAK_CHECK__CFG_VAT_VLV_POS_MOVING->Check__DATA(STR__ENABLE) > 0)
+			{
+				dCH__LEAK_CHECK__ACTIVE_VAT_VLV_POS_MOVING->Set__DATA(STR__ON);
+
+				flag = Fnc__LEAK_CHECK__VAT_VLV_POS_MOVE(p_variable,p_alarm, active__ctc_call);
+
+				dCH__LEAK_CHECK__ACTIVE_VAT_VLV_POS_MOVING->Set__DATA(STR__OFF);
+
+				if(flag < 0)
+				{
+					log_msg.Format("Call__LEAK_CHECK : Fnc__LEAK_CHECK__VAT_VLV_POS_MOVE() <- Failed [%1d] ...", flag);
+					xLOG_CTRL->WRITE__LOG(log_msg);
+				}
 			}
 		}
 	}
@@ -325,12 +367,14 @@ int CObj__CHM_FNC
 			xEXT_CH__PMC_LOG__SUB_DIR->Set__DATA("");
 			xEXT_CH__PMC_LOG__FILE_NAME->Set__DATA("");
 		}
+	}
 
-		if(p_variable->Check__CTRL_ABORT() < 0)
-		{
-			if(bActive__OBJ_CTRL__TURBO_PUMP)		Call__HIGH_VAC_PUMP(p_variable,p_alarm);
-			else									Call__LOW_VAC_PUMP(p_variable,p_alarm);
-		}
+	// ...
+	{
+		if(p_variable->Check__CTRL_ABORT() > 0)			dCH__OBJ_CTRL->Set__DATA("ABORTED");
+
+		if(bActive__OBJ_CTRL__TURBO_PUMP)		Call__HIGH_VAC_PUMP(p_variable,p_alarm);
+		else									Call__LOW_VAC_PUMP(p_variable,p_alarm);
 	}
 
 	return flag;

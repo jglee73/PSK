@@ -37,6 +37,8 @@ private:
 	CX__VAR_DIGITAL_CTRL dCH__PARA_INTERLOCK_SKIP;
 
 	// PARA ...
+	CX__VAR_STRING_CTRL  sCH__PARA_MFC_INDEX;
+	
 	CX__VAR_DIGITAL_CTRL dCH__PARA_MFC_TYPE;
 	CX__VAR_ANALOG_CTRL  aCH__PARA_MFC_FLOW;
 	CX__VAR_ANALOG_CTRL  aCH__PARA_N2_FLOW_TIME;
@@ -131,7 +133,8 @@ private:
 
 	//
 	CString sMODE__MFC_CONTROL;
-	int Call__MFC_CONTROL(CII_OBJECT__VARIABLE *p_variable);
+	CString sMODE__MFC_OPEN;
+	int Call__MFC_CONTROL(CII_OBJECT__VARIABLE *p_variable, const bool active__open_ctrl);
 
 	CString sMODE__MFC_CLOSE;
 	int Call__MFC_CLOSE(CII_OBJECT__VARIABLE *p_variable);

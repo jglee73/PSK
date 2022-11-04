@@ -254,11 +254,16 @@ LOOP_RETRY:
 		}
 	}
 
-	// Gas-Valve <- Proc_Ready
+	// Gas-Valve <- Close
+	if(bActive__GAS_CLOSE_SKIP)
+	{
+
+	}
+	else
 	{
 		// ...
 		{
-			log_msg = "GAS-Valve <- Proc_Ready";
+			log_msg = "GAS-Valve <- Close";
 
 			sCH__OBJ_MSG->Set__DATA(log_msg);
 			xLOG_CTRL->WRITE__LOG(log_msg);
@@ -1718,7 +1723,11 @@ RETRY_LOOP:
 }
 
 int CObj__CHM_FNC
-::Fnc__LEAK_CHECK(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm, const bool active__ctc_call)
+::Fnc__LEAK_CHECK(CII_OBJECT__VARIABLE *p_variable,
+				  CII_OBJECT__ALARM *p_alarm, 
+				  const bool active__ctc_call, 
+				  const bool active__gas_leak,
+				  const int mfc_index)
 {
 	CString log_msg;
 	CString log_bff;
@@ -1775,7 +1784,7 @@ int CObj__CHM_FNC
 		return -1001;
 	}
 
-	// ...
+	// Pumping ...
 	{
 		if(bActive__OBJ_CTRL__TURBO_PUMP)
 		{
@@ -1790,9 +1799,41 @@ int CObj__CHM_FNC
 			flag = Call__LOW_VAC_PUMP(p_variable,p_alarm);
 		}
 
-		if(flag < 0)
+		if(flag < 0)		return -1002;
+	}
+
+	if(active__gas_leak)
+	{
+		// MFC.OPEN ...
 		{
-			return -1002;
+			var_data.Format("%1d", mfc_index);
+			sEXT_CH__GAS_VLV__PARA_MFC_INDEX->Set__DATA(var_data);
+
+			flag = pOBJ_CTRL__GAS_VLV->Call__OBJECT(CMMD_GAS__MFC_OPEN);
+
+			if(flag < 0)		return -1011;
+		}
+
+		// Pumping ...
+		{
+			bActive__GAS_CLOSE_SKIP = true;
+
+			if(bActive__OBJ_CTRL__TURBO_PUMP)
+			{
+				sCH__OBJ_MSG->Set__DATA("1.1 HIGH VAC PUMPING ...");
+
+				flag = Call__HIGH_VAC_PUMP(p_variable,p_alarm);
+			}
+			else
+			{
+				sCH__OBJ_MSG->Set__DATA("1.1 LOW VAC PUMPING ...");
+
+				flag = Call__LOW_VAC_PUMP(p_variable,p_alarm);
+			}
+
+			bActive__GAS_CLOSE_SKIP = false;
+
+			if(flag < 0)		return -1012;
 		}
 	}
 
@@ -1888,7 +1929,15 @@ int CObj__CHM_FNC
 
 		// ...
 		{
-			sCH__OBJ_MSG->Set__DATA("4. LEAK CHECK ...");
+			if(active__gas_leak)
+			{
+				var_data.Format("4. MFC%1d(%s) - LEAK_CHECK", mfc_index+1, sEXT_CH__CFG_GAS_NAME_X[mfc_index]->Get__STRING());
+				sCH__OBJ_MSG->Set__DATA(var_data);
+			}
+			else
+			{
+				sCH__OBJ_MSG->Set__DATA("4. LEAK_CHECK (CHAMBER)");
+			}
 
 			// ...
 			{
@@ -2231,6 +2280,12 @@ int CObj__CHM_FNC
 
 		// ...
 		{
+			CString ref__leak_dir;
+
+			if(active__gas_leak)			ref__leak_dir = "LEAK_CHECK_GAS";
+			else							ref__leak_dir = "LEAK_CHECK_LOG";
+
+			// ...
 			SCX__SEQ_INFO x_seq_info;
 
 			CString dir_root;
@@ -2238,10 +2293,11 @@ int CObj__CHM_FNC
 			CString dir_log;
 			CString path_log;
 
-			// LEAK_CHECK_LOG ...
+			// LEAK_CHECK LOG_DIR ...
 			{
 				x_seq_info->Get__DIR_ROOT(dir_root);
-				sub_dir = "LEAK_CHECK_LOG";
+
+				sub_dir  = ref__leak_dir;
 				sub_dir += "\\";
 
 				dir_log  = dir_root;
@@ -2269,7 +2325,8 @@ int CObj__CHM_FNC
 				int i_hour,i_min,i_sec,i_msec;
 				x_seq_info->Get__TIME(i_hour,i_min,i_sec,i_msec);
 				
-				sub_dir.Format("Result-%002d%002d%002d.log", i_hour,i_min,i_sec);
+				if(active__gas_leak)		sub_dir.Format("MFC%1d-%002d%002d%002d.log", mfc_index+1, i_hour,i_min,i_sec);
+				else						sub_dir.Format("Result-%002d%002d%002d.log", i_hour,i_min,i_sec);
 				
 				path_log.Format("%s\\%s", dir_log,sub_dir);				
 			}
@@ -2290,7 +2347,7 @@ int CObj__CHM_FNC
 				SCX__FILE_CTRL x_file_ctrl;
 				CString check_dir;
 
-				check_dir.Format("%s\\%s\\", dir_root,"LEAK_CHECK_LOG");
+				check_dir.Format("%s\\%s\\", dir_root, ref__leak_dir);
 
 				x_file_ctrl->Delete__LOG_DIR(check_dir,30);
 			}

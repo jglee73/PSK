@@ -16,7 +16,7 @@ int  CObj__MFC_IO::
 Call__OPEN(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
 {
 	double cfg_max  = aCH__CFG_MFC_MAX_VALUE->Get__VALUE();
-	double set_flow = aCH__MON_MFC_SET_FLOW->Get__VALUE();
+	double set_flow = cfg_max;
 
 	return Fnc__CONTROL(set_flow, 1, cfg_max);
 }

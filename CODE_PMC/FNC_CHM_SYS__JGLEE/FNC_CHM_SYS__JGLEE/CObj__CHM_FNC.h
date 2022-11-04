@@ -5,6 +5,8 @@
 #include "CCommon_Error.h"
 #include "CCommon_Def.h"
 
+#include "CObj__CHM_FNC__DEF.h"
+
 
 #define  LEAK_CHECK__ITEM_SIZE						7
 
@@ -22,16 +24,22 @@ private:
 	int iActive__SIM_MODE;
 
 	CUIntArray iLIST_ALID__PART;
+
+	bool bActive__GAS_CLOSE_SKIP;
 	//
 
 
 	//------------------------------------------------------------
 	// INTERNAL PROPERTY
 
+	CX__VAR_DIGITAL_CTRL dCH__OBJ_CTRL;
+
 	// OBJ PARAMETER ...
 	CX__VAR_STRING_CTRL	 sCH__OBJ_STATUS;
 	CX__VAR_STRING_CTRL	 sCH__OBJ_MSG;
 	CX__VAR_STRING_CTRL  sCH__OBJ_TIMER;
+
+	CX__VAR_STRING_CTRL	 sCH__CUR_OBJ_MODE;
 
 	// MON PART ...
 	CX__VAR_DIGITAL_CTRL dCH__MON_PART_ERROR_ACTIVE;
@@ -224,6 +232,17 @@ private:
 	// OBJ : GAS_VLV ...
 	CII_EXT_OBJECT__CTRL *pOBJ_CTRL__GAS_VLV;
 
+	CX__VAR_STRING_CTRL sEXT_CH__GAS_VLV__PARA_MFC_INDEX;
+
+	// OBJ : MFCx ...
+	int iDATA__MFC_SIZE;
+
+	CX__VAR_STRING_CTRL  sEXT_CH__CFG_GAS_NAME_X[_CFG__MFC_SIZE];
+	CX__VAR_DIGITAL_CTRL dEXT_CH__CFG_MFC_USE_X[_CFG__MFC_SIZE];
+
+	CX__VAR_DIGITAL_CTRL dEXT_CH__CFG_LEAK_CHECK_USE_X[_CFG__MFC_SIZE];
+	CX__VAR_DIGITAL_CTRL dEXT_CH__REPORT_LEAK_CHECK_STATE_X[_CFG__MFC_SIZE];
+
 	// OBJ : ESC ...
 	bool bActive__ESC_OBJ;
 	CII_EXT_OBJECT__CTRL *pOBJ_CTRL__ESC;
@@ -311,9 +330,11 @@ private:
 	int _Fnc__FAST_VENT(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm, const int purge_flag);
 
 	//
-	CString sMODE__LEAK_CHECK;
-	int Call__LEAK_CHECK(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
-	int Fnc__LEAK_CHECK(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm, const bool active__ctc_call);
+	CString sMODE__LEAK_CHECK_CHM;
+	CString sMODE__LEAK_CHECK_GAS;
+	int Call__LEAK_CHECK(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm, const bool active__gas_leak);
+
+	int Fnc__LEAK_CHECK(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm, const bool active__ctc_call, const bool active__gas_leak,const int mfc_index = -1);
 	int Fnc__LEAK_CHECK__VAT_VLV_POS_MOVE(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm, const bool active__ctc_call);
 
 	//

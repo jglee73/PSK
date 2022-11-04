@@ -233,6 +233,7 @@ int CObj__PMC_OPR
 
 	return p_ext_mode_ctrl->Call__FNC_MODE(sEXT_MODE__LEAK_CHECK);
 }
+
 int CObj__PMC_OPR
 ::Call__AUTO_PM(CII_OBJECT__VARIABLE *p_variable)
 {
