@@ -34,7 +34,6 @@ int CObj__MFC_IO::__DEFINE__CONTROL_MODE(obj,l_mode)
 
 		//
 		ADD__CTRL_VAR(sMODE__PURGE, "PURGE");
-
 		ADD__CTRL_VAR(sMODE__GAS_LINE_PURGE, "GAS_LINE_PURGE");
 		ADD__CTRL_VAR(sMODE__CHM_LINE_PURGE, "CHM_LINE_PURGE");
 	}
@@ -73,6 +72,14 @@ int CObj__MFC_IO::__DEFINE__VARIABLE_STD(p_variable)
 		str_name = "OBJ.MSG";
 		STD__ADD_STRING(str_name);
 		LINK__VAR_STRING_CTRL(sCH__OBJ_MSG, str_name);
+
+		str_name = "ACT.MODE";
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__ACT_MODE, str_name);
+
+		str_name = "OBJ.TIMER";
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__OBJ_TIMER, str_name);
 	}
 
 	// PARA ...
@@ -590,6 +597,38 @@ int CObj__MFC_IO::__DEFINE__ALARM(p_alarm)
 		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
 	}
 
+	// ...
+	{
+		alarm_id = ALID__INTERLOCK_MFC_CLOSE;
+		iLIST_ALID__PART.Add(alarm_id);
+
+		alarm_title  = title;
+		alarm_title += "Interlock condition !";
+
+		alarm_msg = "MFC must be closed !";
+
+		l_act.RemoveAll();
+		l_act.Add(ACT__CHECK);
+
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
+	// ...
+	{
+		alarm_id = ALID__PROCESS_VALVE_NOT_READY;
+		iLIST_ALID__PART.Add(alarm_id);
+
+		alarm_title  = title;
+		alarm_title += "Interlock condition (valve state) !";
+
+		alarm_msg  = "The valves connected to the chamber are not open. \n";
+		alarm_msg += "Please, check the state of valves !";
+
+		l_act.RemoveAll();
+		l_act.Add(ACT__CHECK);
+
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
+
 	return 1;
 }
 
@@ -671,6 +710,10 @@ int CObj__MFC_IO::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 
 			var_name = "MON.INTERLOCK.LIGHT.ACTIVE.GAS_BOX";
 			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__MON_INTERLOCK_LIGHT_ACTIVE_GAS_BOX, obj_name,var_name);
+
+			//
+			var_name = "MON.ACTIVE.PROCESS.VALVE.READY.STATE";
+			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__MON_ACTIVE_PROCESS_VALVE_READY_STATE, obj_name,var_name);
 		}
 	}
 
@@ -993,18 +1036,21 @@ int CObj__MFC_IO::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 				bool active__interlock_system    = false;
 				bool active__interlock_chamber   = false;
 				bool active__interlock_gas_box   = false;
+				bool active__proc_vlv_not_ready  = false;
 
 				if(dEXT_CH__CFG_PMC_ATM_MAINT_ACTIVE->Check__DATA(STR__ON) > 0)					active__interlock_atm_maint = true;
 				if(dEXT_CH__MON_INTERLOCK_HEAVY_ACTIVE_SYSTEM->Check__DATA(STR__ON)  > 0)		active__interlock_system    = true;
 				if(dEXT_CH__MON_INTERLOCK_HEAVY_ACTIVE_CHAMBER->Check__DATA(STR__ON) > 0)		active__interlock_chamber   = true;
 				if(dEXT_CH__MON_INTERLOCK_HEAVY_ACTIVE_GAS_BOX->Check__DATA(STR__ON) > 0)		active__interlock_gas_box   = true;
+				if(dEXT_CH__MON_ACTIVE_PROCESS_VALVE_READY_STATE->Check__DATA(STR__ON) < 0)		active__proc_vlv_not_ready  = true;
 
 				// Interlock.Check ...
 				{
 					if((active__interlock_atm_maint)
 					|| (active__interlock_system)
 					|| (active__interlock_chamber)
-					|| (active__interlock_gas_box))
+					|| (active__interlock_gas_box)
+					|| (active__proc_vlv_not_ready))
 					{
 
 					}
@@ -1089,6 +1135,24 @@ int CObj__MFC_IO::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 						p_alarm->Check__ALARM(alm_id, r_act);
 						p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
 					}
+					else if(active__proc_vlv_not_ready)
+					{
+						int alm_id = ALID__PROCESS_VALVE_NOT_READY;
+						CString alm_msg;
+						CString alm_bff;
+						CString r_act;
+
+						alm_msg.Format(" Action.Mode <- %s \n", mode);
+						alm_msg += "\n";
+
+						alm_bff.Format(" * %s <- %s \n", 
+										dEXT_CH__MON_ACTIVE_PROCESS_VALVE_READY_STATE->Get__CHANNEL_NAME(),
+										dEXT_CH__MON_ACTIVE_PROCESS_VALVE_READY_STATE->Get__STRING());
+						alm_msg += alm_bff;
+
+						p_alarm->Check__ALARM(alm_id, r_act);
+						p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
+					}
 
 					flag = -1;
 					break;
@@ -1102,6 +1166,8 @@ int CObj__MFC_IO::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 
 	if(flag > 0)
 	{
+		sCH__ACT_MODE->Set__DATA(mode);
+
 		dCH__MON_ERROR_CHECK_ACTIVE->Set__DATA(STR__OFF);
 		dCH__MON_MFC_ABORT_ACTIVE->Set__DATA(STR__OFF);
 		dCH__MON_MFC_STABLE_ACTIVE->Set__DATA(STR__OFF);
@@ -1148,20 +1214,20 @@ int CObj__MFC_IO::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 		ELSE_IF__CTRL_MODE(sMODE__PURGE)
 		{
 			flag = Call__PURGE(p_variable,p_alarm);
-
-			sCH__MON_MFC_STATE->Set__DATA(STR__OPEN);
+			
+			if(flag > 0)		sCH__MON_MFC_STATE->Set__DATA(STR__OPEN);
 		}
 		ELSE_IF__CTRL_MODE(sMODE__GAS_LINE_PURGE)
 		{
 			flag = Call__GAS_LINE_PURGE(p_variable,p_alarm);
 
-			sCH__MON_MFC_STATE->Set__DATA(STR__OPEN);
+			if(flag > 0)		sCH__MON_MFC_STATE->Set__DATA(STR__OPEN);
 		}
 		ELSE_IF__CTRL_MODE(sMODE__CHM_LINE_PURGE)
 		{
 			flag = Call__CHM_LINE_PURGE(p_variable,p_alarm);
 
-			sCH__MON_MFC_STATE->Set__DATA(STR__CLOSE);
+			if(flag > 0)		sCH__MON_MFC_STATE->Set__DATA(STR__OPEN);
 		}
 	}
 

@@ -71,6 +71,13 @@ int CObj__PROC_STD::__DEFINE__VARIABLE_STD(p_variable)
 		LINK__VAR_STRING_CTRL(sCH__OBJ_TIMER, var_name);
 	}
 
+	// CFG ...
+	{
+		var_name = "CFG.DA_OFFSET_CHECK_BEFORE_PROCESSING";
+		STD__ADD_DIGITAL_WITH_X_OPTION(var_name, "NO  YES", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_DA_OFFSET_CHECK_BEFORE_PROCESSING, var_name);
+	}
+
 	// CTC REPORT ...
 	{
 		var_name = "sPRC.TOTAL.TIME.TO.CTC";
@@ -743,6 +750,9 @@ int CObj__PROC_STD::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 
 			var_name = "LOG.SLOTID";
 			LINK__EXT_VAR_STRING_CTRL(sEXT_CH__PROC_LOG__SLOTID, obj_name,var_name);
+
+			var_name = "LOG.DA_REPORT.RESULT";
+			LINK__EXT_VAR_STRING_CTRL(sEXT_CH__PROC_LOG_DA_REPORT_RESULT, obj_name,var_name);
 
 			//
 			var_name = "sVAR.SUB_DIR";

@@ -791,19 +791,26 @@ RETRY_LOOP:
 	}
 
 	// Gas-Valve : Proc_Ready ...
-	if(dCH__CFG_PROCESS_READY_CTRL_AFTER_CHM_PUMPING->Check__DATA(STR__YES) > 0)
+	if(bActive__GAS_CLOSE_SKIP)
 	{
-		// ...
-		{
-			log_msg = "GAS-Valve <- Proc_Ready";
 
-			sCH__OBJ_MSG->Set__DATA(log_msg);
-			xLOG_CTRL->WRITE__LOG(log_msg);
-		}
-
-		if(pOBJ_CTRL__GAS_VLV->Call__OBJECT(CMMD_GAS__PROC_READY) < 0)
+	}
+	else
+	{
+		if(dCH__CFG_PROCESS_READY_CTRL_AFTER_CHM_PUMPING->Check__DATA(STR__YES) > 0)
 		{
-			return -11;
+			// ...
+			{
+				log_msg = "GAS-Valve <- Proc_Ready";
+
+				sCH__OBJ_MSG->Set__DATA(log_msg);
+				xLOG_CTRL->WRITE__LOG(log_msg);
+			}
+
+			if(pOBJ_CTRL__GAS_VLV->Call__OBJECT(CMMD_GAS__PROC_READY) < 0)
+			{
+				return -11;
+			}
 		}
 	}
 

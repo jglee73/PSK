@@ -21,7 +21,7 @@ int CObj__APS_8301
 	CString s_cmmd;
 	CString r_data;
 
-	if(siCH__ESC_VOLTAGE->Check__VARIABLE_NAME(var_name) > 0)
+	if(siCH__ESC_VOLTAGE_V->Check__VARIABLE_NAME(var_name) > 0)
 	{
 		s_cmmd = "*RV";
 
@@ -31,14 +31,16 @@ int CObj__APS_8301
 		read_data = r_data;
 		return 1;
 	}
-	if(siCH__ESC_LEAK_CURRENT->Check__VARIABLE_NAME(var_name) > 0)
+	if(siCH__ESC_LEAK_CURRENT_mA->Check__VARIABLE_NAME(var_name) > 0)
 	{
 		s_cmmd = "*RI";
 
 		int r_val = _Send__Command(s_cmmd, r_data);      // KMS:221018
 		if(r_val < 0)		return -1;
 
-		read_data = r_data;
+		double cur_ma = atof(r_data) * 0.001;		// uA -> mA
+		
+		read_data.Format("%.3f", cur_ma);
 		return 1;
 	}
 	if(siCH__ESC_SYSTEM_STS->Check__VARIABLE_NAME(var_name) > 0)
@@ -110,36 +112,41 @@ int CObj__APS_8301
 	CString s_sign;
 	CString r_data;
 
-	if(aoCH__ESC_VOLTAGE_SET->Check__VARIABLE_NAME(var_name) > 0)
+	if(aoCH__ESC_VOLTAGE_SET_V->Check__VARIABLE_NAME(var_name) > 0)
 	{
 		if(set_data < 0)		s_sign = "-";
 		else					s_sign = "+";
 
-		s_cmmd.Format("*SV%s%04.0f", s_sign,abs(set_data));
+		s_cmmd.Format("*SV%s%04.0f", s_sign, abs(set_data));
 		
 		return _Send__Command(s_cmmd, r_data);
 	}
-	if(aoCH__ESC_CURRENT_LIMIT_SET->Check__VARIABLE_NAME(var_name) > 0)
+	if(aoCH__ESC_CURRENT_LIMIT_SET_mA->Check__VARIABLE_NAME(var_name) > 0)
 	{
-		if(set_data < 0)		s_sign = "-";
-		else					s_sign = "+";
+		double set_ua = set_data * 1000.0;		// mA -> uA
 
-		s_cmmd.Format("*SI%s%04.0f", s_sign,abs(set_data));
+		s_cmmd.Format("*SI%03.0f", abs(set_ua));
 
 		return _Send__Command(s_cmmd, r_data);
 	}
-	if(aoCH__ESC_TIME_DELAY_SET->Check__VARIABLE_NAME(var_name) > 0)
+	
+	if(aoCH__ESC_TIME_DELAY_mSEC->Check__VARIABLE_NAME(var_name) > 0)
 	{
 		s_cmmd.Format("*DT%%04.0f", abs(set_data));
 
 		return _Send__Command(s_cmmd, r_data);
 	}
-	if(aoCH__ESC_RAMP_TIME_SET->Check__VARIABLE_NAME(var_name) > 0)
+	if(aoCH__ESC_RAMP_UP_mSEC->Check__VARIABLE_NAME(var_name) > 0)
 	{
-		if(set_data < 0)		s_sign = "-";
-		else					s_sign = "+";
+		s_sign = "+";
+		s_cmmd.Format("*P%s%04.0f", s_sign, abs(set_data));
 
-		s_cmmd.Format("*P%s%04.0f", s_sign,abs(set_data));
+		return _Send__Command(s_cmmd, r_data);
+	}
+	if(aoCH__ESC_RAMP_DOWN_mSEC->Check__VARIABLE_NAME(var_name) > 0)
+	{
+		s_sign = "-";
+		s_cmmd.Format("*P%s%04.0f", s_sign, abs(set_data));
 
 		return _Send__Command(s_cmmd, r_data);
 	}

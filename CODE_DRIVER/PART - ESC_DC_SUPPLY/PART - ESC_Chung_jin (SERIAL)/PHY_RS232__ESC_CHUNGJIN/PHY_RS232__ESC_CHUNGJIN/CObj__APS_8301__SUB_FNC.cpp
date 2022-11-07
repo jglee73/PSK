@@ -15,34 +15,12 @@ int CObj__APS_8301
 }
 
 int CObj__APS_8301
-::_Fnc__Ramping_Ctrl(CII_OBJECT__VARIABLE* p_variable,
-					 CII_OBJECT__ALARM* p_alarm, 
-					 const bool active_up)
-{
-	double cfg_msec;
-
-	if(active_up)		cfg_msec = aCH__CFG_RAMP_UP_TIME->Get__VALUE();
-	else				cfg_msec = -1.0 * aCH__CFG_RAMP_DOWN_TIME->Get__VALUE();
-
-	//
-	doCH__ESC_VOLTAGE_OUTPUT_SET->Set__DATA(STR__OFF);
-
-	double cfg_set = aCH__CFG_RAMP_START_VOLTAGE->Get__VALUE();
-	aoCH__ESC_VOLTAGE_SET->Set__VALUE(cfg_set);
-
-	aoCH__ESC_RAMP_TIME_SET->Set__VALUE(cfg_msec);
-
-	doCH__ESC_VOLTAGE_OUTPUT_SET->Set__DATA(STR__ON);
-	return 1;
-}
-
-int CObj__APS_8301
 ::_Fnc__Abort_Ctrl()
 {
 	doCH__ESC_POWER_SET->Set__DATA(STR__OFF);
 	doCH__ESC_VOLTAGE_OUTPUT_SET->Set__DATA(STR__OFF);
 
-	aoCH__ESC_VOLTAGE_SET->Set__VALUE(0.0);
+	aoCH__ESC_VOLTAGE_SET_V->Set__VALUE(0.0);
 	return 1;
 }
 

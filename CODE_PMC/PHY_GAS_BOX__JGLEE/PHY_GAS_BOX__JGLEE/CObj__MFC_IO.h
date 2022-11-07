@@ -30,8 +30,10 @@ private:
 	//-------------------------------------------------------------------------
 	// INTERNAL PROPERTY
 
-	// ...
+	// OBJ ...
 	CX__VAR_STRING_CTRL  sCH__OBJ_MSG;
+	CX__VAR_STRING_CTRL  sCH__ACT_MODE;
+	CX__VAR_STRING_CTRL  sCH__OBJ_TIMER;
 
 	// PARA ...
 	CX__VAR_ANALOG_CTRL	 aCH__PARA_SET_VALUE;
@@ -159,6 +161,8 @@ private:
 	CX__VAR_DIGITAL_CTRL dEXT_CH__MON_INTERLOCK_HEAVY_ACTIVE_GAS_BOX;
 	CX__VAR_DIGITAL_CTRL dEXT_CH__MON_INTERLOCK_LIGHT_ACTIVE_GAS_BOX;
 
+	CX__VAR_DIGITAL_CTRL dEXT_CH__MON_ACTIVE_PROCESS_VALVE_READY_STATE;
+
 	// LINK.DATA ...
 	int iLINK_DATA__TYPE;
 	int iLINK_DATA__MAX_FLOW;
@@ -220,6 +224,7 @@ private:
 	CString sMODE__CONTROL;
 	int  Call__CONTROL(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm);
 	int  Fnc__CONTROL(const double set_flow, const int open_mode, const double cfg_ma);
+	int  _Open__VALVE(const double set_flow, const int open_mode, const double cfg_ma);
 	int  _Close__ALL_VALVE();
 
 	CString sMODE__RAMP_CTRL;

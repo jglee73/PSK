@@ -31,42 +31,45 @@ int CObj__PROC_STD
 {
 LOOP_RETRY:
 
-	if(dEXT_CH__TMC_LINK_DA_REPORT_RESULT_WAFER->Check__DATA(STR__OK) < 0)
+	if(dCH__CFG_DA_OFFSET_CHECK_BEFORE_PROCESSING->Check__DATA(STR__YES) > 0)
 	{
-		if(dEXT_CH__SLOT01_STATUS->Check__DATA(STR__NONE) < 0)
+		if(dEXT_CH__TMC_LINK_DA_REPORT_RESULT_WAFER->Check__DATA(STR__OK) < 0)
 		{
-			int alm_id = ALID__PROCESS_INTERLOCK__DA_OFFSET_ERROR;
-			CString alm_msg;
-			CString alm_bff;
-			CString r_act;
+			if(dEXT_CH__SLOT01_STATUS->Check__DATA(STR__NONE) < 0)
+			{
+				int alm_id = ALID__PROCESS_INTERLOCK__DA_OFFSET_ERROR;
+				CString alm_msg;
+				CString alm_bff;
+				CString r_act;
 
-			alm_bff.Format("  * R_Offset <- %s (deg) \n", 
-						   sEXT_CH__TMC_LINK_DA_REPORT_R_OFFSET_WAFER->Get__STRING());
-			alm_msg += alm_bff;
+				alm_bff.Format("  * R_Offset <- %s (deg) \n", 
+							   sEXT_CH__TMC_LINK_DA_REPORT_R_OFFSET_WAFER->Get__STRING());
+				alm_msg += alm_bff;
 
-			alm_bff.Format("  * T_Offset <- %s (mm) \n", 
-						   sEXT_CH__TMC_LINK_DA_REPORT_T_OFFSET_WAFER->Get__STRING());
-			alm_msg += alm_bff;
+				alm_bff.Format("  * T_Offset <- %s (mm) \n", 
+							   sEXT_CH__TMC_LINK_DA_REPORT_T_OFFSET_WAFER->Get__STRING());
+				alm_msg += alm_bff;
 
-			alm_bff.Format("  * %s <- %s \n", 
-						   dEXT_CH__TMC_LINK_DA_REPORT_RESULT_WAFER->Get__CHANNEL_NAME(),
-						   dEXT_CH__TMC_LINK_DA_REPORT_RESULT_WAFER->Get__STRING());
-			alm_msg += alm_bff;
+				alm_bff.Format("  * %s <- %s \n", 
+							   dEXT_CH__TMC_LINK_DA_REPORT_RESULT_WAFER->Get__CHANNEL_NAME(),
+							   dEXT_CH__TMC_LINK_DA_REPORT_RESULT_WAFER->Get__STRING());
+				alm_msg += alm_bff;
 
-			alm_bff.Format("  * %s <- %s \n", 
-						   dEXT_CH__SLOT01_STATUS->Get__CHANNEL_NAME(),
-						   dEXT_CH__SLOT01_STATUS->Get__STRING());
-			alm_msg += alm_bff;
+				alm_bff.Format("  * %s <- %s \n", 
+							   dEXT_CH__SLOT01_STATUS->Get__CHANNEL_NAME(),
+							   dEXT_CH__SLOT01_STATUS->Get__STRING());
+				alm_msg += alm_bff;
 
-			alm_bff.Format("  * %s <- %s \n", 
-						   sEXT_CH__SLOT01_TITLE->Get__CHANNEL_NAME(),
-						   sEXT_CH__SLOT01_TITLE->Get__STRING());
-			alm_msg += alm_bff;
+				alm_bff.Format("  * %s <- %s \n", 
+							   sEXT_CH__SLOT01_TITLE->Get__CHANNEL_NAME(),
+							   sEXT_CH__SLOT01_TITLE->Get__STRING());
+				alm_msg += alm_bff;
 
-			p_alarm->Popup__ALARM_With_MESSAGE(alm_id, alm_msg, r_act);
+				p_alarm->Popup__ALARM_With_MESSAGE(alm_id, alm_msg, r_act);
 
-			if(r_act.CompareNoCase(ACT__RETRY)  == 0)		goto LOOP_RETRY;
-			if(r_act.CompareNoCase(ACT__IGNORE) != 0)		return -11;
+				if(r_act.CompareNoCase(ACT__RETRY)  == 0)		goto LOOP_RETRY;
+				if(r_act.CompareNoCase(ACT__IGNORE) != 0)		return -11;
+			}
 		}
 	}
 

@@ -2234,7 +2234,7 @@ Fnc__HE_ERROR_CHECK(CII_OBJECT__ALARM* p_alarm,
 	if(cfg__pressure_warning > 0.001)
 	{
 		if((check_pressure > ref_warning__pressure_max)
-			|| (check_pressure < ref_warning__pressure_min))
+		|| (check_pressure < ref_warning__pressure_min))
 		{
 			err_check = 0;
 
@@ -2317,7 +2317,7 @@ Fnc__HE_ERROR_CHECK(CII_OBJECT__ALARM* p_alarm,
 
 			alm_bff.Format("current he flow <- %.1f (sccm) \n", check_flow);
 			alm_msg += alm_bff;
-			alm_bff.Format("config max. threshold <- %.1f (sccm) \n", cfg__flow_min);
+			alm_bff.Format("config max. threshold <- %.1f (sccm) \n", cfg__flow_max);
 			alm_msg += alm_bff;
 
 			p_alarm->Check__ALARM(alm_id, r_act);

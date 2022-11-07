@@ -49,8 +49,13 @@ int CObj__CHM_FNC
 	}
 	else
 	{
-		if(dCH__CFG_PROCESS_READY_CTRL_AFTER_CHM_PUMPING->Check__DATA(STR__YES) > 0)
-			pOBJ_CTRL__GAS_VLV->Call__OBJECT(CMMD_GAS__PROC_READY);
+		if(bActive__GAS_CLOSE_SKIP)
+		{
+			if(dCH__CFG_PROCESS_READY_CTRL_AFTER_CHM_PUMPING->Check__DATA(STR__YES) > 0)
+			{
+				pOBJ_CTRL__GAS_VLV->Call__OBJECT(CMMD_GAS__PROC_READY);
+			}
+		}
 	}
 
 	return flag;
@@ -106,9 +111,16 @@ int CObj__CHM_FNC
 		int flag = Fnc__HIGH_VAC_PUMP(p_variable,p_alarm);
 
 		// Gas-Valve <- Proc_Ready
-		if(dCH__CFG_PROCESS_READY_CTRL_AFTER_CHM_PUMPING->Check__DATA(STR__YES) > 0)
+		if(bActive__GAS_CLOSE_SKIP)
 		{
-			pOBJ_CTRL__GAS_VLV->Call__OBJECT(CMMD_GAS__PROC_READY);
+
+		}
+		else
+		{
+			if(dCH__CFG_PROCESS_READY_CTRL_AFTER_CHM_PUMPING->Check__DATA(STR__YES) > 0)
+			{
+				pOBJ_CTRL__GAS_VLV->Call__OBJECT(CMMD_GAS__PROC_READY);
+			}
 		}
 
 		if(flag < 0)

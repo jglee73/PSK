@@ -309,12 +309,26 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 			{
 				aoEXT_CH__ESC_Voltage_CENTER->Get__DATA(var_data);
 				aiEXT_CH__ESC_Voltage_CENTER->Set__DATA(var_data);
+
+				//
+				double cfg__curr_limit = aCH__CFG_ESC_CENTER_CURRENT_LIMIT->Get__VALUE();
+				double sim__curr_value = cfg__curr_limit * 0.5;
+
+				var_data.Format("%.3f", sim__curr_value);
+				aiEXT_CH__ESC_Current_CENTER->Set__DATA(var_data);
 			}
 			// ESC Edge ...
 			if(bActive__EDGE_USE)
 			{
 				aoEXT_CH__ESC_Voltage_EDGE->Get__DATA(var_data);
 				aiEXT_CH__ESC_Voltage_EDGE->Set__DATA(var_data);
+
+				//
+				double cfg__curr_limit = aCH__CFG_ESC_EDGE_CURRENT_LIMIT->Get__VALUE();
+				double sim__curr_value = cfg__curr_limit * 0.5;
+
+				var_data.Format("%.3f", sim__curr_value);
+				aiEXT_CH__ESC_Current_EDGE->Set__DATA(var_data);
 			}
 
 			doEXT_CH__ESC_All_Voltage->Set__DATA(STR__On);
@@ -422,6 +436,10 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 			else if(pre__chuck_sel.CompareNoCase("CHUCK2") == 0)		sCH__CFG_CHUCK_CHART_TIME_CHUCK2->Set__DATA(var_data);
 		}
 
+		// ...
+		bool active__stable_valve_open = true;
+		if(dCH__CFG_STABLE_VALVE_OPEN_DURING_CHUCKING->Check__DATA(STR__YES) < 0)		active__stable_valve_open = false;
+
 		// He Flow.Center ...
 		if(bActive__CENTER_USE)
 		{
@@ -436,8 +454,13 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 				if((iACTIVE__WAFER_LEAK_CHECK > 0)
 				|| (dCH__MON_CHUCK_STATUS->Check__DATA(STR__CHUCKED) > 0))
 				{
-					sCH__RESULT_HE_CENTER_FLOW_READING_POINT1->Get__DATA(var_data);
-					double cfg_center__bypass_flow = atof(var_data);
+					double cfg_center__bypass_flow = 0.0;
+
+					if(active__stable_valve_open)
+					{
+						sCH__RESULT_HE_CENTER_FLOW_READING_POINT1->Get__DATA(var_data);
+						cfg_center__bypass_flow = atof(var_data);
+					}
 
 					sCH__MON_He_Flow_CENTER->Get__DATA(var_data);
 					double cur_center__flow = atof(var_data);	
@@ -465,8 +488,13 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 				if((iACTIVE__WAFER_LEAK_CHECK > 0)
 				|| (dCH__MON_CHUCK_STATUS->Check__DATA(STR__CHUCKED) > 0))
 				{
-					sCH__RESULT_HE_EDGE_FLOW_READING_POINT1->Get__DATA(var_data);
-					double cfg_edge__bypass_flow = atof(var_data);
+					double cfg_edge__bypass_flow = 0.0;
+
+					if(active__stable_valve_open)
+					{
+						sCH__RESULT_HE_EDGE_FLOW_READING_POINT1->Get__DATA(var_data);
+						cfg_edge__bypass_flow = atof(var_data);
+					}
 
 					sCH__MON_He_Flow_EDGE->Get__DATA(var_data);
 					double cur_edge__flow = atof(var_data);	

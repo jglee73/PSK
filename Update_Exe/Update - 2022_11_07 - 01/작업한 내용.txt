@@ -1,0 +1,22 @@
+
+# PM Chuck Parameter 추가 
+ -. 관련 Page
+   * PMC Config - Chuck Step
+   
+# ESC IO OBJECT의  단위 정리
+ -. 관련 Page
+   * APP_POPUP_ESC_RS232
+   
+# 공정 진행시 DA OFFSET Check 관련 Config 항목 추가
+ -. 관련 Page
+   * PMC Config - Module 
+
+# PM GasLine Page에 있는 Purge 기능 정리
+ -. "Chamber Line Purge" 기능 확인
+ -. "Line Purge With N2" 기능 확인
+
+# GAS INTERLOCK 기능 추가
+ -. Vaccum sensor가 감지되지 않을 때 모든 MFC를 Close 시키는 기능
+ -. 관련 Page
+   * PMC Config - Gas Interlock
+

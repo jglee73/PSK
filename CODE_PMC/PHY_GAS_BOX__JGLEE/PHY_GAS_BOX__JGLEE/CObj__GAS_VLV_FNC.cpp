@@ -231,6 +231,21 @@ int CObj__GAS_VLV_FNC::__DEFINE__ALARM(p_alarm)
 
 		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
 	}
+	// ...
+	{
+		alarm_id = ALID__DRY_PUMP_STATE__NOT_ON;
+
+		alarm_title  = title;
+		alarm_title += "Dry-Pump 상태가 \"ON\"이 아닙니다. \n";
+
+		alarm_msg = "Dry-Pump를 \"ON\" 시킨 다음에 작업을 진행하시기 바랍니다.\n";
+
+		l_act.RemoveAll();
+		l_act.Add(ACT__RETRY);
+		l_act.Add(ACT__ABORT);
+
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
 
 	return 1;
 }
@@ -294,6 +309,14 @@ int CObj__GAS_VLV_FNC::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		p_ext_obj_create->Get__DEF_CONST_DATA(def_name, ch_name);
 		p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(ch_name, obj_name,var_name);
 		LINK__EXT_VAR_STRING_CTRL(sEXT_CH__CHM_PUMPING_STATE, obj_name,var_name);
+	}
+
+	// OBJ : DRY_PUMPING_STATE 
+	{
+		def_name = "CH__DRY_PUMPING_STATE";
+		p_ext_obj_create->Get__DEF_CONST_DATA(def_name, ch_name);
+		p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(ch_name, obj_name,var_name);
+		LINK__EXT_VAR_STRING_CTRL(sEXT_CH__DRY_PUMPING_STATE, obj_name,var_name);
 	}
 
 	// OBJ : GAS_VLV
@@ -386,6 +409,10 @@ int CObj__GAS_VLV_FNC::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 			//
 			var_name = "PARA.SET.FLOW";
 			LINK__EXT_VAR_ANALOG_CTRL(aEXT_CH__PARA_SET_FLOW[i],  obj_name,var_name);
+
+			//
+			var_name = "MON.MFC.STATE";
+			LINK__EXT_VAR_STRING_CTRL(sEXT_CH__MON_MFC_STATE[i], obj_name,var_name);
 		}
 	}
 
@@ -449,14 +476,11 @@ LOOP_RETRY:
 
 	if(active__interlock_check)
 	{
-		if(sEXT_CH__CHM_PUMPING_STATE->Check__DATA("PUMPING") < 0)
+		if((mode.CompareNoCase(sMODE__MFC_CONTROL)        == 0)
+		|| (mode.CompareNoCase(sMODE__CHM_BALLAST_FLOW)   == 0)
+		|| (mode.CompareNoCase(sMODE__TRANS_BALLAST_FLOW) == 0))
 		{
-			if((mode.CompareNoCase(sMODE__GAS_LINE_PURGE)     == 0)
-			|| (mode.CompareNoCase(sMODE__CHM_LINE_PURGE)     == 0)
-			|| (mode.CompareNoCase(sMODE__LINE_PURGE_WITH_N2) == 0)
-			|| (mode.CompareNoCase(sMODE__MFC_CONTROL)        == 0)
-			|| (mode.CompareNoCase(sMODE__CHM_BALLAST_FLOW)   == 0)
-			|| (mode.CompareNoCase(sMODE__TRANS_BALLAST_FLOW) == 0))
+			if(sEXT_CH__CHM_PUMPING_STATE->Check__DATA("PUMPING") < 0)
 			{
 				bool active__pumping_check = true;
 
@@ -492,6 +516,48 @@ LOOP_RETRY:
 							log_bff.Format("  * %s <- %s \n",
 										   sEXT_CH__CHM_PUMPING_STATE->Get__CHANNEL_NAME(),
 										   sEXT_CH__CHM_PUMPING_STATE->Get__STRING());
+							log_msg += log_bff;
+
+							xLOG_CTRL->WRITE__LOG(log_msg);
+						}
+						goto LOOP_RETRY;
+					}
+
+					flag = -101;
+				}
+			}
+		}
+
+		if((mode.CompareNoCase(sMODE__GAS_LINE_PURGE)     == 0)
+		|| (mode.CompareNoCase(sMODE__CHM_LINE_PURGE)     == 0)
+		|| (mode.CompareNoCase(sMODE__LINE_PURGE_WITH_N2) == 0))
+		{
+			if(sEXT_CH__DRY_PUMPING_STATE->Check__DATA("ON") < 0)
+			{
+
+				// ...
+				{
+					int alm_id = ALID__DRY_PUMP_STATE__NOT_ON;
+					CString alm_msg;
+					CString r_act;
+
+					alm_msg.Format("\"%s\" 명령을 수행 할 수 없습니다. \n", mode);
+
+					p_alarm->Popup__ALARM_With_MESSAGE(alm_id, alm_msg, r_act);
+
+					if(r_act.CompareNoCase(ACT__RETRY) == 0)
+					{
+						// ...
+						{
+							CString log_msg;
+							CString log_bff;
+
+							log_msg  = "\n";
+							log_msg += "Dry-Pump is not \"ON\". \n";
+
+							log_bff.Format("  * %s <- %s \n",
+											sEXT_CH__DRY_PUMPING_STATE->Get__CHANNEL_NAME(),
+											sEXT_CH__DRY_PUMPING_STATE->Get__STRING());
 							log_msg += log_bff;
 
 							xLOG_CTRL->WRITE__LOG(log_msg);

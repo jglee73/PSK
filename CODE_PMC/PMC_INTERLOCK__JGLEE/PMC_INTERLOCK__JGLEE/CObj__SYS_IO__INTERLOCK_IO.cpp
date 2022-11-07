@@ -75,7 +75,7 @@ int  CObj__SYS_IO
 		p_interlock->REGISTER__VARIABLE_NAME(obj_name,var_name,var_data, Fnc_SetPoint__VAC_Fast_Vlv_Open);
 	}
 
-	// 3. Slow Valve <- Open
+	// Slow Valve <- Open
 	if(bActive__DO_ROUGH_SOFT_VLV)
 	{
 		ch_name = sCH_Name__DO_ROUGH_SOFT_VLV;
