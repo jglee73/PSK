@@ -413,6 +413,7 @@ private:
 	int  _Get__ARM_LIST_TO_PICK_STx(CStringArray& l__stx_name, 
 									CUIntArray& l__stx_slot);
 	int  _Check__SLOT_COUNT_TO_PICK_STx(const double ref_sec, const int max_check);
+	int  _Check__SAME_PTN_IN_STx(const CString& stx_name,const int stx_id, const int port_id);
 
 	int  AUTO_CTRL__LBo_RB(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);
 	int  AUTO_CTRL__RB_BUFFERx(CII_OBJECT__VARIABLE *p_variable,CII_OBJECT__ALARM *p_alarm);

@@ -51,6 +51,10 @@ int CObj__CHM_FNC
 	{
 		if(bActive__GAS_CLOSE_SKIP)
 		{
+
+		}
+		else
+		{
 			if(dCH__CFG_PROCESS_READY_CTRL_AFTER_CHM_PUMPING->Check__DATA(STR__YES) > 0)
 			{
 				pOBJ_CTRL__GAS_VLV->Call__OBJECT(CMMD_GAS__PROC_READY);

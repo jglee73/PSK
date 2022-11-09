@@ -20,19 +20,52 @@ extern CMacro_FA mFA_Link;
 void CObj_Phy__LPx_STD
 ::Mon__PORT_EXCEPTION(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm)
 {
+	CString ch_data;
+
 
 	while(1)
 	{
 		while(dCH_CFG__LPx_USE->Check__DATA("DISABLE") > 0)
 		{
 			p_variable->Wait__SINGLE_OBJECT(0.9);
+
+			sCH__RESERVE_ID->Set__DATA("__");
 		}
 		p_variable->Wait__SINGLE_OBJECT(0.1);
 
+		
+		// RESERVE ID ...
+		{
+			CUIntArray l__ptn_rsv;
+			xI_SCH_MATERIAL_CTRL->Get__PORT_RESERVE_LIST(l__ptn_rsv);
+
+			int check_id = -1;
+
+			int k_limit = l__ptn_rsv.GetSize();
+			for(int k=0; k<k_limit; k++)
+			{
+				int ptn_id = l__ptn_rsv[k];
+				if(ptn_id != iPTN)			continue;
+
+				check_id = k + 1;
+				break;
+			}
+
+			if(check_id > 0)
+			{
+				ch_data.Format("%1d", check_id);
+			}
+			else				
+			{
+				if(sCH__PORT_STATUS->Check__DATA("RESERVE") > 0)			ch_data = "?";
+				else														ch_data = ".";
+			}
+
+			sCH__RESERVE_ID->Set__DATA(ch_data);
+		}
+
 		// ...
 		{
-			CString ch_data;
-
 			if((sCH__PORT_STATUS->Check__DATA(STR__UNLOAD_REQ) > 0)
 			&& (sCH__PIO_TRANSFER->Check__DATA(STR__YES) < 0))
 			{

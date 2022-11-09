@@ -264,6 +264,7 @@ int CObj_Phy__LPx_STD::__DEFINE__VARIABLE_STD(p_variable)
 	{
 		p_variable->Get__STD_DESCRIPTION(DSP__OBJ_CTRL, dsp_item);
 
+		//
 		str_name = "APP.PORT.CTRL";
 		STD__ADD_DIGITAL(str_name,dsp_item);
 		dCH__PORT_CTRL = p_variable->Get__VAR_DIGITAL_CTRL(str_name);
@@ -271,6 +272,10 @@ int CObj_Phy__LPx_STD::__DEFINE__VARIABLE_STD(p_variable)
 		str_name = "APP.PORT.STATUS";
 		STD__ADD_STRING(str_name);
 		sCH__PORT_STATUS = p_variable->Get__VAR_STRING_CTRL(str_name);
+
+		str_name = "APP.RESERVE.ID";
+		STD__ADD_STRING(str_name);
+		sCH__RESERVE_ID = p_variable->Get__VAR_STRING_CTRL(str_name);
 
 		str_name = "APP.PORT.EXCEPTION";
 		STD__ADD_STRING(str_name);

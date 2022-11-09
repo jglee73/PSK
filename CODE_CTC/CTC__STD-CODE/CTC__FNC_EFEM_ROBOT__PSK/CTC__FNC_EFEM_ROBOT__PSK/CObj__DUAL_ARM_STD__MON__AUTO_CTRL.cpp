@@ -2915,6 +2915,80 @@ int  CObj__DUAL_ARM_STD
 }
 
 int  CObj__DUAL_ARM_STD
+::_Check__SAME_PTN_IN_STx(const CString& stx_name,const int stx_id, const int port_id)
+{
+	// ST1
+	if(stx_name.CompareNoCase(MODULE__BUFFER1) == 0)
+	{
+		if(sCH__SCH_DB_ST1_USE_FLAG->Check__DATA(STR__ENABLE) < 0)			return -11;
+
+		// ...
+		CUIntArray l__st_slot_id;
+
+		if(Buffer1__Get_Occupied__Slot_To_Process(l__st_slot_id) < 0)
+		{
+			return -12;
+		}
+
+		// ...
+		int t_limit = l__st_slot_id.GetSize();
+
+		for(int t=0; t<t_limit; t++)
+		{
+			int slot_id = l__st_slot_id[t];
+			if(slot_id == stx_id)						continue;
+
+			// ...
+			CString sch_name;
+			sch_name.Format("%s-%1d", stx_name,slot_id);
+
+			IDS__SCH_MATERIAL_INFO ds_info;
+			xSCH_MATERIAL_CTRL->Get__MATERIAL_INFO(sch_name, ds_info);
+
+			if(ds_info.iSRC__PTN == port_id)			return 1;
+		}
+
+		return -13;
+	}
+
+	// ST2
+	if(stx_name.CompareNoCase(MODULE__BUFFER2) == 0)
+	{
+		if(sCH__SCH_DB_ST2_USE_FLAG->Check__DATA(STR__ENABLE) < 0)			return -21;
+
+		// ...
+		CUIntArray l__st_slot_id;
+
+		if(Buffer2__Get_Occupied__Slot_To_Process(l__st_slot_id) < 0)
+		{
+			return -22;
+		}
+
+		// ...
+		int t_limit = l__st_slot_id.GetSize();
+
+		for(int t=0; t<t_limit; t++)
+		{
+			int slot_id = l__st_slot_id[t];
+			if(slot_id == stx_id)						continue;
+
+			// ...
+			CString sch_name;
+			sch_name.Format("%s-%1d", stx_name,slot_id);
+
+			IDS__SCH_MATERIAL_INFO ds_info;
+			xSCH_MATERIAL_CTRL->Get__MATERIAL_INFO(sch_name, ds_info);
+
+			if(ds_info.iSRC__PTN == port_id)			return 1;
+		}
+
+		return -23;
+	}
+
+	return -1;
+}
+
+int  CObj__DUAL_ARM_STD
 ::_Check__SLOT_COUNT_TO_PICK_STx(const double ref_sec, const int max_check)
 {
 	int count__slot_check = 0;
@@ -3064,6 +3138,10 @@ int  CObj__DUAL_ARM_STD
 				{
 					para__out_mode = dCH__SCH_DB_ST2_OUT_MODE_BUFFER_TO_LPo->Get__STRING();
 				}
+				else
+				{
+					continue;
+				}
 
 				if(para__out_mode.CompareNoCase(STR__LPx_EMPTY) == 0)					active__lpx_empty = 1;
 				if(para__out_mode.CompareNoCase(STR__LPx_OPTIMIZATION) == 0)			active__lpx_opt   = 1;
@@ -3186,9 +3264,28 @@ int  CObj__DUAL_ARM_STD
 		}
 		else
 		{
-			double ref_sec = 1.0;
+			if(l__stx_name.GetSize() < 1)			NEXT__LOOP;
 
-			if(_Check__SLOT_COUNT_TO_PICK_STx(ref_sec, 2) > 0)			NEXT__LOOP;
+			// ...
+			{
+				CString stx_name = l__stx_name[0];
+				int stx_id = l__stx_slot[0];
+
+				CString stx_sch;
+				stx_sch.Format("%s-%1d", stx_name,stx_id);
+
+				IDS__SCH_MATERIAL_INFO stx_info;
+				xSCH_MATERIAL_CTRL->Get__MATERIAL_INFO(stx_sch, stx_info);
+				
+				int port_id = stx_info.iSRC__PTN;
+
+				if(_Check__SAME_PTN_IN_STx(stx_name,stx_id, port_id) > 0)
+				{
+					double ref_sec = 1.0;
+
+					if(_Check__SLOT_COUNT_TO_PICK_STx(ref_sec, 2) > 0)			NEXT__LOOP;
+				}
+			}
 		}
 	}
 

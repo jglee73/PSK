@@ -750,46 +750,128 @@ void CObj_Opr__AUTO_MODE::Seq__UPDATE_PORT_INFO()
 
 void CObj_Opr__AUTO_MODE::Seq__UPLOAD_RESERVE_PORT(CII_OBJECT__ALARM *p_alarm)
 {
+	// HOQ CHECK ...
+	{
+		for(int i=0; i<iLPx_UNIT_SIZE; i++)
+		{
+			if(sCH__PORT_HOQ_REQ[i]->Check__DATA(STR__YES) < 0)			continue;
+
+			int hoq_id = i + 1;
+
+			// ...
+			bool active__hoq_change = false;
+
+			CUIntArray l__ptn_reserve;
+			CUIntArray l__ptn_change;
+			
+			xSCH_MATERIAL_CTRL->Get__PORT_RESERVE_LIST(l__ptn_reserve);
+
+			int t_limit = l__ptn_reserve.GetSize();
+			for(int t=0; t<t_limit; t++)
+			{
+				int check_id = l__ptn_reserve[t];
+				if(hoq_id == check_id)
+				{
+					active__hoq_change = true;
+					continue;
+				}
+
+				l__ptn_change.Add(check_id);
+			}
+
+			if(active__hoq_change)
+			{
+				l__ptn_change.InsertAt(0, hoq_id);
+				
+				xSCH_MATERIAL_CTRL->Set__PORT_RESERVE_LIST(l__ptn_change);
+			}
+
+			sCH__PORT_HOQ_REQ[i]->Set__DATA("");
+		}
+	}
+
 	if(xSCH_MATERIAL_CTRL->Can_Upload__NEXT_PORT() < 0)
 	{
 		return;
 	}
 
 	// ...
-	CUIntArray l_ptn;
-	int ptn_i;
+	bool active__next_job = false;
 
-	xSCH_MATERIAL_CTRL->Get__PORT_RESERVE_LIST(l_ptn);
+	CUIntArray l__ptn_next;
+	CUIntArray l__ptn_check;
 
-	int limit = l_ptn.GetSize();
-	int i;
+	xSCH_MATERIAL_CTRL->Get__PORT_RESERVE_LIST(l__ptn_check);
 
-	for(i=0;i<limit;i++)
+	int i_limit = l__ptn_check.GetSize();
+
+	for(int i=0;i<i_limit;i++)
 	{
-		ptn_i = ((int) l_ptn[i]) - 1;
+		int ptn_id = ((int) l__ptn_check[i]);
+		int ptn_index = ptn_id - 1;
 
-		if(ptn_i < 0)					continue;
-		if(ptn_i >= iLPx_UNIT_SIZE)		continue;
+		if(ptn_index <  0)					continue;
+		if(ptn_index >= iLPx_UNIT_SIZE)		continue;
 
-		if((xCH__PORT_CTRL[ptn_i]->Check__DATA("RUN")       < 0)	
-		|| (xCH__PORT_STATUS[ptn_i]->Check__DATA("RESERVE") < 0))
+		if((xCH__PORT_CTRL[ptn_index]->Check__DATA("RUN") < 0)	
+		|| (xCH__PORT_STATUS[ptn_index]->Check__DATA("RESERVE") < 0))
 		{
-			l_ptn.RemoveAt(i);
-			limit--;
-			i--;
-
 			continue;
 		}
 
-		Sleep(100);
-
-		if(_Seq__UPLOAD_JOB(p_alarm,ptn_i) > 0)
+		if(active__next_job)
 		{
-			break;
+			l__ptn_next.Add(ptn_id);
+		}
+		else
+		{
+			if(_Seq__UPLOAD_JOB(p_alarm, ptn_index) > 0)
+			{
+				active__next_job = true;
+
+				printf(" * Seq__UPLOAD_RESERVE_PORT() ... \n");
+				printf("  * JOB_START : ptn_id (%1d) \n", ptn_id);
+
+				Sleep(100);
+			}
+			else
+			{
+				l__ptn_next.Add(ptn_id);
+			}
 		}
 	}
 
-	xSCH_MATERIAL_CTRL->Set__PORT_RESERVE_LIST(l_ptn);
+	if(active__next_job)
+	{
+		int k_limit;
+		int k;
+
+		// NEXT LIST ...
+		{
+			k_limit = l__ptn_next.GetSize();
+			printf(" * NEXT_LIST (%1d) \n", k_limit);
+
+			for(k=0; k<k_limit; k++)
+			{
+				printf("  * LP( %1d ) \n", l__ptn_next[k]);
+			}
+			printf("\n");
+		}
+
+		// CHECK LIST ...
+		{
+			k_limit = l__ptn_check.GetSize();
+			printf(" * CHECK_LIST (%1d) \n", k_limit);
+
+			for(k=0; k<k_limit; k++)
+			{
+				printf("  * LP( %1d ) \n", l__ptn_check[k]);
+			}
+			printf("\n");
+		}
+	}
+
+	xSCH_MATERIAL_CTRL->Set__PORT_RESERVE_LIST(l__ptn_next);
 }
 int  CObj_Opr__AUTO_MODE::
 Check__LPx_CID_ERROR(CII_OBJECT__ALARM *p_alarm,
@@ -1459,7 +1541,7 @@ Seq__UPLOAD_JOB(CII_OBJECT__ALARM* p_alarm)
 				}
 			}
 
-			xCH__PORT_STATUS[i]->Set__DATA("RESERVE");
+			xCH__PORT_STATUS[i]->Set__DATA(STR__RESERVE);
 			xCH__PORT_UPLOAD_FILE_FLAG[i]->Set__DATA("");
 
 			xSCH_MATERIAL_CTRL->Set__PORT_RESERVE(ptn);
