@@ -687,6 +687,16 @@ int CObj__MFC_IO::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__CFG_PMC_ATM_MAINT_ACTIVE, obj_name,var_name);
 
 			//
+			var_name = "CFG.DI_INTERLOCK_HEAVY_CHECK.SYSTEM";
+			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__CFG_DI_INTERLOCK_HEAVY_CHECK_SYSTEM, obj_name,var_name);
+
+			var_name = "CFG.DI_INTERLOCK_HEAVY_CHECK.CHAMBER";
+			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__CFG_DI_INTERLOCK_HEAVY_CHECK_CHAMBER, obj_name,var_name);
+
+			var_name = "CFG.DI_INTERLOCK_HEAVY_CHECK.GAS_BOX";
+			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__CFG_DI_INTERLOCK_HEAVY_CHECK_GAS_BOX, obj_name,var_name);
+
+			//
 			var_name = "MON.SYSTEM.PROCESS.ACTIVE";
 			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__MON_SYSTEM_PROCESS_ACTIVE, obj_name,var_name);
 
@@ -1023,8 +1033,7 @@ int CObj__MFC_IO::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 	}
 	else
 	{
-		if((mode.CompareNoCase(sMODE__OPEN)      == 0)
-		|| (mode.CompareNoCase(sMODE__CONTROL)   == 0)
+		if((mode.CompareNoCase(sMODE__CONTROL)   == 0)
 		|| (mode.CompareNoCase(sMODE__RAMP_CTRL) == 0)
 		|| (mode.CompareNoCase(sMODE__SET_FLOW)  == 0))
 		{

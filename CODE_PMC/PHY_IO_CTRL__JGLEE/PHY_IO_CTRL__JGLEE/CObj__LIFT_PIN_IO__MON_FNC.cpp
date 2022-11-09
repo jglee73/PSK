@@ -87,25 +87,43 @@ int CObj__LIFT_PIN_IO
 				}
 			}
 
-			if(active__unknown_pos)
+			if(iDATA__PIN_SNS_CHECK_MODE == _PIN_CHECK_MODE__TOP)
 			{
-				sCH__MON_LIFT_STATE->Set__DATA(STR__UNKNOWN);
-			}
-			else if((active__up_pos) && (!active__down_pos) && (!active__middle_pos))
-			{
-				sCH__MON_LIFT_STATE->Set__DATA(STR__UP);
-			}
-			else if((!active__up_pos) && (active__down_pos) && (!active__middle_pos))
-			{
-				sCH__MON_LIFT_STATE->Set__DATA(STR__DOWN);
-			}
-			else if((!active__up_pos) && (!active__down_pos) && (active__middle_pos))
-			{
-				sCH__MON_LIFT_STATE->Set__DATA(STR__MIDDLE);
+				if((active__up_pos) && (active__middle_pos) && (active__down_pos))
+				{
+					sCH__MON_LIFT_STATE->Set__DATA(STR__UP);
+				}
+				else if((!active__up_pos) && (active__middle_pos) && (active__down_pos))
+				{
+					sCH__MON_LIFT_STATE->Set__DATA(STR__MIDDLE);
+				}
+				else if((!active__up_pos) && (!active__middle_pos)&& (active__down_pos))
+				{
+					sCH__MON_LIFT_STATE->Set__DATA(STR__DOWN);
+				}
+				else
+				{
+					sCH__MON_LIFT_STATE->Set__DATA(STR__UNKNOWN);
+				}
 			}
 			else
 			{
-				sCH__MON_LIFT_STATE->Set__DATA(STR__UNKNOWN);
+				if((active__up_pos) && (!active__down_pos) && (!active__middle_pos))
+				{
+					sCH__MON_LIFT_STATE->Set__DATA(STR__UP);
+				}
+				else if((!active__up_pos) && (active__down_pos) && (!active__middle_pos))
+				{
+					sCH__MON_LIFT_STATE->Set__DATA(STR__DOWN);
+				}
+				else if((!active__up_pos) && (!active__down_pos) && (active__middle_pos))
+				{
+					sCH__MON_LIFT_STATE->Set__DATA(STR__MIDDLE);
+				}
+				else
+				{
+					sCH__MON_LIFT_STATE->Set__DATA(STR__UNKNOWN);
+				}
 			}
 		}
 

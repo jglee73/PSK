@@ -155,32 +155,49 @@ LOOP_RETRY:
 
 	// Interlock Check ...
 	{
-		// Robot.Arm State ...
+		int check_count = 0;
+
+		while(1)
 		{
-			CString cur__arm_sts = dEXT_CH__TMC_ROBOT_ARM_STATE->Get__STRING();
-
-			if(cur__arm_sts.CompareNoCase(STR__EXEND) == 0)
+			// Robot.Arm State ...
 			{
-				int alm_id = ALID__SLOT_VALVE_CLOSE_INTERLOCK;
-				CString alm_msg;
-				CString alm_bff;
-				CString r_act;
+				CString cur__arm_sts = dEXT_CH__TMC_ROBOT_ARM_STATE->Get__STRING();
 
-				alm_msg.Format("Interlock condition is as follows; \n");
+				if(cur__arm_sts.CompareNoCase(STR__EXEND) == 0)
+				{
+					check_count++;
+					if(check_count > 10);
+					{
+						int alm_id = ALID__SLOT_VALVE_CLOSE_INTERLOCK;
+						CString alm_msg;
+						CString alm_bff;
+						CString r_act;
 
-				alm_bff.Format("  Arm-state is \"%s\". \n", cur__arm_sts);
-				alm_msg += alm_bff;
-				
-				alm_bff.Format("  * %s <- %s. \n",
-							   dEXT_CH__TMC_ROBOT_ARM_STATE->Get__CHANNEL_NAME(),
-							   cur__arm_sts);
-				alm_msg += alm_bff;
+						alm_msg.Format("Interlock condition is as follows; \n");
 
-				p_alarm->Popup__ALARM_With_MESSAGE(alm_id, alm_msg, r_act);
+						alm_bff.Format("  Arm-state is \"%s\". \n", cur__arm_sts);
+						alm_msg += alm_bff;
+						
+						alm_bff.Format("  * %s <- %s. \n",
+									   dEXT_CH__TMC_ROBOT_ARM_STATE->Get__CHANNEL_NAME(),
+									   cur__arm_sts);
+						alm_msg += alm_bff;
 
-				if(r_act.CompareNoCase(ACT__RETRY)  == 0)		goto LOOP_RETRY;	
-				if(r_act.CompareNoCase(ACT__IGNORE) != 0)		return -101;
+						p_alarm->Popup__ALARM_With_MESSAGE(alm_id, alm_msg, r_act);
+
+						if(r_act.CompareNoCase(ACT__RETRY)  == 0)		continue;
+						if(r_act.CompareNoCase(ACT__IGNORE) == 0)		break;
+						
+						return -101;
+					}
+				}
+				else
+				{
+					break;
+				}
 			}
+
+			Sleep(100);
 		}
 	}
 
@@ -218,7 +235,7 @@ LOOP_RETRY:
 			}
 
 			if((dEXT_CH__DI_DOOR_OPEN->Check__DATA(STR__OFF) > 0)
-				&& (dEXT_CH__DI_DOOR_CLOSE->Check__DATA(STR__ON) > 0))
+			&& (dEXT_CH__DI_DOOR_CLOSE->Check__DATA(STR__ON) > 0))
 			{
 				break;
 			}

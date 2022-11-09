@@ -1,0 +1,7 @@
+
+# GAS INTERLOCK 기능 추가
+ -. DI Interlock Sensor Check 관련 항목 추가함.
+ -. 관련 Page
+   * PMC Config - Gas Interlock
+
+# PM SLOT CLOSE시 Arm 상태 관련 Retry Checking 기능 추가함.

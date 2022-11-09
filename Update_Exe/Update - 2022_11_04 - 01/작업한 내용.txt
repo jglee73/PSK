@@ -1,7 +1,0 @@
-
-# PM Gas-LINE LEAK CHECK 기능 추가
- -. 관련 Page
-   * PMC Control Popup
-   * PMC Config - Gas - Other
-   * PMC Datalog - LeakCheck (Gas_Line)
-   

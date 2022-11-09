@@ -111,9 +111,33 @@ void CObj__LIFT_PIN_IO
 		dEXT_CH__DI_PIN_DOWN->Set__DATA(STR__OFF);
 		dEXT_CH__DI_PIN_MIDDLE->Set__DATA(STR__OFF);
 
-		if(active_up)			dEXT_CH__DI_PIN_UP->Set__DATA(STR__ON);
-		if(active_down)			dEXT_CH__DI_PIN_DOWN->Set__DATA(STR__ON);
-		if(active_middle)		dEXT_CH__DI_PIN_MIDDLE->Set__DATA(STR__ON);
+		if(iDATA__PIN_SNS_CHECK_MODE == _PIN_CHECK_MODE__TOP)
+		{
+			if(active_up)
+			{
+				dEXT_CH__DI_PIN_UP->Set__DATA(STR__ON);
+				dEXT_CH__DI_PIN_MIDDLE->Set__DATA(STR__ON);
+				dEXT_CH__DI_PIN_DOWN->Set__DATA(STR__ON);
+			}
+			if(active_middle)
+			{
+				dEXT_CH__DI_PIN_UP->Set__DATA(STR__OFF);
+				dEXT_CH__DI_PIN_MIDDLE->Set__DATA(STR__ON);
+				dEXT_CH__DI_PIN_DOWN->Set__DATA(STR__ON);
+			}
+			if(active_down)
+			{
+				dEXT_CH__DI_PIN_UP->Set__DATA(STR__OFF);
+				dEXT_CH__DI_PIN_MIDDLE->Set__DATA(STR__OFF);
+				dEXT_CH__DI_PIN_DOWN->Set__DATA(STR__ON);
+			}
+		}
+		else
+		{
+			if(active_up)			dEXT_CH__DI_PIN_UP->Set__DATA(STR__ON);
+			if(active_down)			dEXT_CH__DI_PIN_DOWN->Set__DATA(STR__ON);
+			if(active_middle)		dEXT_CH__DI_PIN_MIDDLE->Set__DATA(STR__ON);
+		}
 	}
 	else
 	{

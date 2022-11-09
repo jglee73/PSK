@@ -166,6 +166,16 @@ int CObj__DB_SYS::__DEFINE__VARIABLE_STD(p_variable)
 		//
 		str_name = "MON.ACTIVE.PROCESS.VALVE.READY.STATE";
 		STD__ADD_DIGITAL(str_name, APP_DSP__OFF_ON);
+
+		//
+		str_name = "CFG.DI_INTERLOCK_HEAVY_CHECK.SYSTEM";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "YES NO", "");
+
+		str_name = "CFG.DI_INTERLOCK_HEAVY_CHECK.CHAMBER";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "YES NO", "");
+
+		str_name = "CFG.DI_INTERLOCK_HEAVY_CHECK.GAS_BOX";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "YES NO", "");
 	}
 
 	// CFG : GAS_BOX ...

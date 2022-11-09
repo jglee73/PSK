@@ -465,18 +465,36 @@ int  CObj__MFC_IO
 			bool active__interlock_gas_box   = false;
 			bool active__proc_vlv_not_ready  = false;
 
-			if(dEXT_CH__CFG_PMC_ATM_MAINT_ACTIVE->Check__DATA(STR__ON) > 0)					active__interlock_atm_maint = true;
-			if(dEXT_CH__MON_INTERLOCK_HEAVY_ACTIVE_SYSTEM->Check__DATA(STR__ON)  > 0)		active__interlock_system    = true;
-			if(dEXT_CH__MON_INTERLOCK_HEAVY_ACTIVE_CHAMBER->Check__DATA(STR__ON) > 0)		active__interlock_chamber   = true;
-			if(dEXT_CH__MON_INTERLOCK_HEAVY_ACTIVE_GAS_BOX->Check__DATA(STR__ON) > 0)		active__interlock_gas_box   = true;
+			if(dEXT_CH__CFG_PMC_ATM_MAINT_ACTIVE->Check__DATA(STR__ON) > 0)
+			{
+				active__interlock_atm_maint = true;
+			}
+
+			if(dEXT_CH__CFG_DI_INTERLOCK_HEAVY_CHECK_SYSTEM->Check__DATA(STR__YES) > 0)
+			{
+				if(dEXT_CH__MON_INTERLOCK_HEAVY_ACTIVE_SYSTEM->Check__DATA(STR__ON)  > 0)		active__interlock_system = true;
+			}
+			if(dEXT_CH__CFG_DI_INTERLOCK_HEAVY_CHECK_CHAMBER->Check__DATA(STR__YES) > 0)
+			{
+				if(dEXT_CH__MON_INTERLOCK_HEAVY_ACTIVE_CHAMBER->Check__DATA(STR__ON) > 0)		active__interlock_chamber = true;
+			}
+			if(dEXT_CH__CFG_DI_INTERLOCK_HEAVY_CHECK_GAS_BOX->Check__DATA(STR__YES) > 0)
+			{
+				if(dEXT_CH__MON_INTERLOCK_HEAVY_ACTIVE_GAS_BOX->Check__DATA(STR__ON) > 0)		active__interlock_gas_box = true;
+			}
 			
 			if(dEXT_CH__MON_ACTIVE_PROCESS_VALVE_READY_STATE->Check__DATA(STR__ON) < 0)
 			{
 				CString cur__act_mode = sCH__ACT_MODE->Get__STRING();
 
-				if((cur__act_mode.CompareNoCase(sMODE__PURGE) != 0)
-				&& (cur__act_mode.CompareNoCase(sMODE__CHM_LINE_PURGE) != 0)
-				&& (cur__act_mode.CompareNoCase(sMODE__GAS_LINE_PURGE) != 0))
+				if((cur__act_mode.CompareNoCase(sMODE__OPEN)  == 0)
+				|| (cur__act_mode.CompareNoCase(sMODE__PURGE) == 0)
+				|| (cur__act_mode.CompareNoCase(sMODE__CHM_LINE_PURGE) == 0)
+				|| (cur__act_mode.CompareNoCase(sMODE__GAS_LINE_PURGE) == 0))
+				{
+					active__proc_vlv_not_ready  = false;
+				}
+				else
 				{
 					active__proc_vlv_not_ready  = true;
 				}
