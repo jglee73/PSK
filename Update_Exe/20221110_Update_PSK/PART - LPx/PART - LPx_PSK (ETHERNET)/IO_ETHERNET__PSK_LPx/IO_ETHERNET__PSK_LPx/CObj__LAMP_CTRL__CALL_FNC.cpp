@@ -1,0 +1,281 @@
+#include "StdAfx.h"
+#include "CObj__LAMP_CTRL.h"
+#include "CObj__LAMP_CTRL__DEF.h"
+#include "CObj__LAMP_CTRL__ALID.h"
+
+
+//----------------------------------------------------------------------------------------------------
+// LIGHT RED -----
+int CObj__LAMP_CTRL::
+Call__RED_ON()
+{
+	if(dCH__IO_MONITOR__ACTIVE_FLAG->Check__DATA(STR__ENABLE) > 0)
+	{
+		dCH__LINK_LIGHT_RED_ON_OFF_ACTIVE->Set__DATA(STR__ON);
+		dCH__LINK_LIGHT_RED_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+	else
+	{
+		dCH__LOCAL_LINK_LIGHT_RED_ON_OFF_ACTIVE->Set__DATA(STR__ON);
+		dCH__LOCAL_LINK_LIGHT_RED_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+
+	return 1;
+}
+int CObj__LAMP_CTRL::
+Call__RED_OFF()
+{
+	if(dCH__IO_MONITOR__ACTIVE_FLAG->Check__DATA(STR__ENABLE) > 0)
+	{
+		dCH__LINK_LIGHT_RED_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LINK_LIGHT_RED_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+	else
+	{
+		dCH__LOCAL_LINK_LIGHT_RED_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LOCAL_LINK_LIGHT_RED_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+
+	return 1;
+}
+int CObj__LAMP_CTRL::
+Call__RED_BLINK()
+{
+	if(dCH__IO_MONITOR__ACTIVE_FLAG->Check__DATA(STR__ENABLE) > 0)
+	{
+		dCH__LINK_LIGHT_RED_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LINK_LIGHT_RED_BLINK_ACTIVE->Set__DATA(STR__ON);
+	}
+	else
+	{
+		dCH__LOCAL_LINK_LIGHT_RED_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LOCAL_LINK_LIGHT_RED_BLINK_ACTIVE->Set__DATA(STR__ON);
+	}
+
+	return 1;
+}
+
+
+// LIGHT YELLOW -----
+int CObj__LAMP_CTRL::
+Call__YELLOW_ON()
+{
+	if(dCH__IO_MONITOR__ACTIVE_FLAG->Check__DATA(STR__ENABLE) > 0)
+	{
+		dCH__LINK_LIGHT_YELLOW_ON_OFF_ACTIVE->Set__DATA(STR__ON);
+		dCH__LINK_LIGHT_YELLOW_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+	else
+	{
+		dCH__LOCAL_LINK_LIGHT_YELLOW_ON_OFF_ACTIVE->Set__DATA(STR__ON);
+		dCH__LOCAL_LINK_LIGHT_YELLOW_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+
+	return 1;
+}
+int CObj__LAMP_CTRL::
+Call__YELLOW_OFF()
+{
+	if(dCH__IO_MONITOR__ACTIVE_FLAG->Check__DATA(STR__ENABLE) > 0)
+	{
+		dCH__LINK_LIGHT_YELLOW_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LINK_LIGHT_YELLOW_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+	else
+	{
+		dCH__LOCAL_LINK_LIGHT_YELLOW_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LOCAL_LINK_LIGHT_YELLOW_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+
+	return 1;
+}
+int CObj__LAMP_CTRL::
+Call__YELLOW_BLINK()
+{
+	if(dCH__IO_MONITOR__ACTIVE_FLAG->Check__DATA(STR__ENABLE) > 0)
+	{
+		dCH__LINK_LIGHT_YELLOW_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LINK_LIGHT_YELLOW_BLINK_ACTIVE->Set__DATA(STR__ON);
+	}
+	else
+	{
+		dCH__LOCAL_LINK_LIGHT_YELLOW_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LOCAL_LINK_LIGHT_YELLOW_BLINK_ACTIVE->Set__DATA(STR__ON);
+	}
+
+	return 1;
+}
+
+
+// LIGHT GREEN -----
+int CObj__LAMP_CTRL::
+Call__GREEN_ON()
+{
+	if(dCH__IO_MONITOR__ACTIVE_FLAG->Check__DATA(STR__ENABLE) > 0)
+	{
+		dCH__LINK_LIGHT_GREEN_ON_OFF_ACTIVE->Set__DATA(STR__ON);
+		dCH__LINK_LIGHT_GREEN_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+	else
+	{
+		dCH__LOCAL_LINK_LIGHT_GREEN_ON_OFF_ACTIVE->Set__DATA(STR__ON);
+		dCH__LOCAL_LINK_LIGHT_GREEN_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+
+	return 1;
+}
+int CObj__LAMP_CTRL::
+Call__GREEN_OFF()
+{
+	if(dCH__IO_MONITOR__ACTIVE_FLAG->Check__DATA(STR__ENABLE) > 0)
+	{
+		dCH__LINK_LIGHT_GREEN_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LINK_LIGHT_GREEN_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+	else
+	{
+		dCH__LOCAL_LINK_LIGHT_GREEN_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LOCAL_LINK_LIGHT_GREEN_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+
+	return 1;
+}
+int CObj__LAMP_CTRL::
+Call__GREEN_BLINK()
+{
+	if(dCH__IO_MONITOR__ACTIVE_FLAG->Check__DATA(STR__ENABLE) > 0)
+	{
+		dCH__LINK_LIGHT_GREEN_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LINK_LIGHT_GREEN_BLINK_ACTIVE->Set__DATA(STR__ON);
+	}
+	else
+	{
+		dCH__LOCAL_LINK_LIGHT_GREEN_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LOCAL_LINK_LIGHT_GREEN_BLINK_ACTIVE->Set__DATA(STR__ON);
+	}
+
+	return 1;
+}
+
+
+// LIGHT BLUE -----
+int CObj__LAMP_CTRL::
+Call__BLUE_ON()
+{
+	if(dCH__IO_MONITOR__ACTIVE_FLAG->Check__DATA(STR__ENABLE) > 0)
+	{
+		dCH__LINK_LIGHT_BLUE_ON_OFF_ACTIVE->Set__DATA(STR__ON);
+		dCH__LINK_LIGHT_BLUE_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+	else
+	{
+		dCH__LOCAL_LINK_LIGHT_BLUE_ON_OFF_ACTIVE->Set__DATA(STR__ON);
+		dCH__LOCAL_LINK_LIGHT_BLUE_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+
+	return 1;
+}
+int CObj__LAMP_CTRL::
+Call__BLUE_OFF()
+{
+	if(dCH__IO_MONITOR__ACTIVE_FLAG->Check__DATA(STR__ENABLE) > 0)
+	{
+		dCH__LINK_LIGHT_BLUE_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LINK_LIGHT_BLUE_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+	else
+	{
+		dCH__LOCAL_LINK_LIGHT_BLUE_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LOCAL_LINK_LIGHT_BLUE_BLINK_ACTIVE->Set__DATA(STR__OFF);
+	}
+
+	return 1;
+}
+int CObj__LAMP_CTRL::
+Call__BLUE_BLINK()
+{
+	if(dCH__IO_MONITOR__ACTIVE_FLAG->Check__DATA(STR__ENABLE) > 0)
+	{
+		dCH__LINK_LIGHT_BLUE_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LINK_LIGHT_BLUE_BLINK_ACTIVE->Set__DATA(STR__ON);
+	}
+	else
+	{
+		dCH__LOCAL_LINK_LIGHT_BLUE_ON_OFF_ACTIVE->Set__DATA(STR__OFF);
+		dCH__LOCAL_LINK_LIGHT_BLUE_BLINK_ACTIVE->Set__DATA(STR__ON);
+	}
+
+	return 1;
+}
+
+// LIGHT WHITE -----
+int CObj__LAMP_CTRL::
+Call__WHITE_ON()
+{
+	return -1;
+}
+int CObj__LAMP_CTRL::
+Call__WHITE_OFF()
+{
+	return -1;
+}
+int CObj__LAMP_CTRL::
+Call__WHITE_BLINK()
+{
+	return -1;
+}
+
+
+// ALARM BUZZER -----
+int CObj__LAMP_CTRL::
+Call__ALARM_BUZZER_ON()
+{
+	if(dCH__IO_MONITOR__ACTIVE_FLAG->Check__DATA(STR__ENABLE) > 0)
+	{
+		dCH__LINK_ALARM_BUZZER->Set__DATA(STR__ON);
+	}
+	else
+	{
+		dCH__LOCAL_LINK_ALARM_BUZZER->Set__DATA(STR__ON);
+	}
+
+	return 1;
+}
+int CObj__LAMP_CTRL::
+Call__ALARM_BUZZER_OFF()
+{
+	if(dCH__IO_MONITOR__ACTIVE_FLAG->Check__DATA(STR__ENABLE) > 0)
+	{
+		dCH__LINK_ALARM_BUZZER->Set__DATA(STR__OFF);
+	}
+	else
+	{
+		dCH__LOCAL_LINK_ALARM_BUZZER->Set__DATA(STR__OFF);
+	}
+
+	return 1;
+}
+int CObj__LAMP_CTRL::
+Call__ALARM_BUZZER_RESET_ON()
+{
+	return -1;
+}
+int CObj__LAMP_CTRL::
+Call__ALARM_BUZZER_RESET_OFF()
+{
+	return -1;
+}
+
+
+// MELODY -----
+int CObj__LAMP_CTRL::
+Call__MELODY_ON()
+{
+	return -1;
+}
+
+int CObj__LAMP_CTRL::
+Call__MELODY_OFF()
+{
+	return -1;
+}
