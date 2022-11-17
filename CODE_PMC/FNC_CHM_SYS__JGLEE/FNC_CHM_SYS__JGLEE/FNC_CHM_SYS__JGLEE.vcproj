@@ -408,7 +408,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\CObj__PMC_INF__ALID.h"
+					>
+				</File>
+				<File
 					RelativePath=".\CObj__PMC_INF__CALL_FNC.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CObj__PMC_INF__MON_FNC.cpp"
 					>
 				</File>
 			</Filter>

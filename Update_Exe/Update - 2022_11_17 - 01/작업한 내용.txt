@@ -1,0 +1,9 @@
+
+# PM High-Vac Pumping 시용 유무 설정 기능 추가함.
+ -. 관련 Page
+   * PMC_Config - Module
+ -. High-Vac Pumping 수행시 Low-Vac Pumping만 수행함.
+ -. Recipe 수행시 APC 사용하지 않음.
+ -. Reicpe APC 설정 항목은 Position & 0% 으로 설정하애 합니다. 
+
+

@@ -21,6 +21,14 @@ Mon__REQ_CTRL(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 		loop_count++;
 		if(loop_count > 20)		loop_count = 1;
 
+		if(loop_count == 20)
+		{
+			if(dEXT_CH__WAFER_STATUS->Check__DATA(STR__NONE) > 0)
+			{
+				dCH__MON_CHUCK_STATUS->Set__DATA(STR__DECHUCKED);
+			}
+		}
+
 		if(loop_count == 1)
 		{
 			int check__err_esc     = p_alarm->Check__Posted_Internal_Alarm(iLIST_ALID__ESC);

@@ -156,6 +156,9 @@ private:
 	CX__VAR_DIGITAL_CTRL dEXT_CH__MON_INTERLOCK_HEAVY_ACTIVE_CHAMBER;
 	CX__VAR_DIGITAL_CTRL dEXT_CH__MON_INTERLOCK_LIGHT_ACTIVE_CHAMBER;
 
+	// LINK.CHANNEL ...
+	CX__VAR_DIGITAL_CTRL dEXT_CH__CFG_USE_APC_CTRL;
+
 	// OBJ APC ...
 	int APC_OBJ__Start_MODE(const CString& obj_mode,const CString& para_data, const double para_hold_sec,const double para_hold_pos);
 	int APC_OBJ__Start_OPEN();	

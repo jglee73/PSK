@@ -71,11 +71,26 @@ int CObj__CHM_FNC
 	CString log_msg;
 
 	// ...
+	bool active__high_vac_skip = false;
+	
+	if(dCH__CFG_USE_HIGH_VAC_PUMPING->Check__DATA(STR__NO) > 0)
+	{
+		active__high_vac_skip = true;
+	}
+
+	// ...
 	bool active__low_vac = true;
 
-	if(bActive__OBJ_CTRL__TURBO_PUMP)
+	if(active__high_vac_skip)
 	{
-		if(Check__LOW_VAC_PUMP() > 0)		active__low_vac = false;
+		active__low_vac = true;
+	}
+	else
+	{
+		if(bActive__OBJ_CTRL__TURBO_PUMP)
+		{
+			if(Check__LOW_VAC_PUMP() > 0)		active__low_vac = false;
+		}
 	}
 
 	// LOW_VAC.PUMPING ...
@@ -88,6 +103,18 @@ int CObj__CHM_FNC
 			log_msg.Format("Fnc__LOW_VAC_PUMP() : Failed [%d] ...", flag);	
 			xLOG_CTRL->WRITE__LOG(log_msg);
 			return flag;
+		}
+
+		if(active__high_vac_skip)
+		{
+			if(!bActive__GAS_CLOSE_SKIP)
+			{
+				if(dCH__CFG_PROCESS_READY_CTRL_AFTER_CHM_PUMPING->Check__DATA(STR__YES) > 0)
+				{
+					pOBJ_CTRL__GAS_VLV->Call__OBJECT(CMMD_GAS__PROC_READY);
+				}
+			}
+			return 1;
 		}
 	}
 	else

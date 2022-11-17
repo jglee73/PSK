@@ -569,7 +569,8 @@ int CObj__TMP_IO
 					dEXT_CH__DO_TMP_PURGE_VALVE->Set__DATA(STR__CLOSE);
 				}
 
-				if(bActive__VAT_USE)
+				if((bActive__VAT_USE)
+				&& (dCH__CFG_INTERLOCK_VAT_CLOSE->Check__DATA(STR__YES) > 0))
 				{
 					ch_data = sEXT_CH__VAT_MON_POSITION->Get__STRING();
 					double cur_pos = atof(ch_data);
@@ -613,7 +614,8 @@ int CObj__TMP_IO
 			{
 				count_error__tmp_not_nromal = 0;
 
-				if(bActive__VAT_USE)
+				if((bActive__VAT_USE)
+				&& (dCH__CFG_INTERLOCK_VAT_CLOSE->Check__DATA(STR__YES) > 0))
 				{
 					ch_data = sEXT_CH__VAT_MON_POSITION->Get__STRING();
 					double cur_pos = atof(ch_data);

@@ -431,6 +431,10 @@ int CObj__DB_SYS::__DEFINE__VARIABLE_STD(p_variable)
 		}
 
 		//
+		str_name = "ACTIVE.INTERLOCK.CHAMBER.VENT";
+		STD__ADD_DIGITAL(str_name, "ON  OFF");
+
+		//
 		str_name = "CFG.INTERLOCK.CHECK.SEC";
 		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 0, 0, 10, "");
 		LINK__VAR_ANALOG_CTRL(aCH__CFG_INTERLOCK_CHECK_SEC, str_name);

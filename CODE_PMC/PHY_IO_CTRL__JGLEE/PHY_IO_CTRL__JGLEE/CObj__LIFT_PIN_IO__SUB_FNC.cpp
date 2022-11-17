@@ -65,10 +65,10 @@ int CObj__LIFT_PIN_IO
 			CString alm_msg;
 			CString alm_bff;
 
-			alm_bff.Format("ESC current voltage : %d \n", cur__ai_esc_voltage);
+			alm_bff.Format("ESC current voltage : %.0f \n", cur__ai_esc_voltage);
 			alm_msg += alm_bff;
 
-			alm_bff.Format("PIN-UP threshold voltage : %d \n", cfg__esc_pin_up_volt);
+			alm_bff.Format("PIN-UP threshold voltage : %.0f \n", cfg__esc_pin_up_volt);
 			alm_msg += alm_bff;
 
 			Alarm__POST_CHECK(p_alarm, alm_msg, alm_id);

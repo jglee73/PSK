@@ -148,6 +148,11 @@ int CObj__TMP_IO::__DEFINE__VARIABLE_STD(p_variable)
 
 	// CFG ...
 	{
+		str_name = "CFG.INTERLOCK.VAT.CLOSE";
+		STD__ADD_DIGITAL(str_name, "YES  NO");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_INTERLOCK_VAT_CLOSE, str_name);
+
+		//
 		str_name = "CFG.VAT_OPEN_DELAY.SEC";
 		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 1, 10, "");
 		LINK__VAR_ANALOG_CTRL(aCH__CFG_VAT_OPEN_DELAY_SEC, str_name);

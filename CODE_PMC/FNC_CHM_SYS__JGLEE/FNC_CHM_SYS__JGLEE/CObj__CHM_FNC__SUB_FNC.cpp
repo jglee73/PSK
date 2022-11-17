@@ -2904,8 +2904,6 @@ int CObj__CHM_FNC
 		
 			xLOG_CTRL->WRITE__LOG(log_msg);
 		}
-
-		Fnc__BALLAST_END(p_variable, p_alarm);
 		return 1;
 	}
 	else
@@ -2970,9 +2968,7 @@ int CObj__CHM_FNC
 
 			xLOG_CTRL->WRITE__LOG(log_msg);
 		}
-
-		Fnc__BALLAST_END(p_variable, p_alarm);
-		return 1;
+		return -1;
 	}
 	else
 	{

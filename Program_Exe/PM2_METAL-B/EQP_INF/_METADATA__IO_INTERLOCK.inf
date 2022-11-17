@@ -248,6 +248,8 @@
 //------------------------------------------------
 #OBJECT_PROPERTY    INTERLOCK_SYS
 
+#DEFINE_CONSTANT    OBJ__DB_SYS                         DB_SYS
+
 #DEFINE_CONSTANT    CH__DO_VENT_FAST_VLV                IO+do.PV12_1
 #DEFINE_CONSTANT    CH__DO_VENT_SOFT_VLV                IO+do.PV12_2
 

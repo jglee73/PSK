@@ -158,6 +158,10 @@ int CObj__CHM_FNC::__DEFINE__VARIABLE_STD(p_variable)
 		str_name = "CFG.PROCESS_READY_CTRL.AFTER_CHM_PUMPING";
 		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO  YES","");
 		LINK__VAR_DIGITAL_CTRL(dCH__CFG_PROCESS_READY_CTRL_AFTER_CHM_PUMPING, str_name);
+
+		str_name = "CFG.USE.HIGH_VAC.PUMPING";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "YES  NO","");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_USE_HIGH_VAC_PUMPING, str_name);
 	}
 
 	// REFERENCE PRESSURE ...
@@ -1416,10 +1420,42 @@ int CObj__CHM_FNC::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 	// ...
 	{
 		CString log_msg;
+		CString log_bff;
+
 		log_msg.Format("Start [%s] ... By %s \n", mode, p_ext_mode_ctrl->Get__UPPER_OBJECT_NAME());
 
-		xLOG_CTRL->WRITE__LOG(log_msg);
 		sCH__OBJ_MSG->Set__DATA(log_msg);
+
+		// ...
+		{
+			log_bff.Format(" * %s <- %s \n",
+							dEXT_CH__SYSTEM_TRANSFER_MODE->Get__CHANNEL_NAME(),
+							dEXT_CH__SYSTEM_TRANSFER_MODE->Get__STRING());
+			log_msg += log_bff;
+
+			log_bff.Format("   * %s <- %s \n",
+							aCH__CFG_ATM_REF_PRESSURE->Get__CHANNEL_NAME(),
+							aCH__CFG_ATM_REF_PRESSURE->Get__STRING());
+			log_msg += log_bff;
+
+			log_bff.Format("   * %s <- %s \n",
+							aCH__CFG_VAC_REF_PRESSURE->Get__CHANNEL_NAME(),
+							aCH__CFG_VAC_REF_PRESSURE->Get__STRING());
+			log_msg += log_bff;
+
+			//
+			log_bff.Format(" * %s <- %s \n",
+							dCH__CFG_PROCESS_READY_CTRL_AFTER_CHM_PUMPING->Get__CHANNEL_NAME(),
+							dCH__CFG_PROCESS_READY_CTRL_AFTER_CHM_PUMPING->Get__STRING());
+			log_msg += log_bff;
+
+			log_bff.Format(" * %s <- %s \n",
+							dCH__CFG_USE_HIGH_VAC_PUMPING->Get__CHANNEL_NAME(),
+							dCH__CFG_USE_HIGH_VAC_PUMPING->Get__STRING());
+			log_msg += log_bff;
+		}
+
+		xLOG_CTRL->WRITE__LOG(log_msg);
 	}
 
 	sCH__CUR_OBJ_MODE->Set__DATA(mode);

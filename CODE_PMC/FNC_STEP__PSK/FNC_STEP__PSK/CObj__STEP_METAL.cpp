@@ -619,6 +619,14 @@ int CObj__STEP_METAL::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__MON_INTERLOCK_LIGHT_ACTIVE_CHAMBER, obj_name,var_name);
 	}
 
+	// LINK.CHANNEL ...
+	{
+		def_name = "CH.CFG_USE.APC_CTRL";
+		p_ext_obj_create->Get__DEF_CONST_DATA(def_name, ch_name);
+		p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(ch_name, obj_name,var_name);
+		LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__CFG_USE_APC_CTRL, obj_name,var_name);
+	}
+
 	// OBJ APC ...
 	{
 		def_name = "OBJ__APC";

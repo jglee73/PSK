@@ -84,6 +84,15 @@ int CObj__PMP_IO::__DEFINE__VARIABLE_STD(p_variable)
 		str_name = "MON.VAC.ON.SNS";
 		STD__ADD_DIGITAL(str_name, "OFF ON");
 		LINK__VAR_DIGITAL_CTRL(dCH__MON_VAC_ON_SNS, str_name);
+
+		//
+		str_name = "MON.PRESSURE.TORR";
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__MON_PRESSURE_TORR, str_name);
+
+		str_name = "MON.PRESSURE.mTORR";
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__MON_PRESSURE_mTORR, str_name);
 	}
 
 	// CFG ...

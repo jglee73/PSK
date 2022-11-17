@@ -10,7 +10,8 @@ int CObj__STEP_METAL
 					  const double para_hold_sec,
 					  const double para_hold_pos)
 {
-	if(!bActive__OBJ_CTRL__APC)						return 1;
+	if(!bActive__OBJ_CTRL__APC)										return 1;
+	if(dEXT_CH__CFG_USE_APC_CTRL->Check__DATA(STR__YES) < 0)		return 2;
 
 		 if(obj_mode.CompareNoCase(_APC_CMD__POSITION) == 0)			aEXT_CH__APC_OBJ__PARA_POSITION->Set__DATA(para_data);
 	else if(obj_mode.CompareNoCase(_APC_CMD__PRESSURE_mTORR) == 0)		aEXT_CH__APC_OBJ__PARA_PRESSURE_mTORR->Set__DATA(para_data);
@@ -29,7 +30,8 @@ int CObj__STEP_METAL
 int CObj__STEP_METAL
 ::APC_OBJ__Start_OPEN()
 {
-	if(!bActive__OBJ_CTRL__APC)						return 1;
+	if(!bActive__OBJ_CTRL__APC)										return 1;
+	if(dEXT_CH__CFG_USE_APC_CTRL->Check__DATA(STR__YES) < 0)		return 2;
 
 	if(pOBJ_CTRL__APC->Is__OBJ_BUSY() > 0)		pOBJ_CTRL__APC->Abort__OBJECT();
 
@@ -41,7 +43,8 @@ int CObj__STEP_METAL
 int CObj__STEP_METAL
 ::APC_OBJ__Call_OPEN()
 {
-	if(!bActive__OBJ_CTRL__APC)						return 1;
+	if(!bActive__OBJ_CTRL__APC)										return 1;
+	if(dEXT_CH__CFG_USE_APC_CTRL->Check__DATA(STR__YES) < 0)		return 2;
 
 	if(pOBJ_CTRL__APC->Is__OBJ_BUSY() > 0)		pOBJ_CTRL__APC->Abort__OBJECT();
 
@@ -53,7 +56,8 @@ int CObj__STEP_METAL
 
 int CObj__STEP_METAL::APC_OBJ__Check_ERROR()
 {
-	if(!bActive__OBJ_CTRL__APC)						return -11;
+	if(!bActive__OBJ_CTRL__APC)										return -11;
+	if(dEXT_CH__CFG_USE_APC_CTRL->Check__DATA(STR__YES) < 0)		return -12;
 
 	if((dEXT_CH__APC_OBJ__MON_PROC_PRESSURE_ABORT_ACTIVE->Check__DATA(STR__ON) > 0)			
 	|| (dEXT_CH__APC_OBJ__MON_IDLE_PRESSURE_ABORT_ACTIVE->Check__DATA(STR__ON) > 0))
@@ -65,7 +69,8 @@ int CObj__STEP_METAL::APC_OBJ__Check_ERROR()
 }
 int CObj__STEP_METAL::APC_OBJ__Check_ABORTED()
 {
-	if(!bActive__OBJ_CTRL__APC)						return -11;
+	if(!bActive__OBJ_CTRL__APC)										return -11;
+	if(dEXT_CH__CFG_USE_APC_CTRL->Check__DATA(STR__YES) < 0)		return -12;
 
 	int obj_sts = pOBJ_CTRL__APC->Get__OBJECT_STATUS();
 	if(obj_sts == OBJECT_STATUS__ABORTED)			return 1;
@@ -75,7 +80,8 @@ int CObj__STEP_METAL::APC_OBJ__Check_ABORTED()
 
 int CObj__STEP_METAL::APC_OBJ__Check_STABLE()
 {
-	if(!bActive__OBJ_CTRL__APC)						return -11;
+	if(!bActive__OBJ_CTRL__APC)										return -11;
+	if(dEXT_CH__CFG_USE_APC_CTRL->Check__DATA(STR__YES) < 0)		return -12;
 
 	if(dEXT_CH__APC_OBJ__MON_PROC_PRESSURE_STABLE_ACTIVE->Check__DATA(STR__ON) > 0)
 	{

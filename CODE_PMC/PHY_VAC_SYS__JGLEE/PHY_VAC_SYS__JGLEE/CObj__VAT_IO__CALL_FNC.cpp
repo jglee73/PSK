@@ -33,7 +33,8 @@ int CObj__VAT_IO
 	}
 	else if(iDATA__VAT_CTRL_TYPE == _VAT_CTRL_TYPE__HEXA)
 	{
-		sEXT_CH__SO_APC_CTRL_MODE->Set__DATA("01");
+		if(iDATA__VAT_HEXA_TYPE == _VAT_HEXA_TYPE__USER)			sEXT_CH__SO_APC_CTRL_MODE->Set__DATA(sDATA__HEXA_CLOSE);
+		else														sEXT_CH__SO_APC_CTRL_MODE->Set__DATA("01");
 
 		if(iActive__SIM_MODE > 0)
 		{
@@ -116,7 +117,8 @@ int CObj__VAT_IO
 
 	if(iDATA__VAT_CTRL_TYPE == _VAT_CTRL_TYPE__HEXA)
 	{
-		sEXT_CH__SO_APC_CTRL_MODE->Set__DATA("01");
+		if(iDATA__VAT_HEXA_TYPE == _VAT_HEXA_TYPE__USER)			sEXT_CH__SO_APC_CTRL_MODE->Set__DATA(sDATA__HEXA_CLOSE);
+		else														sEXT_CH__SO_APC_CTRL_MODE->Set__DATA("01");
 
 		if(iActive__SIM_MODE > 0)
 		{
@@ -151,7 +153,8 @@ int CObj__VAT_IO
 	}
 	else if(iDATA__VAT_CTRL_TYPE == _VAT_CTRL_TYPE__HEXA)
 	{
-		sEXT_CH__SO_APC_CTRL_MODE->Set__DATA("02");
+		if(iDATA__VAT_HEXA_TYPE == _VAT_HEXA_TYPE__USER)		sEXT_CH__SO_APC_CTRL_MODE->Set__DATA(sDATA__HEXA_OPEN);
+		else													sEXT_CH__SO_APC_CTRL_MODE->Set__DATA("02");
 
 		if(iActive__SIM_MODE > 0)
 		{
@@ -264,10 +267,11 @@ int CObj__VAT_IO
 		str_hexa.Format("%02X %02X", 0x0ff & x_data.cBYTE[0], 0x0ff & x_data.cBYTE[1]);
 
 		sCH__MON_SET_POSITION->Set__DATA(ch_pos);
-		sEXT_CH__SO_APC_SETPOINT_DATA->Set__DATA(str_hexa);
-
+		sEXT_CH__SO_APC_POSITION_DATA->Set__DATA(str_hexa);
 		sEXT_CH__SO_APC_SETPOINT_TYPE->Set__DATA("01");
-		sEXT_CH__SO_APC_CTRL_MODE->Set__DATA("00");
+		
+		if(iDATA__VAT_HEXA_TYPE == _VAT_HEXA_TYPE__USER)			sEXT_CH__SO_APC_CTRL_MODE->Set__DATA(sDATA__HEXA_CONTROL);
+		else														sEXT_CH__SO_APC_CTRL_MODE->Set__DATA("00");
 
 		if(iActive__SIM_MODE > 0)
 		{
@@ -354,10 +358,11 @@ int CObj__VAT_IO
 			str_hexa.Format("%02X %02X", 0x0ff & x_data.cBYTE[0], 0x0ff & x_data.cBYTE[1]);
 
 			sCH__MON_SET_POSITION->Set__DATA(ch_pos);
-			sEXT_CH__SO_APC_SETPOINT_DATA->Set__DATA(str_hexa);
-
+			sEXT_CH__SO_APC_POSITION_DATA->Set__DATA(str_hexa);
 			sEXT_CH__SO_APC_SETPOINT_TYPE->Set__DATA("01");
-			sEXT_CH__SO_APC_CTRL_MODE->Set__DATA("00");
+			
+			if(iDATA__VAT_HEXA_TYPE == _VAT_HEXA_TYPE__USER)			sEXT_CH__SO_APC_CTRL_MODE->Set__DATA(sDATA__HEXA_CONTROL);
+			else														sEXT_CH__SO_APC_CTRL_MODE->Set__DATA("00");
 
 			if(iActive__SIM_MODE > 0)
 			{
@@ -437,10 +442,11 @@ int CObj__VAT_IO
 		CString str_hexa;
 		str_hexa.Format("%02X %02X", 0x0ff & x_data.cBYTE[0], 0x0ff & x_data.cBYTE[1]);
 
-		sEXT_CH__SO_APC_SETPOINT_DATA->Set__DATA(str_hexa);
-
+		sEXT_CH__SO_APC_PRESSURE_DATA->Set__DATA(str_hexa);
 		sEXT_CH__SO_APC_SETPOINT_TYPE->Set__DATA("00");
-		sEXT_CH__SO_APC_CTRL_MODE->Set__DATA("00");
+
+		if(iDATA__VAT_HEXA_TYPE == _VAT_HEXA_TYPE__USER)			sEXT_CH__SO_APC_CTRL_MODE->Set__DATA(sDATA__HEXA_CONTROL);
+		else														sEXT_CH__SO_APC_CTRL_MODE->Set__DATA("00");
 
 		if(iActive__SIM_MODE > 0)
 		{

@@ -303,6 +303,15 @@ int CObj__GAS_VLV_FNC::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__CFG_TRANSFER_MODE, obj_name,var_name);
 	}
 
+	// OBJ.DB_SYS ...
+	{
+		def_name = "OBJ__DB_SYS";
+		p_ext_obj_create->Get__DEF_CONST_DATA(def_name, obj_name);
+
+		var_name = "ACTIVE.INTERLOCK.CHAMBER.VENT";
+		LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__ACTIVEINTERLOCK_CHAMBER_VENT, obj_name,var_name);
+	}
+
 	// OBJ : CHM_PUMPING_STATE 
 	{
 		def_name = "CH__CHM_PUMPING_STATE";
@@ -534,39 +543,40 @@ LOOP_RETRY:
 		{
 			if(sEXT_CH__DRY_PUMPING_STATE->Check__DATA("ON") < 0)
 			{
+				int alm_id = ALID__DRY_PUMP_STATE__NOT_ON;
+				CString alm_msg;
+				CString r_act;
 
-				// ...
+				alm_msg.Format("\"%s\" 명령을 수행 할 수 없습니다. \n", mode);
+
+				p_alarm->Popup__ALARM_With_MESSAGE(alm_id, alm_msg, r_act);
+
+				if(r_act.CompareNoCase(ACT__RETRY) == 0)
 				{
-					int alm_id = ALID__DRY_PUMP_STATE__NOT_ON;
-					CString alm_msg;
-					CString r_act;
-
-					alm_msg.Format("\"%s\" 명령을 수행 할 수 없습니다. \n", mode);
-
-					p_alarm->Popup__ALARM_With_MESSAGE(alm_id, alm_msg, r_act);
-
-					if(r_act.CompareNoCase(ACT__RETRY) == 0)
+					// ...
 					{
-						// ...
-						{
-							CString log_msg;
-							CString log_bff;
+						CString log_msg;
+						CString log_bff;
 
-							log_msg  = "\n";
-							log_msg += "Dry-Pump is not \"ON\". \n";
+						log_msg  = "\n";
+						log_msg += "Dry-Pump is not \"ON\". \n";
 
-							log_bff.Format("  * %s <- %s \n",
-											sEXT_CH__DRY_PUMPING_STATE->Get__CHANNEL_NAME(),
-											sEXT_CH__DRY_PUMPING_STATE->Get__STRING());
-							log_msg += log_bff;
+						log_bff.Format("  * %s <- %s \n",
+										sEXT_CH__DRY_PUMPING_STATE->Get__CHANNEL_NAME(),
+										sEXT_CH__DRY_PUMPING_STATE->Get__STRING());
+						log_msg += log_bff;
 
-							xLOG_CTRL->WRITE__LOG(log_msg);
-						}
-						goto LOOP_RETRY;
+						xLOG_CTRL->WRITE__LOG(log_msg);
 					}
-
-					flag = -101;
+					goto LOOP_RETRY;
 				}
+
+				flag = -101;
+			}
+
+			if(flag > 0)
+			{
+				dEXT_CH__ACTIVEINTERLOCK_CHAMBER_VENT->Set__DATA(STR__OFF);
 			}
 		}
 	}
@@ -595,6 +605,13 @@ LOOP_RETRY:
 		ELSE_IF__CTRL_MODE(sMODE__CHM_BALLAST_FLOW)			flag = Call__CHM_BALLAST_FLOW(p_variable);
 		ELSE_IF__CTRL_MODE(sMODE__TRANS_BALLAST_FLOW)		flag = Call__TRANS_BALLAST_FLOW(p_variable);
 		ELSE_IF__CTRL_MODE(sMODE__BALLAST_CLOSE)			flag = Call__BALLAST_CLOSE(p_variable);
+	}
+
+	if((mode.CompareNoCase(sMODE__GAS_LINE_PURGE)     == 0)
+	|| (mode.CompareNoCase(sMODE__CHM_LINE_PURGE)     == 0)
+	|| (mode.CompareNoCase(sMODE__LINE_PURGE_WITH_N2) == 0))
+	{
+		dEXT_CH__ACTIVEINTERLOCK_CHAMBER_VENT->Set__DATA(STR__ON);
 	}
 
 	if((flag < 0)||(p_variable->Check__CTRL_ABORT() > 0))
