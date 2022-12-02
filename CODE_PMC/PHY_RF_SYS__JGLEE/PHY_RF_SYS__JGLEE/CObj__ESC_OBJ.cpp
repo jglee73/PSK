@@ -959,6 +959,11 @@ int CObj__ESC_OBJ::__DEFINE__VARIABLE_STD(p_variable)
 		STD__ADD_ANALOG_WITH_X_OPTION(var_name, "sec", 1, 0.0, 60.0, "");
 		LINK__VAR_ANALOG_CTRL(aCH__CFG_He_DUMP_TIME_BEFORE_DECHUCK, var_name);
 
+		var_name = "CFG.He_DUMP_VALVE_CLOSE.DURING_DECHUCK";
+		STD__ADD_DIGITAL_WITH_X_OPTION(var_name, "NO YES", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_He_DUMP_VALVE_CLOSE_DURING_DECHUCK, var_name);
+
+		//
 		var_name = "CFG.ESC.POWER.ZERO.VOLTAGE.READING.NOISE.RANGE";
 		STD__ADD_ANALOG_WITH_X_OPTION(var_name, "V", 1, 0.0, 100.0, "");
 		LINK__VAR_ANALOG_CTRL(aCH__CFG_ESC_POWER_ZERO_VOLTAGE_READING_NOISE_RANGE, var_name);
@@ -1057,6 +1062,11 @@ int CObj__ESC_OBJ::__DEFINE__VARIABLE_STD(p_variable)
 					STD__ADD_ANALOG_WITH_X_OPTION(var_name, "V", 0, -1000, 1000, "");
 					LINK__VAR_ANALOG_CTRL(aCH__CFG_EDGE_DECHUCK_X__STEPx_VOLT[k][i], var_name);
 
+					//
+					var_name.Format("CFG.DECHUCK%1d.STEP%1d.HE", k,i+1);
+					STD__ADD_ANALOG_WITH_X_OPTION(var_name, "sccm", 0, 0.0, 100, "");
+					LINK__VAR_ANALOG_CTRL(aCH__CFG_DECHUCK_X__STEPx_HE[k][i], var_name);
+
 					var_name.Format("CFG.DECHUCK%1d.STEP%1d.TIME", k,i+1);
 					STD__ADD_ANALOG_WITH_X_OPTION(var_name, "sec", 1, 0.0, 10, "");
 					LINK__VAR_ANALOG_CTRL(aCH__CFG_DECHUCK_X__STEPx_TIME[k][i], var_name);
@@ -1071,6 +1081,11 @@ int CObj__ESC_OBJ::__DEFINE__VARIABLE_STD(p_variable)
 					var_name.Format("CFG.EDGE.DECHUCK%1d.LAST.VOLT", k);
 					STD__ADD_ANALOG_WITH_X_OPTION(var_name, "V", 0, -100.0, 100.0, "");
 					LINK__VAR_ANALOG_CTRL(aCH__CFG_EDGE_DECHUCK_X__LAST_VOLT[k], var_name);
+
+					//
+					var_name.Format("CFG.DECHUCK%1d.LAST.HE", k);
+					STD__ADD_ANALOG_WITH_X_OPTION(var_name, "sccm", 0, 0.0, 100.0, "");
+					LINK__VAR_ANALOG_CTRL(aCH__CFG_DECHUCK_X__LAST_HE[k], var_name);
 
 					var_name.Format("CFG.DECHUCK%1d.LAST.TIME", k);
 					STD__ADD_ANALOG_WITH_X_OPTION(var_name, "sec", 1, 0.0, 100.0, "");
@@ -1150,6 +1165,13 @@ int CObj__ESC_OBJ::__DEFINE__VARIABLE_STD(p_variable)
 		var_name = "CFG.INTERLOCK.MODE.CHM_ISO";
 		STD__ADD_DIGITAL_WITH_X_OPTION(var_name, APP_DSP__ENABLE_DISABLE, "");
 		LINK__VAR_DIGITAL_CTRL(dCH__CFG_INTERLOCK_MODE_CHM_ISO, var_name);
+	}
+
+	// CFG Option ...
+	{
+		var_name = "CFG.HE_VALVE_CLOSE_WHEN_ERROR";
+		STD__ADD_DIGITAL_WITH_X_OPTION(var_name, "NO YES", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_HE_VALVE_CLOSE_WHEN_ERROR, var_name);
 	}
 
 	// ...

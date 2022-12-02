@@ -538,6 +538,17 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 							aiEXT_CH__He_Flow_EDGE_IO->Change__MIN_MAX_DEC(0,cfg_range_max,1);
 							aCH__CFG_HE_EDGE_BYPASS_FLOW_FOR_HW_CHECK->Change__MIN_MAX_DEC(0,cfg_range_max,1);
 						}
+
+						// Dechucking Parameter ...
+						for(int k=0; k<DEF__DECHUCK_MODE_SIZE; k++)
+						{
+							for(int t=0; t<DEF_DECHUCK__STEP_SIZE; t++)
+							{
+								aCH__CFG_DECHUCK_X__STEPx_HE[k][t]->Change__MIN_MAX_DEC(0,cfg_range_max,1);
+							}
+
+							aCH__CFG_DECHUCK_X__LAST_HE[k]->Change__MIN_MAX_DEC(0,cfg_range_max,1);
+						}
 					}
 				}
 

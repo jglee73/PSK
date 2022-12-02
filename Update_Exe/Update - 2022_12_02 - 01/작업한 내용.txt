@@ -1,0 +1,18 @@
+
+# PM Chucking Sequence 수정
+  1. 3Way Valve Open 시 He Dump Valve를 바로 Close 하지 않고, 
+     Stable Time (sec) 이후에 Close 되도록 변경함.
+  2. Alarm 발생시 3Way Valve Close 되도록 Config 항목 추가함.
+    -. 관련 Page
+      * PMC_Config - Chuck_Step 
+
+# PM Dechucking Sequence 수정
+  1. Dechuck 시 He Pressure 관련 Config 항목 추가
+     Pressure 0 입력시 Close 할지? Config 항목 추가
+    -. 관련 Page
+      * PMC_Config - Dechuck_Step 
+  2. Dechuck 종료 후 3Way Valce Close 이후, Side Dump Valve Open 할지? Config 항목 추가함.
+    -. 관련 Page
+      * PMC_Config - Dechuck_Step 
+        "After Dechucking-Action Completed, He-Line Dump Valve Open" 항목 "YES"이면 Close 됨.
+

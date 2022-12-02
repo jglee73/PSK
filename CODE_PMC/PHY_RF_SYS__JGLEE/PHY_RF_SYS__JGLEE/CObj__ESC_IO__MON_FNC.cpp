@@ -296,6 +296,9 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 	CString pre__chuck_sel = "";
 	CString pre__cfg_save  = "";
 
+	int count__error_center = 0;
+	int count__error_edge   = 0;
+
 	CString var_data;
 	int i;
 
@@ -444,10 +447,6 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 			else if(pre__chuck_sel.CompareNoCase("CHUCK2") == 0)		sCH__CFG_CHUCK_CHART_TIME_CHUCK2->Set__DATA(var_data);
 		}
 
-		// ...
-		bool active__stable_valve_open = true;
-		if(dCH__CFG_STABLE_VALVE_OPEN_DURING_CHUCKING->Check__DATA(STR__YES) < 0)		active__stable_valve_open = false;
-
 		// He Flow.Center ...
 		if(bActive__CENTER_USE)
 		{
@@ -456,6 +455,9 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 			if(he_flow_check < 0)
 			{
 				sCH__MON_He_LEAK_SCCM_CENTER->Set__DATA("");
+				count__error_center = 0;
+
+				sCH__MON_FAULT_HE_LEAK_CENTER_STATE->Set__DATA(STR__NO);
 			}
 			else 
 			{
@@ -464,7 +466,7 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 				{
 					double cfg_center__bypass_flow = 0.0;
 
-					if(active__stable_valve_open)
+					if(Check__Stable_Valve_Open_Of_HE_CENTER() > 0)
 					{
 						sCH__RESULT_HE_CENTER_FLOW_READING_POINT1->Get__DATA(var_data);
 						cfg_center__bypass_flow = atof(var_data);
@@ -472,13 +474,61 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 
 					sCH__MON_He_Flow_CENTER->Get__DATA(var_data);
 					double cur_center__flow = atof(var_data);	
+					double cur__flow_leak = cur_center__flow - cfg_center__bypass_flow;
+					if(cur__flow_leak < 0)			cur__flow_leak = 0.0;
 
-					var_data.Format("%.1f", (cur_center__flow - cfg_center__bypass_flow));
+					var_data.Format("%.1f", cur__flow_leak);
 					sCH__MON_He_LEAK_SCCM_CENTER->Set__DATA(var_data);
+
+					// Error Check ...
+					if(dCH__MON_CHUCK_STATUS->Check__DATA(STR__CHUCKED) > 0)
+					{
+						double cfg__max_leak = aCH__CFG_HE_CENTER_WAFER_MAX_LEAK->Get__VALUE();
+
+						if(cur__flow_leak > cfg__max_leak)
+						{
+							count__error_center++;
+						}
+						else
+						{
+							count__error_center = 0;
+
+							sCH__MON_FAULT_HE_LEAK_CENTER_STATE->Set__DATA(STR__NO);
+						}
+
+						if(count__error_center >= 20)
+						{
+							count__error_center = 0;
+
+							// ...
+							{
+								int alm_id = ALID__HE_WAFER_MAXIMUM_LEAK_SCCM_CENTER_MON;
+								CString alm_msg;
+								CString alm_bff;
+								CString r_act;
+
+								alm_bff.Format("Current leak flow (center) is %.1f sccm \n", cur__flow_leak);
+								alm_msg += alm_bff;
+
+								alm_bff.Format("Config Max leak (center) is %.1f sccm \n", cfg__max_leak);
+								alm_msg += alm_bff;
+
+								p_alarm->Check__ALARM(alm_id, r_act);
+								p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
+							}
+
+							sCH__MON_FAULT_HE_LEAK_CENTER_STATE->Set__DATA(STR__YES);
+
+							Fnc__ESC_ABORT(p_variable,p_alarm, "Center.Monitoring");
+						}
+					}
 				}
 				else
 				{
 					sCH__MON_He_LEAK_SCCM_CENTER->Set__DATA("__");
+					count__error_center = 0;
+
+					sCH__MON_FAULT_HE_LEAK_CENTER_STATE->Set__DATA(STR__NO);
 				}
 			}
 		}
@@ -490,6 +540,9 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 			if(he_flow_check < 0)
 			{
 				sCH__MON_He_LEAK_SCCM_EDGE->Set__DATA("");
+				count__error_edge = 0;
+
+				sCH__MON_FAULT_HE_LEAK_EDGE_STATE->Set__DATA(STR__NO);
 			}
 			else 
 			{
@@ -498,7 +551,7 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 				{
 					double cfg_edge__bypass_flow = 0.0;
 
-					if(active__stable_valve_open)
+					if(Check__Stable_Valve_Open_Of_HE_EDGE() > 0)
 					{
 						sCH__RESULT_HE_EDGE_FLOW_READING_POINT1->Get__DATA(var_data);
 						cfg_edge__bypass_flow = atof(var_data);
@@ -506,13 +559,61 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 
 					sCH__MON_He_Flow_EDGE->Get__DATA(var_data);
 					double cur_edge__flow = atof(var_data);	
+					double cur__flow_leak = cur_edge__flow - cfg_edge__bypass_flow;
+					if(cur__flow_leak < 0)			cur__flow_leak = 0.0;
 
-					var_data.Format("%.1f", (cur_edge__flow - cfg_edge__bypass_flow));
+					var_data.Format("%.1f", cur__flow_leak);
 					sCH__MON_He_LEAK_SCCM_EDGE->Set__DATA(var_data);
+
+					// Error Check ...
+					if(dCH__MON_CHUCK_STATUS->Check__DATA(STR__CHUCKED) > 0)
+					{
+						double cfg__max_leak = aCH__CFG_HE_EDGE_WAFER_MAX_LEAK->Get__VALUE();
+
+						if(cur__flow_leak > cfg__max_leak)
+						{
+							count__error_edge++;
+						}
+						else
+						{
+							count__error_edge = 0;
+
+							sCH__MON_FAULT_HE_LEAK_EDGE_STATE->Set__DATA(STR__NO);
+						}
+
+						if(count__error_edge >= 20)
+						{
+							count__error_edge = 0;
+
+							// ...
+							{
+								int alm_id = ALID__HE_WAFER_MAXIMUM_LEAK_SCCM_EDGE_MON;
+								CString alm_msg;
+								CString alm_bff;
+								CString r_act;
+
+								alm_bff.Format("Current leak flow (edge) is %.1f sccm \n", cur__flow_leak);
+								alm_msg += alm_bff;
+
+								alm_bff.Format("Config Max leak (edge) is %.1f sccm \n", cfg__max_leak);
+								alm_msg += alm_bff;
+
+								p_alarm->Check__ALARM(alm_id, r_act);
+								p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
+							}
+
+							sCH__MON_FAULT_HE_LEAK_EDGE_STATE->Set__DATA(STR__YES);
+
+							Fnc__ESC_ABORT(p_variable,p_alarm, "Edge.Monitoring");
+						}
+					}
 				}
 				else
 				{
 					sCH__MON_He_LEAK_SCCM_EDGE->Set__DATA("__");
+					count__error_edge = 0;
+
+					sCH__MON_FAULT_HE_LEAK_EDGE_STATE->Set__DATA(STR__NO);
 				}
 			}
 		}
@@ -645,6 +746,17 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 						aCH__CFG_HE_EDGE_PRESSURE_SETPOINT->Change__MIN_MAX_DEC(0,cfg_range_max,1);
 						aCH__CFG_HE_EDGE_PRESSURE_DURING_DECHUCK_VERIFY->Change__MIN_MAX_DEC(0,cfg_range_max,1);
 						aCH__CFG_HE_EDGE_PRESSURE_FOR_HW_CHECK->Change__MIN_MAX_DEC(0,cfg_range_max,1);
+					}
+
+					// Dechucking Parameter ...
+					for(int k=0; k<DEF__DECHUCK_MODE_SIZE; k++)
+					{
+						for(int t=0; t<DEF_DECHUCK__STEP_SIZE; t++)
+						{
+							aCH__CFG_DECHUCK_X__STEPx_HE[k][t]->Change__MIN_MAX_DEC(0,cfg_range_max,1);
+						}
+
+						aCH__CFG_DECHUCK_X__LAST_HE[k]->Change__MIN_MAX_DEC(0,cfg_range_max,1);
 					}
 				}
 
@@ -1023,7 +1135,8 @@ Mon__ESC_STABLE_CHECK(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_ala
 			if(bActive__CENTER_USE)
 			{
 				if((sCH__MON_CENTER_FAULT_ESC_STATE->Check__DATA(STR__YES) > 0)
-				|| (sCH__MON_FAULT_HE_CENTER_STATE->Check__DATA(STR__YES)  > 0))
+				|| (sCH__MON_FAULT_HE_CENTER_STATE->Check__DATA(STR__YES)  > 0)
+				|| (sCH__MON_FAULT_HE_LEAK_CENTER_STATE->Check__DATA(STR__YES) > 0))
 				{
 					active__fault_check = true;
 				}
@@ -1031,7 +1144,8 @@ Mon__ESC_STABLE_CHECK(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_ala
 			if(bActive__EDGE_USE)
 			{
 				if((sCH__MON_EDGE_FAULT_ESC_STATE->Check__DATA(STR__YES) > 0)
-				|| (sCH__MON_FAULT_HE_EDGE_STATE->Check__DATA(STR__YES)  > 0))
+				|| (sCH__MON_FAULT_HE_EDGE_STATE->Check__DATA(STR__YES)  > 0)
+				|| (sCH__MON_FAULT_HE_LEAK_EDGE_STATE->Check__DATA(STR__YES) > 0))
 				{
 					active__fault_check = true;
 				}
