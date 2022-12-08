@@ -8,13 +8,6 @@
 
 //------------------------------------------------------------------------------------
 int  CObj__AtmRobot_FUSION
-::Drv__CMD_COM_INIT(const CString& var_name)
-{
-
-	return 1;
-}
-
-int  CObj__AtmRobot_FUSION
 ::Fnc__StrTo2Word(const CString& data,
 				  const char section,
 				  CString *p_str1,

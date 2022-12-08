@@ -113,11 +113,6 @@ int CObj__VacRobot_PSK::__DEFINE__VARIABLE_STD(p_variable)
 	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 0, 1, 60, "");
 	LINK__VAR_ANALOG_CTRL(aCH__HYPER_TERMINAL_CMD_TIMEOUT,str_name);
 
-	// DA Retry Count
-	str_name = "aDA.DA.RETRY.CHECK.COUNT";
-	STD__ADD_ANALOG(str_name, "Num",0,1,5);
-	LINK__VAR_ANALOG_CTRL(aDA_DA_RETRY_CHECK_COUNT,str_name);
-
 	//
 	str_name = "INR.RB1.ACT.MSG";
 	STD__ADD_STRING(str_name);
@@ -424,44 +419,27 @@ int CObj__VacRobot_PSK::__DEFINE__VARIABLE_STD(p_variable)
 		LINK__VAR_STRING_CTRL(sCH__PARA_CHECK_ERR_CODE, str_name);
 	}
 
-	// ...
-	{
-		str_name = "Robot.sGetInfo.Update.Req";
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sCH__Robot_GetInfo_Update_Req, str_name);
-	}
-
-	// Arm - Material State ...
-	{
-		str_name = "Robot.Material.Req";
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sCH__Robot_Material_Req, str_name);
-
-		str_name = "REQ.ARM_A.MATERIAL.STATE";
-		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "ON OFF", "");
-		LINK__VAR_DIGITAL_CTRL(dCH__REQ_ARM_A_MATERIAL_STATE, str_name);
-
-		str_name = "REQ.ARM_B.MATERIAL.STATE";
-		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "ON OFF", "");
-		LINK__VAR_DIGITAL_CTRL(dCH__REQ_ARM_B_MATERIAL_STATE, str_name);
-	}
-
 	// DRV_INFO ...
 	{
-		str_name = "DRV_INFO.ACTIVE_BUSY";
-		STD__ADD_DIGITAL(str_name, "ON OFF");
+		str_name = "DRV.INFO.ACTIVE.BUSY";
+		STD__ADD_DIGITAL(str_name, "OFF ON");
 		LINK__VAR_DIGITAL_CTRL(dCH__DRV_INFO_ACTIVE_BUSY, str_name);
 
-		str_name = "DRV_INFO.ERRID";
+		str_name = "DRV.INFO.ERROR.CODE";
 		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sCH__DRV_INFO_ERRID, str_name);
+		LINK__VAR_STRING_CTRL(sCH__DRV_INFO_ERROR_CODE, str_name);
 
 		//
-		str_name = "DRV_INFO.ArmAMat.Read";
+		str_name = "INR.RB1.VERSION";
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__INR_RB1_VERSION, str_name);
+
+		//
+		str_name = "DRV.INFO.ArmAMat.Read";
 		STD__ADD_DIGITAL(str_name, APP_DSP__MATERIAL);
 		LINK__VAR_DIGITAL_CTRL(dCH__DRV_INFO_ARM_A_MAT_READ, str_name);
 
-		str_name = "DRV_INFO.ArmBMat.Read";
+		str_name = "DRV.INFO.ArmBMat.Read";
 		STD__ADD_DIGITAL(str_name, APP_DSP__MATERIAL);
 		LINK__VAR_DIGITAL_CTRL(dCH__DRV_INFO_ARM_B_MAT_READ, str_name);
 	}
@@ -841,113 +819,123 @@ int CObj__VacRobot_PSK::__DEFINE__VARIABLE_IO(p_io_variable)
 
 	// String
 	{
-		// SI  -----------------------------
-		str_name = "esi.RB1.Version";
-		IO__ADD_STRING_READ__MANUAL(str_name);
-		LINK__IO_VAR_STRING_CTRL(siCH__VERSION, str_name);
+		// SI
+		{
+			str_name = "esi.RB1.Version.Manual";
+			IO__ADD_STRING_READ__MANUAL(str_name);
+			LINK__IO_VAR_STRING_CTRL(siCH__VERSION__MANUAL, str_name);
+		}
 
-		// SO  -----------------------------
-		str_name = "so.Check.Cmmd";
-		IO__ADD_STRING_WRITE(str_name);
-		LINK__IO_VAR_STRING_CTRL(soCH__CHECK_CMMD, str_name);
+		// SO
+		{
+			str_name = "so.Check.Cmmd";
+			IO__ADD_STRING_WRITE(str_name);
+			LINK__IO_VAR_STRING_CTRL(soCH__CHECK_CMMD, str_name);
 
-		str_name = "eso.RB1.HyperTerminal.Command";
-		IO__ADD_STRING_WRITE(str_name);
-		LINK__IO_VAR_STRING_CTRL(soCH__HYPER_TERMINAL_CMD, str_name);
+			str_name = "eso.RB1.HyperTerminal.Command";
+			IO__ADD_STRING_WRITE(str_name);
+			LINK__IO_VAR_STRING_CTRL(soCH__HYPER_TERMINAL_CMD, str_name);
+		}
 	}
 
 	// Analog
 	{
-		// AO  -----------------------------
-		str_name = "eao.RB1.RO.Offset";
-		IO__ADD_ANALOG_WRITE(str_name, "", 0, -9999999, 9999999);
-		LINK__IO_VAR_ANALOG_CTRL(aoCH_RO_OFFSET, str_name);
+		// AO
+		{
+			str_name = "eao.RB1.RO.Offset";
+			IO__ADD_ANALOG_WRITE(str_name, "", 0, -9999999, 9999999);
+			LINK__IO_VAR_ANALOG_CTRL(aoCH_RO_OFFSET, str_name);
 
-		str_name = "eao.RB1.TO.Offset";
-		IO__ADD_ANALOG_WRITE(str_name, "", 0, -9999999, 9999999);
-		LINK__IO_VAR_ANALOG_CTRL(aoCH_TO_OFFSET, str_name);
+			str_name = "eao.RB1.TO.Offset";
+			IO__ADD_ANALOG_WRITE(str_name, "", 0, -9999999, 9999999);
+			LINK__IO_VAR_ANALOG_CTRL(aoCH_TO_OFFSET, str_name);
 
-		str_name = "eao.RB1.STN.R.VAL";
-		IO__ADD_ANALOG_WRITE(str_name, "", 0, -9999999, 9999999);
-		LINK__IO_VAR_ANALOG_CTRL(aoCH_STN_R_VAL, str_name);
+			str_name = "eao.RB1.STN.R.VAL";
+			IO__ADD_ANALOG_WRITE(str_name, "", 0, -9999999, 9999999);
+			LINK__IO_VAR_ANALOG_CTRL(aoCH_STN_R_VAL, str_name);
 
-		str_name = "eao.RB1.STN.T.VAL";
-		IO__ADD_ANALOG_WRITE(str_name, "", 0, -9999999, 9999999);
-		LINK__IO_VAR_ANALOG_CTRL(aoCH_STN_T_VAL, str_name);
+			str_name = "eao.RB1.STN.T.VAL";
+			IO__ADD_ANALOG_WRITE(str_name, "", 0, -9999999, 9999999);
+			LINK__IO_VAR_ANALOG_CTRL(aoCH_STN_T_VAL, str_name);
+		}
 	}
 
 	// Digital
 	{
-		// DO  -----------------------------
-		str_name = "edo.RB1.Command";
-		IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__CMD_SET);
-		LINK__IO_VAR_DIGITAL_CTRL(doCH__COMMAND, str_name);
+		// DO
+		{
+			str_name = "edo.RB1.Command";
+			IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__CMD_SET);
+			LINK__IO_VAR_DIGITAL_CTRL(doCH__COMMAND, str_name);
 
-		str_name = "edo.RB1.StnA";
-		IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__STN_NUM);
-		LINK__IO_VAR_DIGITAL_CTRL(doCH__STN_A, str_name);
+			str_name = "edo.RB1.StnA";
+			IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__STN_NUM);
+			LINK__IO_VAR_DIGITAL_CTRL(doCH__STN_A, str_name);
 
-		str_name = "edo.RB1.StnB";
-		IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__STN_NUM);
-		LINK__IO_VAR_DIGITAL_CTRL(doCH__STN_B, str_name);
+			str_name = "edo.RB1.StnB";
+			IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__STN_NUM);
+			LINK__IO_VAR_DIGITAL_CTRL(doCH__STN_B, str_name);
 
-		str_name = "edo.RB1.CPTR.StnA";
-		IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__CPTR_STN_NUM);
-		LINK__IO_VAR_DIGITAL_CTRL(doCH__CPTR_STN_A, str_name);
+			str_name = "edo.RB1.CPTR.StnA";
+			IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__CPTR_STN_NUM);
+			LINK__IO_VAR_DIGITAL_CTRL(doCH__CPTR_STN_A, str_name);
 
-		str_name = "edo.RB1.CPTR.StnB";
-		IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__CPTR_STN_NUM);
-		LINK__IO_VAR_DIGITAL_CTRL(doCH__CPTR_STN_B, str_name);
+			str_name = "edo.RB1.CPTR.StnB";
+			IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__CPTR_STN_NUM);
+			LINK__IO_VAR_DIGITAL_CTRL(doCH__CPTR_STN_B, str_name);
 
-		str_name = "edo.RB1.Slot";
-		IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__SLOT_NUM);
-		LINK__IO_VAR_DIGITAL_CTRL(doCH__SLOT, str_name);
+			str_name = "edo.RB1.Slot";
+			IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__SLOT_NUM);
+			LINK__IO_VAR_DIGITAL_CTRL(doCH__SLOT, str_name);
 
-		str_name = "edo.RB1.ZPos";
-		IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__DOWN_UP);
-		LINK__IO_VAR_DIGITAL_CTRL(doCH__ZPOS, str_name);
+			str_name = "edo.RB1.ZPos";
+			IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__DOWN_UP);
+			LINK__IO_VAR_DIGITAL_CTRL(doCH__ZPOS, str_name);
 
-		str_name = "edo.RB1.RPos";
-		IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__RET_EXT);
-		LINK__IO_VAR_DIGITAL_CTRL(doCH__RPOS, str_name);
+			str_name = "edo.RB1.RPos";
+			IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__RET_EXT);
+			LINK__IO_VAR_DIGITAL_CTRL(doCH__RPOS, str_name);
 
-		str_name = "edo.RB1.ArmAMat";
-		IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__MATERIAL);
-		LINK__IO_VAR_DIGITAL_CTRL(doCH__ARM_A_MAT, str_name);
+			str_name = "edo.RB1.ArmAMat";
+			IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__MATERIAL);
+			LINK__IO_VAR_DIGITAL_CTRL(doCH__ARM_A_MAT, str_name);
 
-		str_name = "edo.RB1.ArmBMat";
-		IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__MATERIAL);
-		LINK__IO_VAR_DIGITAL_CTRL(doCH__ARM_B_MAT, str_name);
+			str_name = "edo.RB1.ArmBMat";
+			IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__MATERIAL);
+			LINK__IO_VAR_DIGITAL_CTRL(doCH__ARM_B_MAT, str_name);
 
-		str_name = "edo.RB1.WfrSns";
-		IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__WAFER_SNS);
-		LINK__IO_VAR_DIGITAL_CTRL(doCH__ARM_WFR_SNS, str_name);
+			str_name = "edo.RB1.WfrSns";
+			IO__ADD_DIGITAL_WRITE(str_name, APP_DSP__WAFER_SNS);
+			LINK__IO_VAR_DIGITAL_CTRL(doCH__ARM_WFR_SNS, str_name);
+		}
 
-		// DI  -----------------------------
-		str_name = "edi.RB1.ComSts";
-		IO__ADD_DIGITAL_READ__MANUAL(str_name, APP_DSP__COMM_STS);
-		LINK__IO_VAR_DIGITAL_CTRL(diCH__COMM_STS, str_name);
+		// DI
+		{
+			str_name = "edi.RB1.ComSts";
+			IO__ADD_DIGITAL_READ__MANUAL(str_name, APP_DSP__COMM_STS);
+			LINK__IO_VAR_DIGITAL_CTRL(diCH__COMM_STS, str_name);
 
-		str_name = "edi.RB1.ArmARad";
-		IO__ADD_DIGITAL_READ__MANUAL(str_name, APP_DSP__ARM_STS);
-		LINK__IO_VAR_DIGITAL_CTRL(diCH__ARM_A_READ, str_name);
+			str_name = "edi.RB1.ArmARad";
+			IO__ADD_DIGITAL_READ__MANUAL(str_name, APP_DSP__ARM_STS);
+			LINK__IO_VAR_DIGITAL_CTRL(diCH__ARM_A_READ, str_name);
 
-		str_name = "edi.RB1.ArmBRad";
-		IO__ADD_DIGITAL_READ__MANUAL(str_name, APP_DSP__ARM_STS);
-		LINK__IO_VAR_DIGITAL_CTRL(diCH__ARM_B_READ, str_name);
+			str_name = "edi.RB1.ArmBRad";
+			IO__ADD_DIGITAL_READ__MANUAL(str_name, APP_DSP__ARM_STS);
+			LINK__IO_VAR_DIGITAL_CTRL(diCH__ARM_B_READ, str_name);
 
-		str_name = "edi.RB.INIT.CMD";
-		IO__ADD_DIGITAL_READ__MANUAL(str_name, "SUCCESS  FAIL");
-		LINK__IO_VAR_DIGITAL_CTRL(diCH__ROBOT_INIT_CMD, str_name);
+			str_name = "edi.RB.INIT.CMD";
+			IO__ADD_DIGITAL_READ__MANUAL(str_name, "SUCCESS  FAIL");
+			LINK__IO_VAR_DIGITAL_CTRL(diCH__ROBOT_INIT_CMD, str_name);
 
-		//
-		str_name = "edi.RB.Status.Read.Auto";
-		IO__ADD_DIGITAL_READ(str_name, "SUCCESS  FAIL");
-		LINK__IO_VAR_DIGITAL_CTRL(diCH__ROBOT_STATE_READ__AUTO, str_name);
+			//
+			str_name = "edi.RB.Status.Read.Auto";
+			IO__ADD_DIGITAL_READ(str_name, "SUCCESS  FAIL");
+			LINK__IO_VAR_DIGITAL_CTRL(diCH__ROBOT_STATE_READ__AUTO, str_name);
 
-		str_name = "edi.RB.Status.Read.Manual";
-		IO__ADD_DIGITAL_READ__MANUAL(str_name, "SUCCESS  FAIL");
-		LINK__IO_VAR_DIGITAL_CTRL(diCH__ROBOT_STATE_READ__MANUAL, str_name);
+			str_name = "edi.RB.Status.Read.Manual";
+			IO__ADD_DIGITAL_READ__MANUAL(str_name, "SUCCESS  FAIL");
+			LINK__IO_VAR_DIGITAL_CTRL(diCH__ROBOT_STATE_READ__MANUAL, str_name);
+		}
 	}
 
 	return 1;
@@ -1369,7 +1357,7 @@ LOOP__ROBOT_STATE:
 		}
 		else
 		{
-			CString err_code = sCH__DRV_INFO_ERRID->Get__STRING();
+			CString err_code = sCH__DRV_INFO_ERROR_CODE->Get__STRING();
 			int err_id = atoi(err_code);
 
 			if(err_id > 0)

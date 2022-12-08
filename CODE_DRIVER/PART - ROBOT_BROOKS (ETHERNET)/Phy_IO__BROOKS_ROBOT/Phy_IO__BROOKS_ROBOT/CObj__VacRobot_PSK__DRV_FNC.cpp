@@ -78,7 +78,7 @@ int CObj__VacRobot_PSK
 				else										dCH__DRV_INFO_ACTIVE_BUSY->Set__DATA(STR__ON);
 
 				str_data = l_data[1];     // Error
-				sCH__DRV_INFO_ERRID->Set__DATA(str_data);
+				sCH__DRV_INFO_ERROR_CODE->Set__DATA(str_data);
 
 				str_data = l_data[2];     // Arm Station
 
@@ -146,7 +146,8 @@ int CObj__VacRobot_PSK
 	CStringArray l_rsp;
 	CStringArray l_err;
 
-	if(siCH__VERSION->Check__VARIABLE_NAME(var_name) > 0)
+
+	if(siCH__VERSION__MANUAL->Check__VARIABLE_NAME(var_name) > 0)
 	{
 		str_cmmd = "RQ VERSION";
 
@@ -166,6 +167,8 @@ int CObj__VacRobot_PSK
 				
 				read_data += l_rsp[i];
 			}
+
+			sCH__INR_RB1_VERSION->Set__DATA(read_data);
 		}
 		else
 		{
@@ -638,13 +641,6 @@ int CObj__VacRobot_PSK
 		{
 			m_sErrorID.Format("0");
 			sCH__ERRID->Set__DATA(m_sErrorID);
-
-			CString rsp_data = Get__STRING_OF_LIST(l_rsp);
-
-			// ...
-			{
-
-			}
 		}
 
 		if(l_err.GetSize() > 0)
@@ -681,13 +677,6 @@ int CObj__VacRobot_PSK
 		{
 			m_sErrorID.Format("0");
 			sCH__ERRID->Set__DATA(m_sErrorID);
-
-			CString rsp_data = Get__STRING_OF_LIST(l_rsp);
-
-			// ...
-			{
-
-			}
 		}
 
 		if(l_err.GetSize() > 0)

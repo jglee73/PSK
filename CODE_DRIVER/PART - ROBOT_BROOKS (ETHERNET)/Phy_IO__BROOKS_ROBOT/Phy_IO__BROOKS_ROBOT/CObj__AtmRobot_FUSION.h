@@ -657,9 +657,6 @@ private:
 	int  Fnc__AL1_AlMap(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm);
 
 	// ...
-	int  Drv__CMD_COM_INIT(const CString& var_name);
-
-	// ...
 	int  Fnc__StrTo2Word(const CString& data,
 							const char section,
 							CString *p_str1,

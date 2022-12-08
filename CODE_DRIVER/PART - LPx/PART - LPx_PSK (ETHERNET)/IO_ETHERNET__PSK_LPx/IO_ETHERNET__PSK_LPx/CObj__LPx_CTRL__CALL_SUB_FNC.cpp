@@ -30,6 +30,54 @@ int  CObj__LPx_CTRL
 int CObj__LPx_CTRL
 ::Wait__LP_STATE(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
 {
+	// KMS:221110 WAIT IDEL -> RUN
+	{
+		int Count_Check = 0;
+
+		while(sEXT_CH__LP_INFO__STATUS->Check__DATA(STR__RUN) < 0)
+		{
+			Sleep(500);
+			
+			Count_Check++;
+
+			// ...
+			{
+				CString log_msg;
+				CString log_bff;
+				
+				log_msg = "_Wait__LP_INFO__STATE() - Report ... \n";
+				log_bff.Format(" * Delayed Run Mode Chanbe <- [%1d] \n", Count_Check);
+				log_msg += log_bff;
+				log_bff.Format(" * %s <- %s \n",
+								sEXT_CH__LP_INFO__STATUS->Get__CHANNEL_NAME(),
+								sEXT_CH__LP_INFO__STATUS->Get__STRING());
+				log_msg += log_bff;
+				Fnc__APP_LOG(log_msg);
+			}
+
+			if(Count_Check > 10)
+			{
+				return -1011;
+			}
+
+			if(iActive__SIM_MODE > 0)
+			{
+				if(Count_Check > 5)			sEXT_CH__LP_INFO__STATUS->Set__DATA(STR__RUN);
+			}
+		}
+
+		// ...
+		{
+			CString log_msg;
+
+			log_msg.Format(" * %s <- %s (RUN <- STOP CHECK)\n",
+							sEXT_CH__LP_INFO__STATUS->Get__CHANNEL_NAME(),
+							sEXT_CH__LP_INFO__STATUS->Get__STRING());
+		
+			Fnc__APP_LOG(log_msg);
+		}			
+	}
+
 	int r_flag = _Wait__LP_STATE(p_variable, p_alarm);
 
 	// ...
@@ -74,8 +122,15 @@ int CObj__LPx_CTRL
 
 		if(siEXT_CH__LP_STATE->Check__DATA(STR__OK) < 0)			return -11;
 		if(sEXT_CH__LP_INFO__STATUS->Check__DATA(STR__ERROR) > 0)	return -21;
-		if(sEXT_CH__LP_INFO__STATUS->Check__DATA(STR__STOP) > 0)	return 1;
-
+		if(sEXT_CH__LP_INFO__STATUS->Check__DATA(STR__STOP) > 0)
+		{
+			CString log_msg;
+			log_msg.Format(" * %s <- %s (STOP <- RUN CHECK)\n",
+			sEXT_CH__LP_INFO__STATUS->Get__CHANNEL_NAME(),
+			sEXT_CH__LP_INFO__STATUS->Get__STRING());
+			Fnc__APP_LOG(log_msg);
+			return 1;
+		}
 		Sleep(100);
 
 		if(iActive__SIM_MODE > 0)
@@ -178,9 +233,9 @@ int CObj__LPx_CTRL
 
 	if(iActive__SIM_MODE > 0)
 	{
-		sCH__MON_CLAMP_STATUS->Set__DATA(STR__CLAMP);
 		sCH__MON_FOUP_POS_STATUS->Set__DATA(STR__LOAD);
 
+		sEXT_CH__LP_INFO__CLAMP_STATUS->Set__DATA(STR__CLAMP);
 		sEXT_CH__LP_INFO__DOOR_STATUS->Set__DATA(STR__OPEN);
 	}
 
@@ -248,7 +303,7 @@ int CObj__LPx_CTRL
 
 	while(1)
 	{
-		Sleep(90);
+		Sleep(200);		//KMS:221107, Unload Time Out Increase 15Sec
 
 		if(p_variable->Check__CTRL_ABORT() > 0)
 		{
@@ -261,7 +316,7 @@ int CObj__LPx_CTRL
 		}
 
 		check_count++;
-		if(check_count >= 50)
+		if(check_count >= 75)	//KMS:221107, Unload Time Out Increase 15Sec
 		{
 			return -12;
 		}

@@ -49,31 +49,6 @@ void CObj__VacRobot_PSK
 		}
 
 		// ...
-		{
-			if(sCH__Robot_GetInfo_Update_Req->Check__DATA(STR__YES) > 0)
-			{
-				siCH__VERSION->Get__STRING();
-
-				sCH__Robot_GetInfo_Update_Req->Set__DATA("");
-			}
-
-			if(sCH__Robot_Material_Req->Check__DATA(STR__YES) > 0)
-			{
-				if(dCH__REQ_ARM_A_MATERIAL_STATE->Check__DATA(STR__ON) > 0)			
-					doCH__COMMAND->Set__DATA("LoadA");
-				else
-					doCH__COMMAND->Set__DATA("UnloadA");
-				
-				if(dCH__REQ_ARM_B_MATERIAL_STATE->Check__DATA(STR__ON) > 0)
-					doCH__COMMAND->Set__DATA("LoadB");
-				else
-					doCH__COMMAND->Set__DATA("UnloadB");
-
-				sCH__Robot_Material_Req->Set__DATA("");
-			}
-
-			// ...
-		}
 	}	
 }
 

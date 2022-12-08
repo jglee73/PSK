@@ -39,7 +39,7 @@ LOOP_RETRY:
 		alarm_bff.Format("The pressure of TM is [%s] status.\n", str_TM_prss_sts);
 		alarm_msg += alarm_bff;
 
-		p_alarm->Popup__ALARM_With_MESSAGE(alarm_id,alarm_msg,r_act);
+		p_alarm->Popup__ALARM_With_MESSAGE(alarm_id, alarm_msg, r_act);
 
 		if(r_act.CompareNoCase(ACT__RETRY) == 0)
 		{	
@@ -219,7 +219,7 @@ LOOP_RETRY:
 			err_msg.Format("VAC Robot's Arm [%s] Status", var_data);	
 			Fnc_App_Log(err_msg);	
 
-			p_alarm->Popup__ALARM(alarm_id,r_act);
+			p_alarm->Popup__ALARM_With_MESSAGE(alarm_id, err_msg, r_act);
 
 			if(r_act.CompareNoCase(ACT__RETRY) == 0)
 			{

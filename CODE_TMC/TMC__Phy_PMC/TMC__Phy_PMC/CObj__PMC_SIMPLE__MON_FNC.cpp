@@ -3,7 +3,7 @@
 #include "CObj__PMC_SIMPLE__DEF.h"
 
 
-//----------------------------------------------------------------------------------------------------
+// ...
 void CObj__PMC_SIMPLE
 ::Mon__IO_MONITOR(CII_OBJECT__VARIABLE* p_variable,
 				  CII_OBJECT__ALARM* p_alarm)

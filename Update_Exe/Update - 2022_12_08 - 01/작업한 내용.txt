@@ -12,8 +12,13 @@
    * TMC_CONFIG - Slot_Valve (IO Off Mode)
 
 # TMC 최신 Code 업데이트
+ -. 전달 받은 IO_ETHERNET__PSK_LPx 코드 업데이트 후 Simulation 안되는 문제 Patch함.
+
+# TMC DV & SV 관련 Open, Close Timeout 발생시 Error Message 안나오는 문제 Patch함.
+ -. 관련 Code : TMC__Phy_PMC
 
 # Module_Linker : Core Engine Update
   * Link_Object 내 Status 정보 둥기 문제 Patch함.
     예) CTC & TMC 또는 TMC & PMC 간의 동작 명령이 10 msec 이애로 처리되는 경우
       하위 Module의 Object Status 정보가 Update 되지 않는 문제
+

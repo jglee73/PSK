@@ -174,18 +174,11 @@ private:
 	CX__VAR_STRING_CTRL  sCH__PARA_CHECK_CMMD;
 	CX__VAR_STRING_CTRL  sCH__PARA_CHECK_ERR_CODE;
 
-	// REQ ...
-	CX__VAR_STRING_CTRL  sCH__Robot_GetInfo_Update_Req;
-	CX__VAR_STRING_CTRL  sCH__Robot_Material_Req;
-
-	CX__VAR_DIGITAL_CTRL dCH__REQ_ARM_A_MATERIAL_STATE;
-	CX__VAR_DIGITAL_CTRL dCH__REQ_ARM_B_MATERIAL_STATE;
-
-	CX__VAR_ANALOG_CTRL  aDA_DA_RETRY_CHECK_COUNT;
-
 	// DRV_INFO ...
 	CX__VAR_DIGITAL_CTRL dCH__DRV_INFO_ACTIVE_BUSY;
-	CX__VAR_STRING_CTRL  sCH__DRV_INFO_ERRID;
+	CX__VAR_STRING_CTRL  sCH__DRV_INFO_ERROR_CODE;
+
+	CX__VAR_STRING_CTRL  sCH__INR_RB1_VERSION;
 
 	CX__VAR_DIGITAL_CTRL dCH__DRV_INFO_ARM_A_MAT_READ;
 	CX__VAR_DIGITAL_CTRL dCH__DRV_INFO_ARM_B_MAT_READ;
@@ -194,7 +187,7 @@ private:
 	
 	// IO CHANNEL  -----------------------------------
 	// SI
-	CX__VAR_STRING_CTRL  siCH__VERSION;
+	CX__VAR_STRING_CTRL  siCH__VERSION__MANUAL;
 
 	// SO
 	CX__VAR_STRING_CTRL  soCH__CHECK_CMMD;
@@ -243,8 +236,6 @@ private:
 	int  Call__INIT(CII_OBJECT__VARIABLE* p_variable,
 					CII_OBJECT__ALARM* p_alarm);
 
-	int  Fnc__SIM_INIT(CII_OBJECT__VARIABLE* p_variable,
-					   CII_OBJECT__ALARM* p_alarm);
 	int  Fnc__INIT(CII_OBJECT__VARIABLE* p_variable,
 				   CII_OBJECT__ALARM* p_alarm);
 
@@ -409,13 +400,6 @@ private:
 	
 	CString	Get__CFG_STN_NUM(const CString& stn_name, const CString& str_slot_id);	
 	CString Get__CFG_STN_CPTR_NUM(const CString& stn_name, const CString& str_slot_id);
-
-	// ...
-	int  Drv__CMD_COM_INIT(const CString& var_name);
-
-	int	 Drv__SEND_MESSAGE_RETURN(const CString& var_name, 
-							      CString str__send_data, 
-								  const CString& str__for_error);
 
 	// ...
 	int Set__CPTR_SNS_OFF_N(CII_OBJECT__VARIABLE* p_variable,

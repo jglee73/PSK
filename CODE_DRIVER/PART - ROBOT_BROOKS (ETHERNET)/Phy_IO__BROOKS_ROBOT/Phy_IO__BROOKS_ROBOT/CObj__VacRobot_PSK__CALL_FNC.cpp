@@ -14,33 +14,24 @@ int  CObj__VacRobot_PSK
 {
 	if(iActive__SIM_MODE > 0)
 	{
-		return Fnc__SIM_INIT(p_variable,p_alarm);
+		sCH__DRV_INFO_ERROR_CODE->Set__DATA("0");
+		sCH__INR_RB1_VERSION->Set__DATA("V.???");
 	}
 
-	// ...
+	siCH__VERSION__MANUAL->Get__STRING();
+
+	if(Fnc__INIT(p_variable,p_alarm) < 0)
 	{
-		siCH__VERSION->Get__STRING();
+		return -11;
+	}
 
-		if(Fnc__INIT(p_variable,p_alarm) < 0)
-		{
-			return -11;
-		}
-		if(Fnc__MAP(p_variable,p_alarm) < 0)
-		{
-			return -12;
-		}
+	if(Fnc__MAP(p_variable,p_alarm) < 0)
+	{
+		return -12;
 	}
 	return 1;
 }
 
-int  CObj__VacRobot_PSK
-::Fnc__SIM_INIT(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm)
-{
-	Sleep(1500);
-
-	diCH__COMM_STS->Set__DATA(STR__ONLINE);
-	return 1;
-}
 int  CObj__VacRobot_PSK
 ::Fnc__INIT(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm)
 {

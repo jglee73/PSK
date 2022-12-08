@@ -52,10 +52,10 @@ int  CObj__PMC_SIMPLE
 
 		if(Is__SV_CLOSE(p_variable, p_alarm, pmc_id) < 0)
 		{
-			err_msg.Format("PM%1d",pmc_id);
+			err_msg.Format("PM%1d", pmc_id);
 			l_err_msg.Add(err_msg);
 
-			bff.Format("[%s]\n",err_msg);
+			bff.Format("[%s]\n", err_msg);
 			msg += bff;
 		}
 	}
@@ -214,10 +214,10 @@ LOOP_RETRY:
 			CString err_msg;
 			CString r_act;
 
-			err_msg.Format("PM%1d's Slit Valve Open TimeOut (%.0f)", cfg_timeout);
+			err_msg.Format("PM%1d's Slit Valve Open TimeOut (%.0f)", pmc_id, cfg_timeout);
 			Fnc_App_Log(err_msg);
 
-			p_alarm->Popup__ALARM(alarm_id,r_act);
+			p_alarm->Popup__ALARM_With_MESSAGE(alarm_id, err_msg, r_act);
 
 			if(r_act.CompareNoCase(ACT__RETRY) == 0)
 			{
@@ -274,7 +274,6 @@ LOOP_RETRY:
 		}
 
 		// ...
-		CString r_act;
 		CString str_msg;
 
 		// ...
@@ -288,6 +287,7 @@ LOOP_RETRY:
 		// ...
 		{
 			int alarm_id = ALID__PM_NOT_EXIST_CONFIG_ALARAM;
+			CString r_act;
 
 			p_alarm->Popup__ALARM_With_MESSAGE(alarm_id,str_msg, r_act);
 
@@ -331,8 +331,10 @@ LOOP_RETRY:
 			CString err_msg;
 			CString r_act;
 
-			err_msg.Format("PM%1d's Slit Valve Close TimeOut (%.0f)",cfg_timeout);	Fnc_App_Log(err_msg);	
-			p_alarm->Popup__ALARM(alarm_id,r_act);
+			err_msg.Format("PM%1d's Slit Valve Close TimeOut (%.0f)", pmc_id, cfg_timeout);	
+			Fnc_App_Log(err_msg);	
+
+			p_alarm->Popup__ALARM_With_MESSAGE(alarm_id, err_msg, r_act);
 
 			if(r_act.CompareNoCase(ACT__RETRY) == 0)
 			{
@@ -377,7 +379,7 @@ int  CObj__PMC_SIMPLE
 
 		// Open ...
 		{
-			var_data.Format("PM%s's SV(%s) Open - Start", para__pmc_id,para__sv_mode);
+			var_data.Format("PM%s's SV(%s) Open - Start", para__pmc_id, para__sv_mode);
 			sCH__CYCLE_TEST_MSG->Set__DATA(var_data);
 
 			// ...
@@ -393,7 +395,7 @@ int  CObj__PMC_SIMPLE
 
 					if(Call__SV_OPEN(p_variable,p_alarm,i__pmc_id) < 0)
 					{
-						var_data.Format("PM%s's SV(%s) Open - Abort", para__pmc_id,para__sv_mode);
+						var_data.Format("PM%s's SV(%s) Open - Abort", para__pmc_id, para__sv_mode);
 						sCH__CYCLE_TEST_MSG->Set__DATA(var_data);	
 						return -1;
 					}
@@ -412,11 +414,12 @@ int  CObj__PMC_SIMPLE
 
 					CString cur_avg = Get__AVG_DATA(n_count, cur_sec,pre_avg);
 					sCH__CYCLE_TEST_OP_TIME_AVG->Set__DATA(cur_avg);
+					
 					Fnc__Check_MIN_MAX_DATA(n_count, p_ch_min,p_ch_max, cur_sec);
 				}
 			}
 
-			var_data.Format("PM%s's SV(%s) Open - Complete", para__pmc_id,para__sv_mode);
+			var_data.Format("PM%s's SV(%s) Open - Complete", para__pmc_id, para__sv_mode);
 			sCH__CYCLE_TEST_MSG->Set__DATA(var_data);
 		}
 
@@ -439,7 +442,7 @@ int  CObj__PMC_SIMPLE
 
 		// Close ...
 		{
-			var_data.Format("PM%s's SV(%s) Close - Start", para__pmc_id,para__sv_mode);
+			var_data.Format("PM%s's SV(%s) Close - Start", para__pmc_id, para__sv_mode);
 			sCH__CYCLE_TEST_MSG->Set__DATA(var_data);
 
 			// ...
@@ -465,7 +468,7 @@ int  CObj__PMC_SIMPLE
 
 					if(flag < 0)
 					{
-						var_data.Format("PM%s's SV(%s) Close - Abort", para__pmc_id,para__sv_mode);
+						var_data.Format("PM%s's SV(%s) Close - Abort", para__pmc_id, para__sv_mode);
 						sCH__CYCLE_TEST_MSG->Set__DATA(var_data);
 						return -2;
 					}
@@ -488,7 +491,7 @@ int  CObj__PMC_SIMPLE
 				}
 			}
 
-			var_data.Format("PM%s's SV(%s) Close - Complete", para__pmc_id,para__sv_mode);
+			var_data.Format("PM%s's SV(%s) Close - Complete", para__pmc_id, para__sv_mode);
 			sCH__CYCLE_TEST_MSG->Set__DATA(var_data);
 		}
 
