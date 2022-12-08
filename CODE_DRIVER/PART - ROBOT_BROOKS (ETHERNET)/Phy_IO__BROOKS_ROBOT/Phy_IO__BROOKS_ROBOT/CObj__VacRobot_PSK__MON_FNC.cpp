@@ -6,31 +6,12 @@
 #include "CCommon_DEF.h"
 
 
-//------------------------------------------------------------------------------------
-void CObj__VacRobot_PSK
-::Mon__ANI_MONITOR(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm)
-{
-
-	while(1)
-	{
-		p_variable->Wait__SINGLE_OBJECT(0.2);
-
-		if((dCH__SIM_CFG__REAL_TEST->Check__DATA(STR__YES) < 0)
-		&& (iActive__SIM_MODE > 0))
-		{
-			iCFG__SIM_FLAG = 1;
-		}
-		else
-		{
-			iCFG__SIM_FLAG = -1;
-		}
-	}
-}
-
+// ...
 void CObj__VacRobot_PSK
 ::Mon__IO_MONITOR(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm)
 {
 	CString var_data;
+	diCH__ROBOT_INIT_CMD->Get__DATA(var_data); // Before Robot Start Send INIT CMD(for using TCL CMD)
 
 
 	while(1)
@@ -38,7 +19,7 @@ void CObj__VacRobot_PSK
 		p_variable->Wait__SINGLE_OBJECT(0.5);
 
 
-		if(iCFG__SIM_FLAG > 0)
+		if(iActive__SIM_MODE > 0)
 		{
 			if(diCH__COMM_STS->Check__DATA(STR__ONLINE) > 0)
 			{
@@ -54,7 +35,7 @@ void CObj__VacRobot_PSK
 
 				// ...
 				{
-					int alarm_id = ALID__OFFLINE_ALARM;
+					int alarm_id = ALID__OFFLINE_ALARM__MON;
 					CString r_act;
 
 					p_alarm->Check__ALARM(alarm_id,r_act);
@@ -91,10 +72,7 @@ void CObj__VacRobot_PSK
 				sCH__Robot_Material_Req->Set__DATA("");
 			}
 
-			/*
-			diCH__ARM_A_READ->Get__DATA(var_data);
-			diCH__ARM_B_READ->Get__DATA(var_data);
-			*/
+			// ...
 		}
 	}	
 }

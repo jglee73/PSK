@@ -1111,30 +1111,16 @@ int  CObj__LBx_CHM_SLOT
 		_Update__ACTION_MIN_MAX(db_i,slot_i, cur_sec);
 	}
 
-	if(dCH__CFG_IO_OFF_MODE->Check__DATA(STR__ENABLE) > 0)
-	{
-		int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
-		int p_index = para_id - 1;
-
-		if((p_index >= 0) && (p_index < iLBx_SLOT_SIZE))
-		{
-			doEXT_CH__LLx__DV_OPEN_X[p_index]->Set__DATA(STR__OFF);
-			doEXT_CH__LLx__DV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
-		}
-	}
+	End_IO__DV_CLOSE();
 	return r_flag;
 }
 int  CObj__LBx_CHM_SLOT
 ::Fnc__DV_CLOSE(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm, const int slot_id)
 {
-	CString str_log;
-
 LOOP_RETRY:
 
 	// ...
-	double  trg_timeout = 9999.0;
-	double  cfg_timeout = 0.0;
-	CString var_data;
+	CString str_log;
 
 	if(Is__SLOT_DV_CLOSE())
 	{
@@ -1148,27 +1134,7 @@ LOOP_RETRY:
 		return -1;
 	}
 
-	xI_ASYNC_TIMER->START__COUNT_UP(trg_timeout);
-
-	Set__SLOT_DV_CLOSE();
-
-	// Add Simulation !!
-	if(iActive__SIM_MODE > 0)
-	{
-		SCX__TIMER_CTRL sim_timer;
-		aEXT_CH__CFG_SIM_DOOR_VLV_CLOSE_TIME->Get__DATA(var_data);
-
-		int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
-		int p_index = para_id - 1;
-
-		diEXT_CH__LLx__DV_OPEN_X[p_index]->Set__DATA(STR__OFF);
-		diEXT_CH__LLx__DV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
-
-		if(sim_timer->WAIT(atof(var_data)) < 0)			return -1;
-
-		diEXT_CH__LLx__DV_OPEN_X[p_index]->Set__DATA(STR__OFF);
-		diEXT_CH__LLx__DV_CLOSE_X[p_index]->Set__DATA(STR__ON);
-	}
+	Set_IO__DV_CLOSE();
 
 	// ...
 	CII__VAR_ANALOG_CTRL* pch__cfg_timeout = NULL;
@@ -1177,6 +1143,12 @@ LOOP_RETRY:
 	else if(slot_id == 2)		pch__cfg_timeout = aCH__CFG_DOOR_2_VALVE_CLOSE_TIMEOUT.Get__PTR();
 
 	if(pch__cfg_timeout == NULL)		return -11;
+
+	// ...
+	double  trg_timeout = 9999.0;
+	double  cfg_timeout = 0.0;
+
+	xI_ASYNC_TIMER->START__COUNT_UP(trg_timeout);
 
 	while(1)
 	{
@@ -1189,9 +1161,8 @@ LOOP_RETRY:
 
 		if(Is__SLOT_DV_CLOSE())
 		{
-			Sleep(100);
-
-			str_log.Format("%s DV Close Completed..", m_sLBx__MODULE_NAME);	Fnc__LOG(str_log);
+			str_log.Format("%s DV Close Completed..", m_sLBx__MODULE_NAME);	
+			Fnc__LOG(str_log);
 			return 1;
 		}
 
@@ -1247,30 +1218,16 @@ int  CObj__LBx_CHM_SLOT
 		_Update__ACTION_MIN_MAX(db_i,slot_i, cur_sec);
 	}
 
-	if(dCH__CFG_IO_OFF_MODE->Check__DATA(STR__ENABLE) > 0)
-	{
-		int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
-		int p_index = para_id - 1;
-
-		if((p_index >= 0) && (p_index < iLBx_SLOT_SIZE))
-		{
-			doEXT_CH__LLx__DV_OPEN_X[p_index]->Set__DATA(STR__OFF);
-			doEXT_CH__LLx__DV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
-		}
-	}
+	End_IO__DV_OPEN();
 	return r_flag;
 }
 int  CObj__LBx_CHM_SLOT
 ::Fnc__DV_OPEN(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm, const int slot_id)
 {
-	CString str_log;
-
 LOOP_RETRY:
 
 	// ...
-	double  trg_timeout = 9999.0;
-	double  cfg_timeout = 0.0;
-	CString var_data;
+	CString str_log;
 
 	if(Is__SLOT_DV_OPEN())
 	{
@@ -1279,26 +1236,7 @@ LOOP_RETRY:
 		return 1;
 	}
 
-	xI_ASYNC_TIMER->START__COUNT_UP(trg_timeout);
-
-	Set__SLOT_DV_OPEN();
-
-	if(iActive__SIM_MODE > 0)
-	{
-		SCX__TIMER_CTRL sim_timer;
-		aEXT_CH__CFG_SIM_DOOR_VLV_OPEN_TIME->Get__DATA(var_data);
-
-		int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
-		int p_index = para_id - 1;
-
-		diEXT_CH__LLx__DV_OPEN_X[p_index]->Set__DATA(STR__OFF);
-		diEXT_CH__LLx__DV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
-
-		if(sim_timer->WAIT(atof(var_data)) < 0)			return -1;
-
-		diEXT_CH__LLx__DV_OPEN_X[p_index]->Set__DATA(STR__ON);
-		diEXT_CH__LLx__DV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
-	}
+	Set_IO__DV_OPEN();
 
 	// ...
 	CII__VAR_ANALOG_CTRL* pch__cfg_timeout = NULL;
@@ -1307,6 +1245,12 @@ LOOP_RETRY:
 	else if(slot_id == 2)		pch__cfg_timeout = aCH__CFG_DOOR_2_VALVE_OPEN_TIMEOUT.Get__PTR();
 
 	if(pch__cfg_timeout == NULL)		return -11;
+
+	// ...
+	double  trg_timeout = 9999.0;
+	double  cfg_timeout = 0.0;
+
+	xI_ASYNC_TIMER->START__COUNT_UP(trg_timeout);
 
 	while(1)
 	{
@@ -1319,8 +1263,8 @@ LOOP_RETRY:
 
 		if(Is__SLOT_DV_OPEN())
 		{
-			Sleep(100);
-			str_log.Format("%s DV Open Completed..", m_sLBx__MODULE_NAME);	Fnc__LOG(str_log);
+			str_log.Format("%s DV Open Completed..", m_sLBx__MODULE_NAME);	
+			Fnc__LOG(str_log);
 			return 1;
 		}
 
@@ -1370,17 +1314,7 @@ int  CObj__LBx_CHM_SLOT
 		_Update__ACTION_MIN_MAX(db_i,slot_i, cur_sec);
 	}
 
-	if(dCH__CFG_IO_OFF_MODE->Check__DATA(STR__ENABLE) > 0)
-	{
-		int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
-		int p_index = para_id - 1;
-
-		if((p_index >= 0) && (p_index < iLBx_SLOT_SIZE))
-		{
-			doEXT_CH__LLx__SV_OPEN_X[p_index]->Set__DATA(STR__OFF);
-			doEXT_CH__LLx__SV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
-		}
-	}
+	End_IO__SV_CLOSE();
 	return r_flag;
 }
 int  CObj__LBx_CHM_SLOT
@@ -1500,17 +1434,7 @@ int  CObj__LBx_CHM_SLOT
 		_Update__ACTION_MIN_MAX(db_i,slot_i, cur_sec);
 	}
 
-	if(dCH__CFG_IO_OFF_MODE->Check__DATA(STR__ENABLE) > 0)
-	{
-		int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
-		int p_index = para_id - 1;
-
-		if((p_index >= 0) && (p_index < iLBx_SLOT_SIZE))
-		{
-			doEXT_CH__LLx__SV_OPEN_X[p_index]->Set__DATA(STR__OFF);
-			doEXT_CH__LLx__SV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
-		}
-	}
+	End_IO__SV_OPEN();
 	return r_flag;
 }
 int  CObj__LBx_CHM_SLOT
@@ -2016,7 +1940,7 @@ int  CObj__LBx_CHM_SLOT
 	if(bActive__LIFT_PIN)
 	{
 		if((dEXT_CH__CFG_LLx_LIFT_PIN_EXIST_FLAG->Check__DATA("TRUE") > 0)
-		&& (dEXT_CH__CFG_LLx_LIFT_PIN_DOWM_MODE_AFTER_DOOR_CLOSE->Check__DATA("ENABLE") > 0))
+		&& (dEXT_CH__CFG_LLx_LIFT_PIN_DOWM_MODE_AFTER_DOOR_CLOSE->Check__DATA("ENABLE") < 0))
 		{
 			cfg_use = 1;
 		}

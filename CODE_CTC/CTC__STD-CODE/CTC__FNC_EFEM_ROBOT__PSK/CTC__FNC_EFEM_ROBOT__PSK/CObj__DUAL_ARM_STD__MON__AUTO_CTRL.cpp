@@ -5664,8 +5664,10 @@ int  CObj__DUAL_ARM_STD
 
 	// ...
 	{
-		CString arm_type = ARM_A;
+		CString arm_type;
 		CString sch_module;
+
+		if(ATM_RB__Get_Empty__Arm_Type(arm_type) < 0)		NEXT__LOOP;
 
 		// ...
 		{

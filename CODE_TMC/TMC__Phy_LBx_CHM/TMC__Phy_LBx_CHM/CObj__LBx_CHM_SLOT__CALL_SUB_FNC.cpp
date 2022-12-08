@@ -136,51 +136,66 @@ bool CObj__LBx_CHM_SLOT::Is__SLOT_DV_CLOSE()
 	return true;
 }
 
-bool CObj__LBx_CHM_SLOT::Set__SLOT_DV_OPEN()
+int CObj__LBx_CHM_SLOT::Set_IO__DV_OPEN()
 {
 	int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
 	int p_index = para_id - 1;
 
-	if(p_index <  0)					return false;
-	if(p_index >= iLBx_SLOT_SIZE)		return false;
+	if(p_index <  0)					return -1;
+	if(p_index >= iLBx_SLOT_SIZE)		return -2;
 
-	//
-	if(dCH__CFG_IO_OFF_MODE->Check__DATA(STR__ENABLE) > 0)
+	// ...
 	{
 		doEXT_CH__LLx__DV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
 		doEXT_CH__LLx__DV_OPEN_X[p_index]->Set__DATA(STR__ON);
 	}
-	else
-	{
-		doEXT_CH__LLx__DV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
-		Sleep(100);
-		doEXT_CH__LLx__DV_OPEN_X[p_index]->Set__DATA(STR__ON);
-	}
-
-	return true;
+	return 1;
 }
-bool CObj__LBx_CHM_SLOT::Set__SLOT_DV_CLOSE()
+int CObj__LBx_CHM_SLOT::End_IO__DV_OPEN()
 {
 	int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
 	int p_index = para_id - 1;
 
-	if(p_index <  0)					return false;
-	if(p_index >= iLBx_SLOT_SIZE)		return false;
+	if(p_index <  0)					return -1;
+	if(p_index >= iLBx_SLOT_SIZE)		return -2;
 
-	//
+	if(dCH__CFG_IO_OFF_MODE->Check__DATA(STR__ENABLE) > 0)
+	{
+		doEXT_CH__LLx__DV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
+		doEXT_CH__LLx__DV_OPEN_X[p_index]->Set__DATA(STR__OFF);
+	}
+	return 1;
+}
+
+int CObj__LBx_CHM_SLOT::Set_IO__DV_CLOSE()
+{
+	int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
+	int p_index = para_id - 1;
+
+	if(p_index <  0)					return -1;
+	if(p_index >= iLBx_SLOT_SIZE)		return -2;
+
+	// ...
+	{
+		doEXT_CH__LLx__DV_OPEN_X[p_index]->Set__DATA(STR__OFF);
+		doEXT_CH__LLx__DV_CLOSE_X[p_index]->Set__DATA(STR__ON);
+	}
+	return 1;
+}
+int CObj__LBx_CHM_SLOT::End_IO__DV_CLOSE()
+{
+	int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
+	int p_index = para_id - 1;
+
+	if(p_index <  0)					return -1;
+	if(p_index >= iLBx_SLOT_SIZE)		return -2;
+
 	if(dCH__CFG_IO_OFF_MODE->Check__DATA(STR__ENABLE) > 0)
 	{
 		doEXT_CH__LLx__DV_OPEN_X[p_index]->Set__DATA(STR__OFF);
-		doEXT_CH__LLx__DV_CLOSE_X[p_index]->Set__DATA(STR__ON);
+		doEXT_CH__LLx__DV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
 	}
-	else
-	{
-		doEXT_CH__LLx__DV_OPEN_X[p_index]->Set__DATA(STR__OFF);
-		Sleep(100);
-		doEXT_CH__LLx__DV_CLOSE_X[p_index]->Set__DATA(STR__ON);
-	}
-
-	return true;
+	return 1;
 }
 
 bool CObj__LBx_CHM_SLOT::Is__ALL_SV_OPEN()
@@ -259,51 +274,66 @@ bool CObj__LBx_CHM_SLOT::Is__SLOT_SV_CLOSE()
 	return true;
 }
 
-bool CObj__LBx_CHM_SLOT::Set__SLOT_SV_OPEN()
+int CObj__LBx_CHM_SLOT::Set_IO__SV_OPEN()
 {
 	int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
 	int p_index = para_id - 1;
 
-	if(p_index <  0)					return false;
-	if(p_index >= iLBx_SLOT_SIZE)		return false;
+	if(p_index <  0)					return -1;
+	if(p_index >= iLBx_SLOT_SIZE)		return -2;
 
-	//
-	if(dCH__CFG_IO_OFF_MODE->Check__DATA(STR__ENABLE) > 0)
+	// ...
 	{
 		doEXT_CH__LLx__SV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
 		doEXT_CH__LLx__SV_OPEN_X[p_index]->Set__DATA(STR__ON);
 	}
-	else
-	{
-		doEXT_CH__LLx__SV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
-		Sleep(100);
-		doEXT_CH__LLx__SV_OPEN_X[p_index]->Set__DATA(STR__ON);
-	}
-
-	return true;
+	return 1;
 }
-bool CObj__LBx_CHM_SLOT::Set__SLOT_SV_CLOSE()
+int CObj__LBx_CHM_SLOT::End_IO__SV_OPEN()
 {
 	int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
 	int p_index = para_id - 1;
 
-	if(p_index <  0)					return false;
-	if(p_index >= iLBx_SLOT_SIZE)		return false;
+	if(p_index <  0)					return -1;
+	if(p_index >= iLBx_SLOT_SIZE)		return -2;
 
-	//
+	if(dCH__CFG_IO_OFF_MODE->Check__DATA(STR__ENABLE) > 0)
+	{
+		doEXT_CH__LLx__SV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
+		doEXT_CH__LLx__SV_OPEN_X[p_index]->Set__DATA(STR__OFF);
+	}
+	return 1;
+}
+
+int CObj__LBx_CHM_SLOT::Set_IO__SV_CLOSE()
+{
+	int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
+	int p_index = para_id - 1;
+
+	if(p_index <  0)					return -1;
+	if(p_index >= iLBx_SLOT_SIZE)		return -2;
+
+	// ...
+	{
+		doEXT_CH__LLx__SV_OPEN_X[p_index]->Set__DATA(STR__OFF);
+		doEXT_CH__LLx__SV_CLOSE_X[p_index]->Set__DATA(STR__ON);
+	}
+	return 1;
+}
+int CObj__LBx_CHM_SLOT::End_IO__SV_CLOSE()
+{
+	int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
+	int p_index = para_id - 1;
+
+	if(p_index <  0)					return -1;
+	if(p_index >= iLBx_SLOT_SIZE)		return -2;
+
 	if(dCH__CFG_IO_OFF_MODE->Check__DATA(STR__ENABLE) > 0)
 	{
 		doEXT_CH__LLx__SV_OPEN_X[p_index]->Set__DATA(STR__OFF);
-		doEXT_CH__LLx__SV_CLOSE_X[p_index]->Set__DATA(STR__ON);
+		doEXT_CH__LLx__SV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
 	}
-	else
-	{
-		doEXT_CH__LLx__SV_OPEN_X[p_index]->Set__DATA(STR__OFF);
-		Sleep(100);
-		doEXT_CH__LLx__SV_CLOSE_X[p_index]->Set__DATA(STR__ON);
-	}
-
-	return true;
+	return 1;
 }
 
 
@@ -894,10 +924,7 @@ LOOP_RETRY:
 
 			p_alarm->Popup__ALARM_With_MESSAGE(alarm_id, err_msg, r_act);
 
-			if(r_act.CompareNoCase(ACT__RETRY) == 0)
-			{
-				goto LOOP_RETRY;
-			}
+			if(r_act.CompareNoCase(ACT__RETRY) == 0)		goto LOOP_RETRY;
 			return -11;
 		}
 	}
@@ -922,11 +949,51 @@ LOOP_RETRY:
 
 			p_alarm->Popup__ALARM(alarm_id,r_act);
 
-			if(r_act.CompareNoCase(ACT__RETRY) == 0)
-			{
-				goto LOOP_RETRY;
-			}
+			if(r_act.CompareNoCase(ACT__RETRY) == 0)		goto LOOP_RETRY;
 			return -12;
+		}
+	}
+
+	// CHECK : WAFER.SLIDE SENSOR ...
+	{
+		bool active__wafer_out = false;
+
+		// ...
+		{
+			for(int sns_i = 0; sns_i < iData__WAFER_SLIDE_OUT; sns_i++)
+			{
+				if(diEXT_CH__WAFER_SKIDE_OUT_X[sns_i]->Check__DATA(STR__OFF) > 0)			continue;
+
+				active__wafer_out = true;
+				break;
+			}
+		}
+
+		if(active__wafer_out)
+		{
+			CString alm_msg;
+			CString alm_bff;
+
+			alm_msg  = "Wafer Slide Sensor List";
+			alm_msg += "\n";
+
+			int sns_size = iData__WAFER_SLIDE_OUT;
+			for(int sns_i = 0; sns_i < sns_size; sns_i++)
+			{
+				alm_bff.Format("  %1d)  %s <- %s \n",
+								sns_i + 1,
+								diEXT_CH__WAFER_SKIDE_OUT_X[sns_i]->Get__CHANNEL_NAME(),
+								diEXT_CH__WAFER_SKIDE_OUT_X[sns_i]->Get__STRING());
+				alm_msg += alm_bff;
+			}
+
+			int alarm_id = ALID__WAFER_SLIDE_SENSOR_DETECTED;
+			CString r_act;
+
+			p_alarm->Popup__ALARM_With_MESSAGE(alarm_id, alm_msg, r_act);
+
+			if(r_act.CompareNoCase(ACT__RETRY) == 0)		goto LOOP_RETRY;
+			return -13;
 		}
 	}
 
@@ -1199,16 +1266,10 @@ int  CObj__LBx_CHM_SLOT
 }
 
 int  CObj__LBx_CHM_SLOT
-::Sub__SV_OPEN(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm, double dblTimeout)
+::Sub__SV_OPEN(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm, const double cfg_timeout)
 {
 	CString str_log;
-	CString var_data;
-	double  dblDefault_Timeout = 9999.0;
 
-	SCX__ASYNC_TIMER_CTRL x_timer_sv;
-	x_timer_sv->REGISTER__COUNT_CHANNEL(sObject_Name,aCH_SV_OPEN__TIME_COUNT->Get__VARIABLE_NAME());
-
-	// 1. Already Sns Check..
 	if(Is__SLOT_SV_OPEN())
 	{
 		str_log.Format("Already... SV TM_OPEN sts.. %s Slot Valve.", m_sLBx__MODULE_NAME);
@@ -1216,25 +1277,13 @@ int  CObj__LBx_CHM_SLOT
 		return 1;
 	}
 
-	Set__SLOT_SV_OPEN();
+	Set_IO__SV_OPEN();
 
-	x_timer_sv->START__COUNT_UP(dblDefault_Timeout);
+	// ...
+	SCX__ASYNC_TIMER_CTRL x_timer_sv;
 
-	if(iActive__SIM_MODE > 0)
-	{
-		SCX__TIMER_CTRL sim_timer;
-
-		int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
-		int p_index = para_id - 1;
-
-		diEXT_CH__LLx__SV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
-		diEXT_CH__LLx__SV_OPEN_X[p_index]->Set__DATA(STR__OFF);
-
-		if(sim_timer->WAIT(0.5) < 0)		return -1;
-
-		diEXT_CH__LLx__SV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
-		diEXT_CH__LLx__SV_OPEN_X[p_index]->Set__DATA(STR__ON);
-	}
+	x_timer_sv->REGISTER__COUNT_CHANNEL_NAME(aCH_SV_OPEN__TIME_COUNT->Get__CHANNEL_NAME());
+	x_timer_sv->START__COUNT_UP(9999);
 
 	while(1)
 	{
@@ -1252,7 +1301,7 @@ int  CObj__LBx_CHM_SLOT
 			return 1;
 		}
 
-		if(x_timer_sv->Get__CURRENT_TIME() >= dblTimeout)
+		if(x_timer_sv->Get__CURRENT_TIME() >= cfg_timeout)
 		{
 			str_log.Format("%s SV TM_OPEN Timeout..", m_sLBx__MODULE_NAME);	
 			Fnc__LOG(str_log);
@@ -1264,14 +1313,9 @@ int  CObj__LBx_CHM_SLOT
 }
 
 int  CObj__LBx_CHM_SLOT
-::Sub__SV_CLOSE(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm, double dblTimeout)
+::Sub__SV_CLOSE(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm, const double cfg_timeout)
 {
 	CString str_log;
-	CString var_data;
-	double  dblDefault_Timeout = 9999.0;
-
-	SCX__ASYNC_TIMER_CTRL x_timer_sv;
-	x_timer_sv->REGISTER__COUNT_CHANNEL(sObject_Name,aCH_SV_CLOSE__TIME_COUNT->Get__VARIABLE_NAME());
 
 	// 1. Already Sns Check..
 	if(Is__SLOT_SV_CLOSE())
@@ -1281,25 +1325,13 @@ int  CObj__LBx_CHM_SLOT
 		return 1;
 	}
 
-	Set__SLOT_SV_CLOSE();
+	Set_IO__SV_CLOSE();
 
-	x_timer_sv->START__COUNT_UP(dblDefault_Timeout);
+	// ...
+	SCX__ASYNC_TIMER_CTRL x_timer_sv;
 
-	if(iActive__SIM_MODE > 0)
-	{
-		SCX__TIMER_CTRL sim_timer;
-
-		int para_id = (int)	aCH__PARA_SLOT_ID->Get__VALUE();
-		int p_index = para_id - 1;
-
-		diEXT_CH__LLx__SV_CLOSE_X[p_index]->Set__DATA(STR__OFF);
-		diEXT_CH__LLx__SV_OPEN_X[p_index]->Set__DATA(STR__OFF);
-
-		if(sim_timer->WAIT(0.5) < 0)		return -1;
-
-		diEXT_CH__LLx__SV_CLOSE_X[p_index]->Set__DATA(STR__ON);
-		diEXT_CH__LLx__SV_OPEN_X[p_index]->Set__DATA(STR__OFF);
-	}
+	x_timer_sv->REGISTER__COUNT_CHANNEL_NAME(aCH_SV_CLOSE__TIME_COUNT->Get__CHANNEL_NAME());
+	x_timer_sv->START__COUNT_UP(9999);
 
 	while(1)
 	{
@@ -1317,7 +1349,7 @@ int  CObj__LBx_CHM_SLOT
 			return 1;
 		}
 
-		if(x_timer_sv->Get__CURRENT_TIME() >= dblTimeout)
+		if(x_timer_sv->Get__CURRENT_TIME() >= cfg_timeout)
 		{
 			str_log.Format("%s SV TM_CLOSE Timeout..", m_sLBx__MODULE_NAME);	
 			Fnc__LOG(str_log);

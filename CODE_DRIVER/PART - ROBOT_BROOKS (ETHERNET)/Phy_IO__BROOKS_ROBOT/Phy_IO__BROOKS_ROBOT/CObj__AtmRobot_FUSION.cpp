@@ -1059,9 +1059,6 @@ int CObj__AtmRobot_FUSION::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		//
 		iCFG__SIM_MODE = -1;
 
-		str_name = "CFG.SIM.MODE";
-		LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__CFG_SIM_MODE, def_data,str_name);
-
 		//
 		str_name = "CFG.REF.ATM.PRESSURE";
 		LINK__EXT_VAR_ANALOG_CTRL(aEXT_CH__CFG_REF_ATM_PRESSURE, def_data,str_name);

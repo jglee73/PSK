@@ -906,10 +906,16 @@ LOOP_RETRY:
 	CString var_data;
 
 	if((diEXT_CH__LBx__DV_OPEN->Check__DATA(STR__OFF) > 0)
-		&& (diEXT_CH__LBx__DV_CLOSE->Check__DATA(STR__ON) > 0))
+	&& (diEXT_CH__LBx__DV_CLOSE->Check__DATA(STR__ON) > 0))
 	{
-		str_log.Format("Already... Close sts.. %s Door Valve.", m_sLBx__MODULE_NAME);
-		Fnc__LOG(str_log);
+		doEXT_CH__LBx__DV_OPEN->Set__DATA(STR__OFF);
+		doEXT_CH__LBx__DV_CLOSE->Set__DATA(STR__ON);
+
+		// ...
+		{
+			str_log.Format("Already... Close sts.. %s Door Valve.", m_sLBx__MODULE_NAME);
+			Fnc__LOG(str_log);
+		}
 		return 1;
 	}
 

@@ -9,24 +9,24 @@
 int CObj__STD_TYPE::
 Call__RED_ON()
 {
-	doEXT_CH__LIGHT_RED__ON_OFF->Set__DATA(STR__ON);
-	doEXT_CH__LIGHT_RED__BLINK->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_RED__ON_OFF)			doEXT_CH__LIGHT_RED__ON_OFF->Set__DATA(STR__ON);
+	if(bActive__LIGHT_RED__BLINK)			doEXT_CH__LIGHT_RED__BLINK->Set__DATA(STR__OFF);
 
 	return 1;
 }
 int CObj__STD_TYPE::
 Call__RED_OFF()
 {
-	doEXT_CH__LIGHT_RED__ON_OFF->Set__DATA(STR__OFF);
-	doEXT_CH__LIGHT_RED__BLINK->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_RED__ON_OFF)			doEXT_CH__LIGHT_RED__ON_OFF->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_RED__BLINK)			doEXT_CH__LIGHT_RED__BLINK->Set__DATA(STR__OFF);
 
 	return 1;
 }
 int CObj__STD_TYPE::
 Call__RED_BLINK()
 {
-	doEXT_CH__LIGHT_RED__ON_OFF->Set__DATA(STR__OFF);
-	doEXT_CH__LIGHT_RED__BLINK->Set__DATA(STR__ON);
+	if(bActive__LIGHT_RED__ON_OFF)			doEXT_CH__LIGHT_RED__ON_OFF->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_RED__BLINK)			doEXT_CH__LIGHT_RED__BLINK->Set__DATA(STR__ON);
 
 	return 1;
 }
@@ -36,24 +36,24 @@ Call__RED_BLINK()
 int CObj__STD_TYPE::
 Call__YELLOW_ON()
 {
-	doEXT_CH__LIGHT_YELLOW__ON_OFF->Set__DATA(STR__ON);
-	doEXT_CH__LIGHT_YELLOW__BLINK->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_YELLOW__ON_OFF)		doEXT_CH__LIGHT_YELLOW__ON_OFF->Set__DATA(STR__ON);
+	if(bActive__LIGHT_YELLOW__BLINK)		doEXT_CH__LIGHT_YELLOW__BLINK->Set__DATA(STR__OFF);
 
 	return 1;
 }
 int CObj__STD_TYPE::
 Call__YELLOW_OFF()
 {
-	doEXT_CH__LIGHT_YELLOW__ON_OFF->Set__DATA(STR__OFF);
-	doEXT_CH__LIGHT_YELLOW__BLINK->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_YELLOW__ON_OFF)		doEXT_CH__LIGHT_YELLOW__ON_OFF->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_YELLOW__BLINK)		doEXT_CH__LIGHT_YELLOW__BLINK->Set__DATA(STR__OFF);
 
 	return 1;
 }
 int CObj__STD_TYPE::
 Call__YELLOW_BLINK()
 {
-	doEXT_CH__LIGHT_YELLOW__ON_OFF->Set__DATA(STR__OFF);
-	doEXT_CH__LIGHT_YELLOW__BLINK->Set__DATA(STR__ON);
+	if(bActive__LIGHT_YELLOW__ON_OFF)		doEXT_CH__LIGHT_YELLOW__ON_OFF->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_YELLOW__BLINK)		doEXT_CH__LIGHT_YELLOW__BLINK->Set__DATA(STR__ON);
 
 	return 1;
 }
@@ -63,24 +63,24 @@ Call__YELLOW_BLINK()
 int CObj__STD_TYPE::
 Call__GREEN_ON()
 {
-	doEXT_CH__LIGHT_GREEN__ON_OFF->Set__DATA(STR__ON);
-	doEXT_CH__LIGHT_GREEN__BLINK->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_GREEN__ON_OFF)		doEXT_CH__LIGHT_GREEN__ON_OFF->Set__DATA(STR__ON);
+	if(bActive__LIGHT_GREEN__BLINK)			doEXT_CH__LIGHT_GREEN__BLINK->Set__DATA(STR__OFF);
 
 	return 1;
 }
 int CObj__STD_TYPE::
 Call__GREEN_OFF()
 {
-	doEXT_CH__LIGHT_GREEN__ON_OFF->Set__DATA(STR__OFF);
-	doEXT_CH__LIGHT_GREEN__BLINK->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_GREEN__ON_OFF)		doEXT_CH__LIGHT_GREEN__ON_OFF->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_GREEN__BLINK)			doEXT_CH__LIGHT_GREEN__BLINK->Set__DATA(STR__OFF);
 
 	return 1;
 }
 int CObj__STD_TYPE::
 Call__GREEN_BLINK()
 {
-	doEXT_CH__LIGHT_GREEN__ON_OFF->Set__DATA(STR__OFF);
-	doEXT_CH__LIGHT_GREEN__BLINK->Set__DATA(STR__ON);
+	if(bActive__LIGHT_GREEN__ON_OFF)		doEXT_CH__LIGHT_GREEN__ON_OFF->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_GREEN__BLINK)			doEXT_CH__LIGHT_GREEN__BLINK->Set__DATA(STR__ON);
 
 	return 1;
 }
@@ -90,24 +90,24 @@ Call__GREEN_BLINK()
 int CObj__STD_TYPE::
 Call__BLUE_ON()
 {
-	doEXT_CH__LIGHT_BLUE__ON_OFF->Set__DATA(STR__ON);
-	doEXT_CH__LIGHT_BLUE__BLINK->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_BLUE__ON_OFF)				doEXT_CH__LIGHT_BLUE__ON_OFF->Set__DATA(STR__ON);
+	if(bActive__LIGHT_BLUE__BLINK)				doEXT_CH__LIGHT_BLUE__BLINK->Set__DATA(STR__OFF);
 
 	return 1;
 }
 int CObj__STD_TYPE::
 Call__BLUE_OFF()
 {
-	doEXT_CH__LIGHT_BLUE__ON_OFF->Set__DATA(STR__OFF);
-	doEXT_CH__LIGHT_BLUE__BLINK->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_BLUE__ON_OFF)				doEXT_CH__LIGHT_BLUE__ON_OFF->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_BLUE__BLINK)				doEXT_CH__LIGHT_BLUE__BLINK->Set__DATA(STR__OFF);
 
 	return 1;
 }
 int CObj__STD_TYPE::
 Call__BLUE_BLINK()
 {
-	doEXT_CH__LIGHT_BLUE__ON_OFF->Set__DATA(STR__OFF);
-	doEXT_CH__LIGHT_BLUE__BLINK->Set__DATA(STR__ON);
+	if(bActive__LIGHT_BLUE__ON_OFF)				doEXT_CH__LIGHT_BLUE__ON_OFF->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_BLUE__BLINK)				doEXT_CH__LIGHT_BLUE__BLINK->Set__DATA(STR__ON);
 
 	return 1;
 }
@@ -116,24 +116,24 @@ Call__BLUE_BLINK()
 int CObj__STD_TYPE::
 Call__WHITE_ON()
 {
-	doEXT_CH__LIGHT_WHITE__ON_OFF->Set__DATA(STR__ON);
-	doEXT_CH__LIGHT_WHITE__BLINK->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_WHITE__ON_OFF)			doEXT_CH__LIGHT_WHITE__ON_OFF->Set__DATA(STR__ON);
+	if(bActive__LIGHT_WHITE__BLINK)				doEXT_CH__LIGHT_WHITE__BLINK->Set__DATA(STR__OFF);
 
 	return 1;
 }
 int CObj__STD_TYPE::
 Call__WHITE_OFF()
 {
-	doEXT_CH__LIGHT_WHITE__ON_OFF->Set__DATA(STR__OFF);
-	doEXT_CH__LIGHT_WHITE__BLINK->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_WHITE__ON_OFF)			doEXT_CH__LIGHT_WHITE__ON_OFF->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_WHITE__BLINK)				doEXT_CH__LIGHT_WHITE__BLINK->Set__DATA(STR__OFF);
 
 	return 1;
 }
 int CObj__STD_TYPE::
 Call__WHITE_BLINK()
 {
-	doEXT_CH__LIGHT_WHITE__ON_OFF->Set__DATA(STR__OFF);
-	doEXT_CH__LIGHT_WHITE__BLINK->Set__DATA(STR__ON);
+	if(bActive__LIGHT_WHITE__ON_OFF)			doEXT_CH__LIGHT_WHITE__ON_OFF->Set__DATA(STR__OFF);
+	if(bActive__LIGHT_WHITE__BLINK)				doEXT_CH__LIGHT_WHITE__BLINK->Set__DATA(STR__ON);
 
 	return 1;
 }
@@ -143,14 +143,20 @@ Call__WHITE_BLINK()
 int CObj__STD_TYPE::
 Call__ALARM_BUZZER_ON()
 {
-	doEXT_CH__ALARM_BUZZER->Set__DATA(STR__ON);
+	if(bActive__ALARM_BUZZER_SET)
+	{
+		doEXT_CH__ALARM_BUZZER_SET->Set__DATA(STR__ON);
+	}
 
 	return 1;
 }
 int CObj__STD_TYPE::
 Is__ALARM_BUZZER_ON()
 {
-	if(doEXT_CH__ALARM_BUZZER->Check__DATA(STR__ON) > 0)	return 1;
+	if(bActive__ALARM_BUZZER_SET)
+	{
+		if(doEXT_CH__ALARM_BUZZER_SET->Check__DATA(STR__ON) > 0)		return 1;
+	}
 
 	return -1;
 }
@@ -158,7 +164,10 @@ Is__ALARM_BUZZER_ON()
 int CObj__STD_TYPE::
 Call__ALARM_BUZZER_OFF()
 {
-	doEXT_CH__ALARM_BUZZER->Set__DATA(STR__OFF);
+	if(bActive__ALARM_BUZZER_SET)
+	{
+		doEXT_CH__ALARM_BUZZER_SET->Set__DATA(STR__OFF);
+	}
 
 	return 1;
 }
@@ -170,6 +179,7 @@ Call__ALARM_BUZZER_RESET_ON()
 		doEXT_CH__ALARM_BUZZER_RESET->Set__DATA(STR__ON);
 		return 1;
 	}
+
 	return -1;
 }
 int CObj__STD_TYPE::
@@ -179,6 +189,7 @@ Is__ALARM_BUZZER_RESET_ON()
 	{
 		return doEXT_CH__ALARM_BUZZER_RESET->Check__DATA(STR__ON);
 	}
+
 	return -1;
 }
 int CObj__STD_TYPE::
@@ -189,6 +200,7 @@ Call__ALARM_BUZZER_RESET_OFF()
 		doEXT_CH__ALARM_BUZZER_RESET->Set__DATA(STR__OFF);
 		return 1;
 	}
+
 	return -1;
 }
 

@@ -266,8 +266,8 @@ int CObj__VAC_ROBOT_STD::__DEFINE__VARIABLE_STD(p_variable)
 		{
 			// PMx - ARM_STATE
 			str_name.Format("OTR.OUT.MON.dPM%1d.ARM.STATE", i+1);
-			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, APP_DSP__ARM_STS_ANI,"");
-			LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__PMx_ARM_STATE[i],str_name);
+			STD__ADD_STRING_WITH_X_OPTION(str_name, "");
+			LINK__VAR_STRING_CTRL(sCH__OTR_OUT_MON__PMx_ARM_STATE[i], str_name);
 
 			// PMx - Arm_A
 			str_name.Format("OTR.OUT.MON.dPM%1d.ARM_A.ACT", i+1);
@@ -809,6 +809,8 @@ int CObj__VAC_ROBOT_STD::__DEFINE__VARIABLE_STD(p_variable)
 	{
 		p_variable->Add__MONITORING_PROC(3.0, MON_ID__STATE_MONITOR);
 	}
+
+	iDATA__PMx_RETRACT_COUNT = 0;
 	return 1;
 }
 
@@ -1284,10 +1286,7 @@ int CObj__VAC_ROBOT_STD::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		p_variable->Get__DEF_CONST_DATA(def_name, def_data);
 
 		m_nPM_LIMIT = atoi(def_data);
-		if(m_nPM_LIMIT <= 0)
-		{
-			m_nPM_LIMIT = CFG_PMx__SIZE;
-		}
+		if(m_nPM_LIMIT > CFG_PMx__SIZE)			m_nPM_LIMIT = CFG_PMx__SIZE;
 
 		// ...
 		def_name = "OBJ__DB";
@@ -1962,6 +1961,42 @@ int CObj__VAC_ROBOT_STD::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_alarm
 				}
 			}
 		}
+
+		/*
+		// PMx.ARM.RETRACT ...
+		if((mode.CompareNoCase(sMODE__PICK)  == 0)
+		|| (mode.CompareNoCase(sMODE__PLACE) == 0))
+		{
+			CString log_msg;
+			CString log_bff;
+
+			int check__pm_index = Macro__CHECK_PMx_INDEX(para__stn_name);
+
+			log_msg = "PMx.ARM_RETRACT CHECK ... \n";
+			log_bff.Format(" * check__pm_index <- [%1d] \n", check__pm_index);
+			log_msg += log_bff;
+
+			if(check__pm_index >= 0)
+			{
+				CString ch_data;
+				
+				ch_data.Format("%s.%1d", STR__RETRACT,iDATA__PMx_RETRACT_COUNT++);			
+				if(iDATA__PMx_RETRACT_COUNT > 9)		iDATA__PMx_RETRACT_COUNT = 0;
+
+				for(int pm_i=0; pm_i< m_nPM_LIMIT; pm_i++)
+				{
+					sCH__OTR_OUT_MON__PMx_ARM_STATE[pm_i]->Set__DATA(ch_data);
+
+					log_bff.Format(" * %s <- [%s] \n",
+									sCH__OTR_OUT_MON__PMx_ARM_STATE[pm_i]->Get__CHANNEL_NAME(),
+									sCH__OTR_OUT_MON__PMx_ARM_STATE[pm_i]->Get__STRING());
+					log_msg += log_bff;
+				}
+			}
+
+			Fnc__APP_LOG(log_msg);
+		}
+		*/
 	}
 
 	if((flag < 0)||(p_variable->Check__CTRL_ABORT() > 0))

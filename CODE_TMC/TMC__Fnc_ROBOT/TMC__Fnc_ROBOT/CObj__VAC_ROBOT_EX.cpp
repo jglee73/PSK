@@ -517,7 +517,7 @@ int CObj__VAC_ROBOT_EX::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__PHY_ROBOT__PARA_ACTIVE_HANDOFF_REQ, def_data,str_name);
 
 			str_name = "PARA.ACTIVE_HANDOFF.ACT";
-			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__PHY_ROBOT__PARA_ACTIVE_HANDOFF_REQ, def_data,str_name);
+			LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__PHY_ROBOT__PARA_ACTIVE_HANDOFF_ACT, def_data,str_name);
 		}
 	}
 

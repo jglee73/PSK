@@ -1969,7 +1969,16 @@ void CObj_Opr__AUTO_MODE::Seq__CHECK_PORT_COMPLETE(CII_OBJECT__ALARM *p_alarm)
 				}
 				else
 				{
-					if(xCH__PORT_LAMP_STATUS[i]->Check__DATA(STR__END) < 0)
+					bool active__lp_reload = true;
+
+					if((xCH__LPx_END_REQ_FLAG[i]->Check__DATA(STR__YES)    > 0)
+					|| (xCH__LPx_RETURN_REQ_FLAG[i]->Check__DATA(STR__YES) > 0)
+					|| (xCH__PORT_LAMP_STATUS[i]->Check__DATA(STR__END) > 0))
+					{
+						active__lp_reload = false;
+					}
+
+					if(active__lp_reload)
 					{
 						int act_flag = 1;
 
@@ -2167,7 +2176,7 @@ void CObj_Opr__AUTO_MODE::Seq__CHECK_PORT_COMPLETE(CII_OBJECT__ALARM *p_alarm)
 					else
 					{
 						xCH__PORT_CTRL[i]->Set__DATA("AVAILABLE");
-						xCH__PORT_STATUS[i]->Set__DATA("COMPLETED");
+						xCH__PORT_STATUS[i]->Set__DATA("ABORTED");
 					}
 				}
 			}

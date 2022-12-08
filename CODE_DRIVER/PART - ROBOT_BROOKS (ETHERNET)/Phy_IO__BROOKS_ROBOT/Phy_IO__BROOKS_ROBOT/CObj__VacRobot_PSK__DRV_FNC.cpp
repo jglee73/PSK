@@ -22,24 +22,24 @@ int CObj__VacRobot_PSK
 	CStringArray l_err;
 
 	/*
-	if((diCH__ARM_A_READ->Check__VARIABLE_NAME(var_name) > 0)
-	|| (diCH__ARM_B_READ->Check__VARIABLE_NAME(var_name) > 0))
+	if((diCH__ARM_A_MAT_READ->Check__VARIABLE_NAME(var_name) > 0)
+	|| (diCH__ARM_B_MAT_READ->Check__VARIABLE_NAME(var_name) > 0))
 	{
-		if(diCH__ARM_A_READ->Check__VARIABLE_NAME(var_name) > 0)
-			str_cmmd = "RQ POS STN ARM A";
+		if(diCH__ARM_A_MAT_READ->Check__VARIABLE_NAME(var_name) > 0)
+			str_cmmd = "RQ LOAD ARM A";
 		else
-			str_cmmd = "RQ POS STN ARM B";
+			str_cmmd = "RQ LOAD ARM B";
 
 		int r_flag = Proc__CMMD_RSP(var_name, str_cmmd, _TO__QUERY, TRUE, l_rsp,l_err) ;
 		if(r_flag < 0)		return -1;
 
-		if(l_rsp.GetSize() > 4)
+		if(l_rsp.GetSize() > 1)
 		{
-			CString r_data = l_rsp[4];
-		
-			     if(r_data.CompareNoCase("EX") == 0)		read_data = "Extended";
-			else if(r_data.CompareNoCase("RE") == 0)		read_data = "Retracted";
-			else if(r_data.CompareNoCase("--") == 0)		read_data = "Unknown";
+			CString r_data = l_rsp[0];
+
+			if(r_data.Find("ON") > 0)		read_data = "Present";
+			else if(r_data.Find("OFF") > 0)		read_data = "Absent";
+			else if(r_data.Find("?")  > 0)		read_data = "Unknown";
 			else											read_data = "Unknown";
 		}
 		else
@@ -55,41 +55,59 @@ int CObj__VacRobot_PSK
 	}
 	*/
 
-	if((diCH__ARM_A_MAT_READ->Check__VARIABLE_NAME(var_name) > 0)
-	|| (diCH__ARM_B_MAT_READ->Check__VARIABLE_NAME(var_name) > 0))
+	if((diCH__ROBOT_STATE_READ__AUTO->Check__VARIABLE_NAME(var_name)   > 0)
+	|| (diCH__ROBOT_STATE_READ__MANUAL->Check__VARIABLE_NAME(var_name) > 0))
 	{
-		if(diCH__ARM_A_MAT_READ->Check__VARIABLE_NAME(var_name) > 0)
-			str_cmmd = "RQ LOAD ARM A";
-		else
-			str_cmmd = "RQ LOAD ARM B";
-
+		str_cmmd = "TCL rqstate";     // BUSY, ERROR, ARM STATION, ARM Position, SERVO STATUS, ARM A STATUS
+		
 		int r_flag = Proc__CMMD_RSP(var_name, str_cmmd, _TO__QUERY, TRUE, l_rsp,l_err) ;
-		if(r_flag < 0)		return -1;
-
-		if(l_rsp.GetSize() > 3)
+		
+		if((r_flag >= 0)
+		&& (l_rsp.GetSize() > 1))
 		{
-			CString r_data = l_rsp[3];
+			CStringArray l_data;
 
-			     if(r_data.CompareNoCase("ON") == 0)		read_data = "Present";
-			else if(r_data.CompareNoCase("OF") == 0)		read_data = "Absent";
-			else if(r_data.CompareNoCase("?")  == 0)		read_data = "Unknown";
-			else											read_data = "Unknown";
+			splitString(l_rsp[0], " ", l_data);
+			
+			if(l_data.GetSize() >= 7)
+			{
+				CString str_data;
+
+				str_data = l_data[0];     // Busy
+				if(str_data.CompareNoCase("N") == 0)		dCH__DRV_INFO_ACTIVE_BUSY->Set__DATA(STR__OFF);
+				else										dCH__DRV_INFO_ACTIVE_BUSY->Set__DATA(STR__ON);
+
+				str_data = l_data[1];     // Error
+				sCH__DRV_INFO_ERRID->Set__DATA(str_data);
+
+				str_data = l_data[2];     // Arm Station
+
+				str_data = l_data[3];     // Arm Position
+
+				str_data = l_data[4];     // Servo Status
+
+				str_data = l_data[5];     // Arm_A Status
+				if(str_data.CompareNoCase("ON") == 0)		dCH__DRV_INFO_ARM_A_MAT_READ->Set__DATA("Present");
+				else										dCH__DRV_INFO_ARM_A_MAT_READ->Set__DATA("Absent");
+				
+				str_data = l_data[6];     // Arm_B Status
+				if(str_data.CompareNoCase("ON") == 0)		dCH__DRV_INFO_ARM_B_MAT_READ->Set__DATA("Present");
+				else										dCH__DRV_INFO_ARM_B_MAT_READ->Set__DATA("Absent");
+			}
+
+			read_data = STR__SUCCESS;
+			return 1;
 		}
 		else
 		{
-			read_data = "Unknown";
+			read_data = STR__FAIL;
+			return -1;
 		}
-
-		if(l_err.GetSize() > 0)
-		{
-
-		}
-		return 1;
 	}
 
 	if(diCH__COMM_STS->Check__VARIABLE_NAME(var_name) > 0)
 	{
-		if(iCFG__SIM_FLAG > 0)
+		if(iActive__SIM_MODE > 0)
 		{
 			read_data = STR__ONLINE;
 		}
@@ -99,6 +117,22 @@ int CObj__VacRobot_PSK
 			else							read_data = STR__ONLINE;
 		}
 
+		return 1;
+	}
+
+	if(diCH__ROBOT_INIT_CMD ->Check__VARIABLE_NAME(var_name) > 0)
+	{
+		str_cmmd = "RQ OVERALL SPEED 0.9";// AWC AVAILABLE SPEED 0.9
+
+		int r_flag = Proc__CMMD_RSP(var_name, str_cmmd, _TO__QUERY, TRUE, l_rsp,l_err) ;
+		if(r_flag <0) {read_data = "FAIL"; return -1;}
+
+		str_cmmd = "Load TCL scripts";//For using "TCL rqstate"
+
+		r_flag = Proc__CMMD_RSP(var_name, str_cmmd, _TO__QUERY, TRUE, l_rsp,l_err) ;
+		if(r_flag <0) {read_data = "FAIL"; return -1;}
+
+		read_data = STR__SUCCESS;
 		return 1;
 	}
 
@@ -327,6 +361,10 @@ int CObj__VacRobot_PSK
 		{
 			str_cmmd.Format("SET LOAD ARM B OFF");
 		}
+		else if(set_data.CompareNoCase("ChkLoad.All") == 0)
+		{
+			str_cmmd.Format("CHECK LOAD");
+		}
 		else if(set_data.CompareNoCase("ChkLoad") == 0)
 		{
 			str_cmmd.Format("CHECK LOAD INTLCK ALL DIS");
@@ -456,16 +494,18 @@ int CObj__VacRobot_PSK
 			|| (set_data.CompareNoCase("BGet_Cptr")   == 0) 
 			|| (set_data.CompareNoCase("GET_CPTR_21") == 0))
 			{
-				// CPTR NOT TRIGGERED가 올 수도 있다.
 				sCH__CPTR_SNS_FULL_VAL->Set__DATA(rsp_data);
 			}
 			else if((set_data.CompareNoCase("AGet_Current_Stn") == 0) 
 				 || (set_data.CompareNoCase("BGet_Current_Stn") == 0))
 			{
-				sCH__RQ_STN_FULL_VAL->Set__DATA(rsp_data);
+				sCH__DA_RESULT_FULL_VAL->Set__DATA(rsp_data);
 			}
 			else if(set_data.CompareNoCase("WAF_CEN.DATA") == 0)
 			{
+				sCH__DA_RESULT_FULL_VAL->Set__DATA(rsp_data);
+
+				// ...
 				bool active_offset = false;
 				int count_offset = 0;
 
@@ -491,6 +531,7 @@ int CObj__VacRobot_PSK
 					}
 
 					count_offset++;
+
 					if(count_offset == 1)		str__off_r = str_rsp;
 					if(count_offset == 2)		str__off_t = str_rsp;
 				}
@@ -503,18 +544,26 @@ int CObj__VacRobot_PSK
 					double t_value = atof(str__off_t) / 1000.0;
 
 					str_value.Format("%.3f", r_value);
-					sCH__RQSTN_SNS_R_VALUE->Set__DATA(str_value);
+					sCH__DA_RESULT_R_OFFSET_MM->Set__DATA(str_value);
 					
 					str_value.Format("%.3f", t_value);
-					sCH__RQSTN_SNS_T_VALUE->Set__DATA(str_value);
+					sCH__DA_RESULT_T_OFFSET_DEG->Set__DATA(str_value);
 
-					sCH__RQSTN_SNS_Z_VALUE->Set__DATA("0.0");
+					//
+					str_value.Format("%.3f", r_value * cos(t_value));
+					sCH__DA_RESULT_X_OFFSET_MM->Set__DATA(str_value);
+					
+					str_value.Format("%.3f", r_value * sin(t_value));
+					sCH__DA_RESULT_Y_OFFSET_MM->Set__DATA(str_value);
+
 				}
 				else
 				{
-					sCH__RQSTN_SNS_R_VALUE->Set__DATA("0.0");
-					sCH__RQSTN_SNS_T_VALUE->Set__DATA("0.0");
-					sCH__RQSTN_SNS_Z_VALUE->Set__DATA("0.0");
+					sCH__DA_RESULT_R_OFFSET_MM->Set__DATA("0.0");
+					sCH__DA_RESULT_T_OFFSET_DEG->Set__DATA("0.0");
+					
+					sCH__DA_RESULT_X_OFFSET_MM->Set__DATA("0.0");
+					sCH__DA_RESULT_Y_OFFSET_MM->Set__DATA("0.0");
 				}
 			}
 		}
@@ -663,7 +712,8 @@ int CObj__VacRobot_PSK
 	// edo.RB1.Slot
 	if(doCH__SLOT->Check__VARIABLE_NAME(var_name) > 0)
 	{
-		m_sSlot = set_data;
+		// m_sSlot = set_data;
+		m_sSlot = "1";
 		return 1;
 	}
 
@@ -773,3 +823,30 @@ int CObj__VacRobot_PSK
 	return -1;
 }
 
+int CObj__VacRobot_PSK
+::splitString(CString strData, CString Seperator, CStringArray& arr)
+{
+	CString data = strData;
+	int Position = 0;
+	CString Token;
+
+	Token = data.Tokenize(Seperator, Position);
+
+	if (Token != L"") 
+		arr.Add(Token);
+
+	while (!Token.IsEmpty())
+	{
+		// Get next token.
+		Token = data.Tokenize(Seperator, Position);
+
+		if (Token != L"")
+		{
+			arr.Add(Token);
+		}
+	}
+
+	data.Empty();
+	Token.Empty();
+	return 1;
+}

@@ -67,7 +67,7 @@ int  CObj__Driver_FUSION
 
 	// Offline Alarm Post
 	{
-		int alarm_id = ALID__OFFLINE_ALARM;
+		int alarm_id = ALID__OFFLINE_ALARM__ACT;
 
 		CString err_msg;
 		CString r_act;

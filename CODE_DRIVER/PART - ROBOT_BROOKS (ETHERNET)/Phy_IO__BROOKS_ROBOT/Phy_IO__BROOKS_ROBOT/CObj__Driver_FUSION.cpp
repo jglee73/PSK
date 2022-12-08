@@ -455,6 +455,10 @@ int CObj__Driver_FUSION::__DEFINE__VARIABLE_STD(p_variable)
 
 
 // ...
+#define  ACT__CHECK_ALARM						\
+l_act.RemoveAll();								\
+l_act.Add("CHECK");								\
+
 #define  ACT__RETRY_ABORT						\
 l_act.RemoveAll();								\
 l_act.Add("RETRY");								\
@@ -487,10 +491,23 @@ int CObj__Driver_FUSION::__DEFINE__ALARM(p_alarm)
 
 	// ...
 	{
-		alarm_id = ALID__OFFLINE_ALARM;
+		alarm_id = ALID__OFFLINE_ALARM__MON;
 
 		alarm_title  = title;
-		alarm_title += "Offline.";
+		alarm_title += "Offline (Monitoring).";
+
+		alarm_msg  = "Controller is Offline.\n";
+		alarm_msg += "Please, Check Communication Status !\n";
+
+		ACT__CHECK_ALARM;
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
+	// ...
+	{
+		alarm_id = ALID__OFFLINE_ALARM__ACT;
+
+		alarm_title  = title;
+		alarm_title += "Offline (Action).";
 
 		alarm_msg  = "Controller is Offline.\n";
 		alarm_msg += "Please, Check Communication Status !\n";

@@ -272,8 +272,23 @@ int  CObj__ATM_ROBOT_FUSION
 	// ...
 	int r_flag;
 
-	if(active__align_pick)		r_flag = Fnc__ACTION(arm_type,stn_name,stn_slot, CMMD__ALIGN_PICK);
-	else						r_flag = Fnc__ACTION(arm_type,stn_name,stn_slot, CMMD__PICK);
+	if(active__align_pick)
+	{
+		if(iDATA__ALIGN_TYPE == ALIGN_TYPE__ROBOT)			
+		{
+			r_flag = Fnc__ACTION(arm_type,stn_name,stn_slot, CMMD__ALIGN_PICK);
+		}			
+		else
+		{
+			r_flag = Call__ALGN(p_variable,p_alarm);
+
+			if(r_flag > 0)		r_flag = Fnc__ACTION(arm_type,stn_name,stn_slot, CMMD__PICK);
+		}			
+	}
+	else
+	{
+		r_flag = Fnc__ACTION(arm_type,stn_name,stn_slot, CMMD__PICK);
+	}
 
 	if(r_flag > 0)
 	{

@@ -44,7 +44,7 @@ void CObj__Driver_FUSION
 				// ...
 				{
 					CString r_act;
-					int alarm_id = ALID__OFFLINE_ALARM;
+					int alarm_id = ALID__OFFLINE_ALARM__MON;
 
 					p_alarm->Check__ALARM(alarm_id,r_act);
 					p_alarm->Post__ALARM(alarm_id);

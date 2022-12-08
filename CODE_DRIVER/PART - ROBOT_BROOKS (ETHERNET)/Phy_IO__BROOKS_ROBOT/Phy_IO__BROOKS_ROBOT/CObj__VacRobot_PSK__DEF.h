@@ -37,6 +37,12 @@ enum {NORMAL, ACTIVE_HAND_OFF};
 #define  STR__LOAD					"LOAD"
 #define  STR__UNLOAD				"UNLOAD"
 
+#define  STR__SUCCESS               "SUCCESS"
+#define  STR__FAIL                  "FAIL"
+
+#define  STR__Present               "Present"
+#define  STR__Absent                "Absent"
+
 
 // ...
 #define  ARM_A						"A"
@@ -57,9 +63,10 @@ enum {NORMAL, ACTIVE_HAND_OFF};
 #define  _RSP						"_RSP"
 #define  _ERR						"_ERR"
 #define  _DONE						"_DONE"
+#define  _RDY						"_RDY"
 
 
 // ...
-#define _TO__QUERY					1.0				// 1.0  sec
-#define _TO__ACT					50.0			// 50.0 sec
+#define  _TO__QUERY					1.0				// 1.0  sec
+#define  _TO__ACT					50.0			// 50.0 sec
 

@@ -181,7 +181,7 @@ int  CObj__VacRobot_PSK
 	CString key_word;
 	CString log_msg;
 	CString log_bff;
-
+	CStringArray l_para;
 	// ...
 	{
 		l_rsp.RemoveAll();
@@ -207,7 +207,9 @@ int  CObj__VacRobot_PSK
 	int msg_id = Get__Msg_ID();
 
 	CString str_cmmd;
-	str_cmmd.Format("%02d %s", msg_id,s_cmmd);
+	//str_cmmd.Format("%02d %s", msg_id,s_cmmd); // KMS:NOT Use msg_id;
+	str_cmmd.Format("%s",s_cmmd); // KMS:Only Send Message
+
 
 	log_msg.Format(" %s -> %s%s", var_name,str_cmmd,sEnd_OutStr);
 	Fnc__DRV_LOG(log_msg);
@@ -260,105 +262,61 @@ int  CObj__VacRobot_PSK
 			log_msg += log_bff;
 
 			Fnc__DRV_LOG(log_msg);
-		}
-
-		if(active_prt)
-		{
-			printf(" * r_cnt : %1d \n", r_cnt);
-			printf(" * r_len : %1d \n", r_len);
-			printf(" * err_msg  : [%s] \n", err_msg);
-			printf(" * str_data : [%s] \n", str_data);
-		}
-
-		// ...
-		int check_done = -1;
-
-		int k_limit = 4;
-		int k;
-
-		for(k=0; k<k_limit; k++)
-		{
-				 if(k == 0)		key_word = _ACK;
-			else if(k == 1)		key_word = _ERR;
-			else if(k == 2)		key_word = _RSP;
-			else if(k == 3)		key_word = _DONE;
-			else				break;
-
-			// Check : Keyword ...
-			CStringArray l_para;
-
-			if(Check__MSG_KEY_WORD(str_data, key_word,l_para) > 0)
-			{	
-				if(active_prt)
-				{
-					printf("Check : \"%s\" ... \n", key_word);
-					printf(" * key_word : [%s] \n", key_word);
-				}
-
-				// ...
-				int active_rsp = -1;
-				int active_err = -1;
-
-				if(key_word.CompareNoCase(_RSP) == 0)
-				{
-					active_rsp = 1;
-				}
-				else if(key_word.CompareNoCase(_ERR) == 0)
-				{
-					active_err = 1;
-				}
-
-				// ...
-				CString str_para;
-
-				int i_limit = l_para.GetSize();
-				int i;
-
-				for(i=0; i<i_limit; i++)
-				{
-					str_para = l_para[i];
-
-					if(active_prt)
-					{
-						printf(" ** %1d) [%s] \n", i+1,str_para);
-					}
-
-					if(i == 0)
-					{
-						int cur_id = atoi(str_para);
-
-						if(msg_id != cur_id)
-						{
-							active_rsp = -1;
-							active_err = -1;
-						}
-					}
-					else
-					{
-						if(active_rsp > 0)
-						{
-							l_rsp.Add(str_para);
-						}
-						else if(active_err > 0)
-						{
-							l_err.Add(str_para);
-						}
-					}
-				}
-
-				if(key_word.CompareNoCase(_DONE) == 0)
-				{
-					check_done = 1;
-					break;
-				}
+			l_para.Add(str_data);
+			if(str_data.CompareNoCase(_RDY) == 0)
+			{
+				break;
 			}
 		}
+	}
+		
+	// ...	
+	CString str_para;
+	CString str__err_id = _ERR;
 
-		if(check_done > 0)
+	int i_limit = l_para.GetSize();
+
+	for(int i=0; i<i_limit; i++)
+	{
+		str_para = l_para[i];
+		
+		//..
+		int active_rsp = -1;
+		int active_err = -1;
+
+		if(str_para.Find(str__err_id) >= 0)
 		{
-			break;
+			active_err = 1;
+		}
+		else
+		{
+			active_rsp = 1;
+		}
+
+		if(active_rsp > 0)
+		{
+			l_rsp.Add(str_para);
+		}
+		else if(active_err > 0)
+		{
+			CString err_code = str_para;
+
+			int err_index = err_code.Find(str__err_id);
+			int del_size = err_index + str__err_id.GetLength();
+
+			if(err_index >= 0)
+			{
+				if(del_size < err_code.GetLength())
+				{
+					err_code.Delete(0, del_size);
+					err_code.Trim();
+				}
+
+				l_err.Add(err_code);
+			}
 		}
 	}
+
 
 	if(l_err.GetSize() > 0)
 	{

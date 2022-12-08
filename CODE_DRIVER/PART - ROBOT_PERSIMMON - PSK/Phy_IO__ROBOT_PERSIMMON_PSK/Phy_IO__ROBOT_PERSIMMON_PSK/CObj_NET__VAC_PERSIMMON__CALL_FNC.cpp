@@ -294,13 +294,13 @@ int  CObj_NET__VAC_PERSIMMON
 		{
 			if(act_pick)
 			{
-				if(arm_type.CompareNoCase(ARM_A) == 0)		sCH__MON_ROBOT_ARM_A_LOAD->Set__DATA(STR__ON);
-				if(arm_type.CompareNoCase(ARM_B) == 0)		sCH__MON_ROBOT_ARM_B_LOAD->Set__DATA(STR__ON);
+				     if(arm_type.CompareNoCase(ARM_A) == 0)			sCH__MON_ROBOT_ARM_A_LOAD->Set__DATA(STR__ON);
+				else if(arm_type.CompareNoCase(ARM_B) == 0)			sCH__MON_ROBOT_ARM_B_LOAD->Set__DATA(STR__ON);
 			}
 			else
 			{
-				if(arm_type.CompareNoCase(ARM_A) == 0)		sCH__MON_ROBOT_ARM_A_LOAD->Set__DATA(STR__OFF);
-				if(arm_type.CompareNoCase(ARM_B) == 0)		sCH__MON_ROBOT_ARM_B_LOAD->Set__DATA(STR__OFF);
+					 if(arm_type.CompareNoCase(ARM_A) == 0)			sCH__MON_ROBOT_ARM_A_LOAD->Set__DATA(STR__OFF);
+				else if(arm_type.CompareNoCase(ARM_B) == 0)			sCH__MON_ROBOT_ARM_B_LOAD->Set__DATA(STR__OFF);
 			}
 		}
 	}
@@ -469,7 +469,7 @@ int  CObj_NET__VAC_PERSIMMON
 		}
 		else if(arm_type.CompareNoCase(ARM_B) == 0)
 		{
-			if(arm_type)			cmmd__arm_act = _Cmmd__BPick_Retract;
+			if(act_pick)			cmmd__arm_act = _Cmmd__BPick_Retract;
 			else					cmmd__arm_act = _Cmmd__BPlace_Retract;
 		}
 

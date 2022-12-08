@@ -73,7 +73,7 @@ _Set_ANI__ROBOT_EXTEND(const CString& arm_type,
 
 		if((pm_index >= 0) && (pm_index < m_nPM_LIMIT))
 		{
-			dCH__OTR_OUT_MON__PMx_ARM_STATE[pm_index]->Set__DATA(STR__EXTEND);
+			sCH__OTR_OUT_MON__PMx_ARM_STATE[pm_index]->Set__DATA(STR__EXTEND);
 
 				 if(active__arm_a)		dCH__OTR_OUT_MON__PMx_ARM_A_ACT[pm_index]->Set__DATA(STR__EXTEND);
 			else if(active__arm_b)		dCH__OTR_OUT_MON__PMx_ARM_B_ACT[pm_index]->Set__DATA(STR__EXTEND);
@@ -105,7 +105,7 @@ void  CObj__VAC_ROBOT_STD
 
 	for(i=0; i<m_nPM_LIMIT; i++)
 	{
-		dCH__OTR_OUT_MON__PMx_ARM_STATE[i]->Set__DATA(STR__RETRACT);
+		sCH__OTR_OUT_MON__PMx_ARM_STATE[i]->Set__DATA(STR__RETRACT);
 		
 		dCH__OTR_OUT_MON__PMx_ARM_A_ACT[i]->Set__DATA(STR__RETRACT);
 		dCH__OTR_OUT_MON__PMx_ARM_B_ACT[i]->Set__DATA(STR__RETRACT);
@@ -179,7 +179,7 @@ void  CObj__VAC_ROBOT_STD
 	int pm_index = Macro__CHECK_PMx_INDEX(stn_name);
 	if((pm_index >= 0) && (pm_index < m_nPM_LIMIT))
 	{
-		dCH__OTR_OUT_MON__PMx_ARM_STATE[pm_index]->Set__DATA(STR__RETRACT);
+		sCH__OTR_OUT_MON__PMx_ARM_STATE[pm_index]->Set__DATA(STR__RETRACT);
 
 			 if(active__arm_a)		dCH__OTR_OUT_MON__PMx_ARM_A_ACT[pm_index]->Set__DATA(STR__RETRACT);
 		else if(active__arm_b)		dCH__OTR_OUT_MON__PMx_ARM_B_ACT[pm_index]->Set__DATA(STR__RETRACT);

@@ -265,12 +265,29 @@ void CObj__CHM_STD
 ::Mon__BALLAST_CTRL(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM *p_alarm)
 {
 	bool active__ballast_ctrl = false;
+
+	int loop_count = 0;
 	int i;
 	
+
 	while(1)
 	{
 		p_variable->Wait__SINGLE_OBJECT(0.1);
 
+		
+		loop_count++;
+		if(loop_count > 10)			loop_count = 1;
+
+		if(loop_count == 1)
+		{
+			double cfg_min = aCH__CFG_TM_BALLAST_N2_PRESSURE_MIN->Get__VALUE();
+			double cfg_max = aCH__CFG_TM_BALLAST_N2_PRESSURE_MAX->Get__VALUE();
+
+			aCH__CFG_TM_BALLAST_N2_PRESSURE_mTORR->Change__MIN_MAX_DEC(cfg_min, cfg_max, 0);
+
+			if(bActive__AO_BALLAST_PRESSURE_TORR)		aoEXT_CH__AO_BALLAST_PRESSURE_TORR->Change__MIN_MAX_DEC(cfg_min, cfg_max, 0);
+			if(bActive__AI_BALLAST_PRESSURE_TORR)		aoEXT_CH__AI_BALLAST_PRESSURE_TORR->Change__MIN_MAX_DEC(cfg_min, cfg_max, 0);
+		}
 
 		// ...
 		bool active__chm_pumping = true;
@@ -296,7 +313,52 @@ void CObj__CHM_STD
 
 			if(!active__chm_pumping)
 			{
-				Fnc__BALLAST_CLOSE();
+				if(Check__BALLAST_CLOSE() < 0)
+				{
+					// ...
+					{
+						int alm_id = ALID__BALLAST_VLV_CLOSE;
+						CString alm_bff;
+						CString alm_msg;
+						CString r_act;
+
+						alm_msg = "Pumping state ... \n";
+
+						if(dCH__TMC_CHM_PRESSURE_STATUS->Check__DATA(STR__VAC) < 0)
+						{
+							alm_bff.Format(" * %s <- %s \n", 
+											dCH__TMC_CHM_PRESSURE_STATUS->Get__CHANNEL_NAME(),
+											dCH__TMC_CHM_PRESSURE_STATUS->Get__STRING());
+							alm_msg += alm_bff;
+						}
+						if(sEXT_CH__MON_PUMP_RUN_STS->Check__DATA(STR__ON) < 0)
+						{
+							alm_bff.Format(" * %s <- %s \n", 
+											sEXT_CH__MON_PUMP_RUN_STS->Get__CHANNEL_NAME(),
+											sEXT_CH__MON_PUMP_RUN_STS->Get__STRING());
+							alm_msg += alm_bff;
+						}
+						if(sCH__PUMP_VLV_OPEN_FLAG->Check__DATA(STR__YES) < 0)
+						{
+							alm_bff.Format(" * %s <- %s \n", 
+											sCH__PUMP_VLV_OPEN_FLAG->Get__CHANNEL_NAME(),
+											sCH__PUMP_VLV_OPEN_FLAG->Get__STRING());
+							alm_msg += alm_bff;
+						}
+						if(dCH__MON_PUMPING_SEQ_ACTIVE->Check__DATA(STR__ON) > 0)
+						{
+							alm_bff.Format(" * %s <- %s \n", 
+											dCH__MON_PUMPING_SEQ_ACTIVE->Get__CHANNEL_NAME(),
+											dCH__MON_PUMPING_SEQ_ACTIVE->Get__STRING());
+							alm_msg += alm_bff;
+						}
+
+						p_alarm->Check__ALARM(alm_id, r_act);
+						p_alarm->Post__ALARM_With_MESSAGE(alm_id, alm_msg);
+					}
+
+					Fnc__BALLAST_CLOSE();
+				}
 			}
 		}
 
@@ -324,7 +386,8 @@ void CObj__CHM_STD
 		
 		}
 
-		if(active__chm_pumping)
+		if((active__ballast_ctrl)
+		&& (active__chm_pumping))
 		{
 			bool active__ballast_interlock = false;
 
@@ -389,6 +452,20 @@ void CObj__CHM_STD
 	}
 }
 
+int  CObj__CHM_STD::Check__BALLAST_CLOSE()
+{
+	if(bActive__DO_BALLAST_VALVE_SET)
+	{
+		if(doEXT_CH__DO_BALLAST_VALVE_SET->Check__DATA(STR__CLOSE) < 0)			return -1;
+	}
+	if(bActive__AO_BALLAST_PRESSURE_TORR)
+	{
+		double cur_press = aoEXT_CH__AO_BALLAST_PRESSURE_TORR->Get__VALUE();
+		if(cur_press > 0.9)			return -2;
+	}
+
+	return 1;
+}
 void CObj__CHM_STD::Fnc__BALLAST_CLOSE()
 {
 	if(bActive__DO_BALLAST_VALVE_SET)			doEXT_CH__DO_BALLAST_VALVE_SET->Set__DATA(STR__CLOSE);

@@ -1334,6 +1334,13 @@ int CObj__ATM_ROBOT_FUSION::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 
 	// AL1 ...
 	{
+		def_name = "DATA.ALIGN_TYPE";
+		p_ext_obj_create->Get__DEF_CONST_DATA(def_name, def_data);
+
+		if(def_data.CompareNoCase("ROBOT") == 0)		iDATA__ALIGN_TYPE = ALIGN_TYPE__ROBOT;
+		else											iDATA__ALIGN_TYPE = ALIGN_TYPE__ALIGNER;
+
+		// ...
 		def_name = "OBJ__AL1";
 		p_ext_obj_create->Get__DEF_CONST_DATA(def_name, def_data);
 
@@ -2621,11 +2628,7 @@ int CObj__ATM_ROBOT_FUSION::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_al
 
 int CObj__ATM_ROBOT_FUSION::__CALL__MONITORING(id, p_variable, p_alarm)
 {
-	switch(id)
-	{
-		case MON_ID__STATE_MONITOR:
-			Mon__STATE_MONITOR(p_variable,p_alarm);
-			break;
-	}	
+	if(id == MON_ID__STATE_MONITOR)			Mon__STATE_MONITOR(p_variable,p_alarm);
+
 	return 1;
 }

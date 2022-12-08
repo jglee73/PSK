@@ -9,11 +9,14 @@
 #define  ACT__ABORT										"ABORT"
 #define  ACT__YES										"YES"
 #define  ACT__NO										"NO"
-
+//
 
 // ...
-#define  ALID__OFFLINE_ALARM										11
-#define  ALID__ERROR_CODE											12
+#define  ALID__OFFLINE_ALARM__MON									11
+#define  ALID__OFFLINE_ALARM__ACT									12
+
+#define  ALID__ERROR_CODE											13
+#define  ALID__ROBOT_BUSY_CHECK										14
 
 //
 #define  ALID__TM_CHM__NOT_ATM_PRESSURE								21
@@ -40,7 +43,6 @@
 #define  ALID__AFTER_CALCULATION_T_OFFSET__SOFT_RANGE_ERROR			38
 #define  ALID__AFTER_CALCULATION_R_OFFSET__HARD_RANGE_ERROR			39
 #define  ALID__AFTER_CALCULATION_T_OFFSET__HARD_RANGE_ERROR			40
-
 
 // Controller Error Code
 #define  ALID__CONTROLLER_ERROR_CODE								41

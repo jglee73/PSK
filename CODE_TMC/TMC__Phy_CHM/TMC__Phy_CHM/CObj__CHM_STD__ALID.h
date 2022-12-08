@@ -25,3 +25,6 @@
 
 #define  ALID__FR_VALVE_NOT_CLOSE						13
 #define  ALID__FR_VALVE_NOT_OPEN						14
+
+#define  ALID__BALLAST_VLV_CLOSE						15
+

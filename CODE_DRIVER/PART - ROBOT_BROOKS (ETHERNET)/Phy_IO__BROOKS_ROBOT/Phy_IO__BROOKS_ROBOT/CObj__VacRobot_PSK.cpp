@@ -18,9 +18,6 @@ CObj__VacRobot_PSK::CObj__VacRobot_PSK()
 	m_sZPos		=	"DN"; 
 	m_sSlot		=	"1";
 
-	m_sBefore_Stn_Retract_ArmA = "UNKNOWN";
-	m_sBefore_Stn_Retract_ArmB = "UNKNOWN";
-
 	iMsg_ID = 0;
 }
 CObj__VacRobot_PSK::~CObj__VacRobot_PSK()
@@ -47,9 +44,8 @@ int CObj__VacRobot_PSK::__DEFINE__CONTROL_MODE(obj,l_mode)
 		ADD__CTRL_VAR(sMODE__RETRACT,	"RETRACT");
 		ADD__CTRL_VAR(sMODE__GOUP,		"GOUP");
 		ADD__CTRL_VAR(sMODE__GODOWN,	"GODOWN");
-		ADD__CTRL_VAR(sMODE__RQ_STN,	"RQ_STN");
 
-		ADD__CTRL_VAR(sMODE__TEACHED_CPTR_SAVE, "TEACHED_CPTR_SAVE");
+		ADD__CTRL_VAR(sMODE__TEST_DA_REPORT, "TEST.DA_REPORT");
 
 		ADD__CTRL_VAR(sMODE__CHECK_CMMD,     "CHECK.CMMD");
 		ADD__CTRL_VAR(sMODE__CHECK_ERR_CODE, "CHECK.ERR_CODE");
@@ -65,9 +61,8 @@ int CObj__VacRobot_PSK::__DEFINE__VERSION_HISTORY(version)
 
 
 // ...
-#define  MON_ID__ANI_MONITOR			1
-#define  MON_ID__IO_MONITOR				2
-#define  MON_ID__HYPER_TERMINAL			3
+#define  MON_ID__IO_MONITOR				1
+#define  MON_ID__HYPER_TERMINAL			2
 
 // ...
 #define  APP_DSP__STN_NAME				"PM1 PM2 PM3 PM4 PM5 PM6  LBA LBB"
@@ -76,6 +71,8 @@ int CObj__VacRobot_PSK::__DEFINE__VERSION_HISTORY(version)
 #define  APP_DSP__RET_EXT				"Retract  Extend"
 #define  APP_DSP__DOWN_UP				"Down  Up"
 #define  APP_DSP__ARM_STS_ANI			"UNKNOWN  RETRACT  EXTEND"
+
+#define  APP_DSP__MATERIAL				"Unknown Absent Present"
 
 
 int CObj__VacRobot_PSK::__DEFINE__VARIABLE_STD(p_variable)
@@ -116,140 +113,10 @@ int CObj__VacRobot_PSK::__DEFINE__VARIABLE_STD(p_variable)
 	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 0, 1, 60, "");
 	LINK__VAR_ANALOG_CTRL(aCH__HYPER_TERMINAL_CMD_TIMEOUT,str_name);
 
-
-	// DA CHART...
-	for(i=0; i<CFG_PMx__SIZE; i++)
-	{
-		int id = i + 1;
-
-		str_name.Format("dDA.PM%1d.CHART.ARM.A.UPDATE.FLAG", id);
-		STD__ADD_DIGITAL(str_name, "OFF ON");
-		LINK__VAR_DIGITAL_CTRL(dDA_PMC_CHART_ARM_A_UPDATE_FLAG_X[i], str_name);
-
-		str_name.Format("dDA.PM%1d.CHART.ARM.B.UPDATE.FLAG", id);
-		STD__ADD_DIGITAL(str_name, "OFF ON");
-		LINK__VAR_DIGITAL_CTRL(dDA_PMC_CHART_ARM_B_UPDATE_FLAG_X[i], str_name);
-
-		str_name.Format("dDA.PM%1d.CHART.DATA.CLEAR", id);
-		STD__ADD_DIGITAL(str_name, "OFF ON");
-		LINK__VAR_DIGITAL_CTRL(dDA_PMC_CHART_DATA_CLEAR_X[i], str_name);
-	}
-
-	// PM : DA CHART ...
-	for(i=0; i<CFG_PMx__SIZE; i++)
-	{
-		int id = i + 1;
-
-		str_name.Format("sDA.PM%1d.CHART.ARM.A.ROFFSET.DISPLAY", id);
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sDA_PMC_CHART_ARM_A_ROFFSET_DISPLAY_X[i], str_name);
-
-		str_name.Format("sDA.PM%1d.CHART.ARM.A.TOFFSET.DISPLAY", id);
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sDA_PMC_CHART_ARM_A_TOFFSET_DISPLAY_X[i], str_name);
-
-		str_name.Format("sDA.PM%1d.CHART.ARM.B.ROFFSET.DISPLAY", id);
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sDA_PMC_CHART_ARM_B_ROFFSET_DISPLAY_X[i], str_name);
-
-		str_name.Format("sDA.PM%1d.CHART.ARM.B.TOFFSET.DISPLAY", id);
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sDA_PMC_CHART_ARM_B_TOFFSET_DISPLAY_X[i], str_name);
-	}
-
-	// LL : DA CHART ...
-	for(i=0; i<CFG_LBx__SIZE; i++)
-	{
-		CString ll_name;
-
-			 if(i == 0)			ll_name = "LBA";
-		else if(i == 1)			ll_name = "LBB";
-		else					continue;
-
-		// A ARM
-		str_name.Format("sDA.%s.CHART.ARM.A.ROFFSET.DISPLAY", ll_name);
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sDA_LL_CHART_ARM_A_ROFFSET_DISPLAY_X[i], str_name);
-
-		str_name.Format("sDA.%s.CHART.ARM.A.TOFFSET.DISPLAY", ll_name);
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sDA_LL_CHART_ARM_A_TOFFSET_DISPLAY_X[i], str_name);
-
-		// B ARM 
-		str_name.Format("sDA.%s.CHART.ARM.B.ROFFSET.DISPLAY", ll_name);
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sDA_LL_CHART_ARM_B_ROFFSET_DISPLAY_X[i], str_name);
-
-		str_name.Format("sDA.%s.CHART.ARM.B.TOFFSET.DISPLAY", ll_name);
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sDA_LL_CHART_ARM_B_TOFFSET_DISPLAY_X[i], str_name);
-
-		//
-		str_name.Format("dDA.%s.CHART.ARM.A.UPDATE.FLAG", ll_name);
-		STD__ADD_DIGITAL(str_name, "OFF ON");
-		LINK__VAR_DIGITAL_CTRL(dDA_LL_CHART_ARM_A_UPDATE_FLAG_X[i], str_name);
-
-		str_name.Format("dDA.%s.CHART.ARM.B.UPDATE.FLAG", ll_name);
-		STD__ADD_DIGITAL(str_name, "OFF ON");
-		LINK__VAR_DIGITAL_CTRL(dDA_LL_CHART_ARM_B_UPDATE_FLAG_X[i], str_name);
-
-		str_name.Format("dDA.%s.CHART.DATA.CLEAR", ll_name);
-		STD__ADD_DIGITAL(str_name, "OFF ON");
-		LINK__VAR_DIGITAL_CTRL(dDA_LL_CHART_DATA_CLEAR_X[i], str_name);
-
-		//
-		str_name.Format("sDA.%s.CHART.ROFFSET.DISPLAY", ll_name);
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sDA_LL_CHART_ROFFSET_DISPLAY_X[i], str_name);
-
-		str_name.Format("sDA.%s.CHART.TOFFSET.DISPLAY", ll_name);
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sDA_LL_CHART_TOFFSET_DISPLAY_X[i], str_name);
-	}
-
-	// DA Offset ...
-	{
-		str_name = "DA.RESULT.R_OFFSET.DEG";	// deg
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sCH__DA_RESULT_R_OFFSET_DEG, str_name);
-
-		str_name = "DA.RESULT.T_OFFSET.MM";		// mm
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sCH__DA_RESULT_T_OFFSET_MM, str_name); 
-
-		//
-		str_name = "aCH.RETRACT.R.OFFSET.VALUE";
-		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-		LINK__VAR_ANALOG_CTRL(aCH__RETRACT_R_OFFSET_VALUE,str_name);
-
-		str_name = "aCH.RETRACT.T.OFFSET.VALUE";
-		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "milideg", 0, -9999999, 9999999, "");
-		LINK__VAR_ANALOG_CTRL(aCH__RETRACT_T_OFFSET_VALUE,str_name);
-	}
-
-	//
-	for(i=0; i<CFG_PMx__SIZE; i++)
-	{
-		int id = i + 1;
-
-		str_name.Format("sDA.PM%1d.CHART.ROFFSET.DISPLAY", id);
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sDA_PMC_CHART_ROFFSET_DISPLAY_X[i], str_name);
-
-		str_name.Format("sDA.PM%1d.CHART.TOFFSET.DISPLAY", id);
-		STD__ADD_STRING(str_name);
-		LINK__VAR_STRING_CTRL(sDA_PMC_CHART_TOFFSET_DISPLAY_X[i], str_name);
-	}
-
 	// DA Retry Count
 	str_name = "aDA.DA.RETRY.CHECK.COUNT";
 	STD__ADD_ANALOG(str_name, "Num",0,1,5);
 	LINK__VAR_ANALOG_CTRL(aDA_DA_RETRY_CHECK_COUNT,str_name);
-
-	// Simulation ...
-	str_name = "SIM.CFG.REAL.TEST";
-	STD__ADD_DIGITAL(str_name, "NO YES");
-	LINK__VAR_DIGITAL_CTRL(dCH__SIM_CFG__REAL_TEST, str_name);
 
 	//
 	str_name = "INR.RB1.ACT.MSG";
@@ -269,156 +136,76 @@ int CObj__VacRobot_PSK::__DEFINE__VARIABLE_STD(p_variable)
 	LINK__VAR_STRING_CTRL(sCH__szRoot,str_name);
 
 	// PARA CHANNEL ...
-	str_name = "OTR.IN.PARA.dSTN.NAME";
-	STD__ADD_DIGITAL(str_name, APP_DSP__STN_NAME);
-	LINK__VAR_DIGITAL_CTRL(dCH__OTR_IN_PARA__STN_NAME,str_name);
+	{
+		str_name = "OTR.IN.PARA.dSTN.NAME";
+		STD__ADD_DIGITAL(str_name, APP_DSP__STN_NAME);
+		LINK__VAR_DIGITAL_CTRL(dCH__OTR_IN_PARA__STN_NAME,str_name);
 
-	str_name = "OTR.IN.PARA.dSTN.SLOT";
-	STD__ADD_DIGITAL(str_name, APP_DSP__SLOT_NUM);
-	LINK__VAR_DIGITAL_CTRL(dCH__OTR_IN_PARA__STN_SLOT,str_name);
+		str_name = "OTR.IN.PARA.dSTN.SLOT";
+		STD__ADD_DIGITAL(str_name, APP_DSP__SLOT_NUM);
+		LINK__VAR_DIGITAL_CTRL(dCH__OTR_IN_PARA__STN_SLOT,str_name);
 
-	str_name = "OTR.IN.PARA.dARM.TYPE";
-	STD__ADD_DIGITAL(str_name, APP_DSP__RB_ARM);
-	LINK__VAR_DIGITAL_CTRL(dCH__OTR_IN_PARA__ARM_TYPE,str_name);
+		str_name = "OTR.IN.PARA.dARM.TYPE";
+		STD__ADD_DIGITAL(str_name, APP_DSP__RB_ARM);
+		LINK__VAR_DIGITAL_CTRL(dCH__OTR_IN_PARA__ARM_TYPE,str_name);
 
-	str_name = "dACTION.STATUS";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__ACTION_STS, str_name);
+		str_name = "dACTION.STATUS";
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__ACTION_STS, str_name);
 
-	str_name.Format("OTR.IN.sARM_A.BEFORE.MODE.STS");
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__ARM_A_BEFORE_MODE_STS,str_name);
+		str_name.Format("OTR.IN.sARM_A.BEFORE.MODE.STS");
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__ARM_A_BEFORE_MODE_STS,str_name);
 
-	str_name.Format("OTR.IN.sARM_B.BEFORE.MODE.STS");
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__ARM_B_BEFORE_MODE_STS,str_name);
+		str_name.Format("OTR.IN.sARM_B.BEFORE.MODE.STS");
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__ARM_B_BEFORE_MODE_STS,str_name);
 
-	str_name.Format("OTR.IN.aSET.STN.R.VALUE");
-	STD__ADD_ANALOG(str_name, "microns", 0, -9999999, 9999999);
-	LINK__VAR_ANALOG_CTRL(aCH__SET_STN_R_VALUE,str_name);
+		str_name.Format("OTR.IN.aSET.STN.R.VALUE");
+		STD__ADD_ANALOG(str_name, "microns", 0, -9999999, 9999999);
+		LINK__VAR_ANALOG_CTRL(aCH__SET_STN_R_VALUE,str_name);
 
-	str_name.Format("OTR.IN.aSET.STN.T.VALUE");
-	STD__ADD_ANALOG(str_name, "microns", 0, -9999999, 9999999);
-	LINK__VAR_ANALOG_CTRL(aCH__SET_STN_T_VALUE,str_name);
+		str_name.Format("OTR.IN.aSET.STN.T.VALUE");
+		STD__ADD_ANALOG(str_name, "microns", 0, -9999999, 9999999);
+		LINK__VAR_ANALOG_CTRL(aCH__SET_STN_T_VALUE,str_name);
 
-	str_name.Format("OTR.IN.sGUI.DISPLAY.R.OFFSET");
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__Estimated_R_OFFSET,str_name);
+		str_name.Format("OTR.IN.sGUI.DISPLAY.R.OFFSET");
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__Estimated_R_OFFSET,str_name);
 
-	str_name.Format("OTR.IN.sGUI.DISPLAY.T.OFFSET");
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__Estimated_T_OFFSET,str_name);
+		str_name.Format("OTR.IN.sGUI.DISPLAY.T.OFFSET");
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__Estimated_T_OFFSET,str_name);
+	}
 
 	// LLx ...
 	for(i=0; i<CFG_LBx__SIZE; i++)
 	{
-		CString ll_name;
-
-			 if(i == 0)			ll_name = "LBA";
-		else if(i == 1)			ll_name = "LBB";
-		else					continue;
-
 		int ll_id = i + 1;
 
-		// Hard
-		str_name.Format("OTR.IN.CFG.%s.R.OFFSET.HARD.TOLERANCE.RET", ll_name);
-		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 4, "");
-		LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_CFG__R_OFFSET_HARD_TOLERANCE_LL_RET_X[i], str_name);
-
-		str_name.Format("OTR.IN.CFG.%s.T.OFFSET.HARD.TOLERANCE.RET", ll_name);
-		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "degree", 1, 0, 2, "");
-		LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_CFG__T_OFFSET_HARD_TOLERANCE_LL_RET_X[i], str_name);
-
-		// Soft
-		str_name.Format("OTR.IN.CFG.%s.R.OFFSET.SOFT.TOLERANCE.RET", ll_name);
-		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 4, "");
-		LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_CFG__R_OFFSET_SOFT_TOLERANCE_LL_RET_X[i], str_name);
-
-		str_name.Format("OTR.IN.CFG.%s.T.OFFSET.SOFT.TOLERANCE.RET", ll_name);
-		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "degree", 1, 0, 2, "");
-		LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_CFG__T_OFFSET_SOFT_TOLERANCE_LL_RET_X[i], str_name);
-
-		// STN.NUM
-		str_name.Format("CFG.%s.STN.NUM", ll_name);
-		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "num", 0, 1, 16, "");
-		LINK__VAR_ANALOG_CTRL(aCH__CFG_LLx_STN_NUM[i], str_name);
-
-		// ARM_A ...
+		for(int k=0; k<CFG_LBx__SLOT_SIZE; k++)
 		{
-			// HIGH ...
-			str_name.Format("OTR.IN.CALED.ARM_A.CPTR.R.HIGH.SNS.LL%1d.VALUE", ll_id);
-			STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-			LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_A_CALED_LL_CPTR_R_HIGH_SNS_VAL_X[i], str_name);
+			int slot_id = k + 1;
 
-			str_name.Format("OTR.IN.CALED.ARM_A.CPTR.T.HIGH.SNS.LL%1d.VALUE", ll_id);
-			STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-			LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_A_CALED_LL_CPTR_T_HIGH_SNS_VAL_X[i], str_name);
-
-			str_name.Format("OTR.IN.CALED.ARM_A.CPTR.Z.HIGH.SNS.LL%1d.VALUE", ll_id);
-			STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-			LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_A_CALED_LL_CPTR_Z_HIGH_SNS_VAL_X[i], str_name);
-
-			// LOW ...
-			str_name.Format("OTR.IN.CALED.ARM_A.CPTR.R.LOW.SNS.LL%1d.VALUE", ll_id);
-			STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-			LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_A_CALED_LL_CPTR_R_LOW_SNS_VAL_X[i], str_name);
-
-			str_name.Format("OTR.IN.CALED.ARM_A.CPTR.T.LOW.SNS.LL%1d.VALUE", ll_id);
-			STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-			LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_A_CALED_LL_CPTR_T_LOW_SNS_VAL_X[i], str_name);
-
-			str_name.Format("OTR.IN.CALED.ARM_A.CPTR.Z.LOW.SNS.LL%1d.VALUE", ll_id);
-			STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-			LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_A_CALED_LL_CPTR_Z_LOW_SNS_VAL_X[i], str_name);
-		}
-		// ARM_B ...
-		{
-			// HIGH ...
-			str_name.Format("OTR.IN.CALED.ARM_B.CPTR.R.HIGH.SNS.LL%1d.VALUE", ll_id);
-			STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-			LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_B_CALED_LL_CPTR_R_HIGH_SNS_VAL_X[i], str_name);
-
-			str_name.Format("OTR.IN.CALED.ARM_B.CPTR.T.HIGH.SNS.LL%1d.VALUE", ll_id);
-			STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-			LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_B_CALED_LL_CPTR_T_HIGH_SNS_VAL_X[i], str_name);
-
-			str_name.Format("OTR.IN.CALED.ARM_B.CPTR.Z.HIGH.SNS.LL%1d.VALUE", ll_id);
-			STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-			LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_B_CALED_LL_CPTR_Z_HIGH_SNS_VAL_X[i], str_name);
-
-			// LOW ...
-			str_name.Format("OTR.IN.CALED.ARM_B.CPTR.R.LOW.SNS.LL%1d.VALUE", ll_id);
-			STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-			LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_B_CALED_LL_CPTR_R_LOW_SNS_VAL_X[i], str_name);
-
-			str_name.Format("OTR.IN.CALED.ARM_B.CPTR.T.LOW.SNS.LL%1d.VALUE", ll_id);
-			STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-			LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_B_CALED_LL_CPTR_T_LOW_SNS_VAL_X[i], str_name);
-
-			str_name.Format("OTR.IN.CALED.ARM_B.CPTR.Z.LOW.SNS.LL%1d.VALUE", ll_id);
-			STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-			LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_B_CALED_LL_CPTR_Z_LOW_SNS_VAL_X[i], str_name);
-		}
-
-		// ... 
-		{
-			str_name.Format("CFG.CPTR.SNS.LL%1d.NUM", ll_id);
-			STD__ADD_ANALOG_WITH_X_OPTION(str_name, "num", 0, 1, 10, "");
-			LINK__VAR_ANALOG_CTRL(aCH__CFG_CPTR_SNS__LLx_NUM[i], str_name);
-		}
-
-		// CFG : DYNAMIC ...
-		{
-			str_name.Format("CFG.LL%1d.DA.USE", ll_id);
-			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO YES", "");
-			LINK__VAR_DIGITAL_CTRL(dCH__CFG_LLx_DA_USE[i], str_name);
+			// STN.NUM ...
+			{
+				str_name.Format("CFG.LL%1d.%1d.STN.NUM", ll_id, slot_id);
+				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "num", 0, 1, 16, "");
+				LINK__VAR_ANALOG_CTRL(aCH__CFG_LLx_STN_NUM_X[i][k], str_name);
+			}	
+			// SENSOR ... 
+			{
+				str_name.Format("CFG.CPTR.SNS.LL%1d.%1d.NUM", ll_id, slot_id);
+				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "num", 0, 1, 10, "");
+				LINK__VAR_ANALOG_CTRL(aCH__CFG_CPTR_SNS__LLx_NUM_X[i][k], str_name);
+			}
 		}
 	}
 
 	// DA Sensor ...
 	{
 		str_name = "CFG.DA.SENSOR.TYPE";
-		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "YES REPORT", "");
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "REPORT  YES", "");
 		LINK__VAR_DIGITAL_CTRL(dCH__CFG_DA_SENSOR_TYPE, str_name);
 	}
 
@@ -443,7 +230,7 @@ int CObj__VacRobot_PSK::__DEFINE__VARIABLE_STD(p_variable)
 		{
 			int id = i + 1;
 
-			//
+			// STN.NUM ...
 			{
 				str_name.Format("CFG.PM%1d.STN.NUM", id);
 				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "num", 0, 1, 16, "");
@@ -456,103 +243,6 @@ int CObj__VacRobot_PSK::__DEFINE__VARIABLE_STD(p_variable)
 				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "num", 0, 1, 10, "");
 				LINK__VAR_ANALOG_CTRL(aCH__CFG_CPTR_SNS__PMx_NUM[i], str_name);
 			}
-			// CFG Range (R and T Offset)
-			{
-
-			}
-
-			// Hard
-			{
-				str_name.Format("OTR.IN.CFG.PM%1d.R.OFFSET.HARD.TOLERANCE.RET", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 4, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_CFG__R_OFFSET_HARD_TOLERANCE_RET[i], str_name);
-
-				str_name.Format("OTR.IN.CFG.PM%1d.T.OFFSET.HARD.TOLERANCE.RET", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "degree", 1, 0, 2, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_CFG__T_OFFSET_HARD_TOLERANCE_RET[i], str_name);
-			}
-			// Soft
-			{
-				str_name.Format("OTR.IN.CFG.PM%1d.R.OFFSET.SOFT.TOLERANCE.RET", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mm", 1, 0, 4, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_CFG__R_OFFSET_SOFT_TOLERANCE_RET[i], str_name);
-
-				str_name.Format("OTR.IN.CFG.PM%1d.T.OFFSET.SOFT.TOLERANCE.RET", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "degree", 1, 0, 2, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_CFG__T_OFFSET_SOFT_TOLERANCE_RET[i], str_name);
-			}
-
-			// ARM_A ...
-			{
-				// R..
-				str_name.Format("OTR.IN.CALED.ARM_A.CPTR.R.HIGH.SNS.PM%1d.VALUE", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_A_CALED_PMx_CPTR_R_HIGH_SNS_VAL[i], str_name);
-
-				// T..
-				str_name.Format("OTR.IN.CALED.ARM_A.CPTR.T.HIGH.SNS.PM%1d.VALUE", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_A_CALED_PMx_CPTR_T_HIGH_SNS_VAL[i], str_name);
-
-				// Z..
-				str_name.Format("OTR.IN.CALED.ARM_A.CPTR.Z.HIGH.SNS.PM%1d.VALUE", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_A_CALED_PMx_CPTR_Z_HIGH_SNS_VAL[i], str_name);
-
-				// R..
-				str_name.Format("OTR.IN.CALED.ARM_A.CPTR.R.LOW.SNS.PM%1d.VALUE", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_A_CALED_PMx_CPTR_R_LOW_SNS_VAL[i], str_name);
-
-				// T..
-				str_name.Format("OTR.IN.CALED.ARM_A.CPTR.T.LOW.SNS.PM%1d.VALUE", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_A_CALED_PMx_CPTR_T_LOW_SNS_VAL[i], str_name);
-
-				// Z..
-				str_name.Format("OTR.IN.CALED.ARM_A.CPTR.Z.LOW.SNS.PM%1d.VALUE", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_A_CALED_PMx_CPTR_Z_LOW_SNS_VAL[i], str_name);
-			}
-			// ARM_B ...
-			{
-				// R..
-				str_name.Format("OTR.IN.CALED.ARM_B.CPTR.R.HIGH.SNS.PM%1d.VALUE", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_B_CALED_PMx_CPTR_R_HIGH_SNS_VAL[i], str_name);
-
-				// T..
-				str_name.Format("OTR.IN.CALED.ARM_B.CPTR.T.HIGH.SNS.PM%1d.VALUE", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_B_CALED_PMx_CPTR_T_HIGH_SNS_VAL[i], str_name);
-
-				// Z..
-				str_name.Format("OTR.IN.CALED.ARM_B.CPTR.Z.HIGH.SNS.PM%1d.VALUE", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_B_CALED_PMx_CPTR_Z_HIGH_SNS_VAL[i], str_name);
-
-				// R..
-				str_name.Format("OTR.IN.CALED.ARM_B.CPTR.R.LOW.SNS.PM%1d.VALUE", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_B_CALED_PMx_CPTR_R_LOW_SNS_VAL[i], str_name);
-
-				// T..
-				str_name.Format("OTR.IN.CALED.ARM_B.CPTR.T.LOW.SNS.PM%1d.VALUE", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_B_CALED_PMx_CPTR_T_LOW_SNS_VAL[i], str_name);
-
-				// Z..
-				str_name.Format("OTR.IN.CALED.ARM_B.CPTR.Z.LOW.SNS.PM%1d.VALUE", id);
-				STD__ADD_ANALOG_WITH_X_OPTION(str_name, "microns", 0, -9999999, 9999999, "");
-				LINK__VAR_ANALOG_CTRL(aCH__OTR_IN_ARM_B_CALED_PMx_CPTR_Z_LOW_SNS_VAL[i], str_name);
-			}
-
-			// CFG : DYNAMIC ...
-			{
-				str_name.Format("CFG.PM%1d.DA.USE", id);
-				STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO YES", "");
-				LINK__VAR_DIGITAL_CTRL(dCH__CFG_PMx_DA_USE[i], str_name);
-			}
 		}
 	}
 
@@ -562,297 +252,166 @@ int CObj__VacRobot_PSK::__DEFINE__VARIABLE_STD(p_variable)
 		p_variable->Get__STD_DESCRIPTION("STD_SLOT_STATUS", dsp_slot_sts);
 
 		// Material Status
-		str_name = "OTR.OUT.MON.dARM_A.MATERIAL.STATUS";
-		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, dsp_slot_sts, "");
-		LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS,str_name);
+		{
+			str_name = "MON.ARM_A.MATERIAL.STATUS";
+			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, dsp_slot_sts, "");
+			LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS, str_name);
 
-		str_name = "OTR.OUT.MON.dARM_B.MATERIAL.STATUS";
-		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, dsp_slot_sts,"");
-		LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS,str_name);
-
+			str_name = "MON.ARM_B.MATERIAL.STATUS";
+			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, dsp_slot_sts,"");
+			LINK__VAR_DIGITAL_CTRL(dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS, str_name);
+		}
 		// Material Title
-		str_name = "OTR.OUT.MON.sARM_A.MATERIAL.TITLE";
-		STD__ADD_STRING_WITH_X_OPTION(str_name,"");
-		LINK__VAR_STRING_CTRL(sCH__OTR_OUT_MON__ARM_A_MATERIAL_TITLE,str_name);
+		{
+			str_name = "MON.ARM_A.MATERIAL.TITLE";
+			STD__ADD_STRING_WITH_X_OPTION(str_name,"");
+			LINK__VAR_STRING_CTRL(sCH__OTR_OUT_MON__ARM_A_MATERIAL_TITLE, str_name);
 
-		str_name = "OTR.OUT.MON.sARM_B.MATERIAL.TITLE";
-		STD__ADD_STRING_WITH_X_OPTION(str_name,"");
-		LINK__VAR_STRING_CTRL(sCH__OTR_OUT_MON__ARM_B_MATERIAL_TITLE,str_name);
+			str_name = "MON.ARM_B.MATERIAL.TITLE";
+			STD__ADD_STRING_WITH_X_OPTION(str_name,"");
+			LINK__VAR_STRING_CTRL(sCH__OTR_OUT_MON__ARM_B_MATERIAL_TITLE, str_name);
+		}
 	}
 
 	// SIMULATION CHANNEL -----
-	str_name = "SIM.CFG.aROTATE.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name,"sec",1,0,9999,"");
-	LINK__VAR_ANALOG_CTRL(aCH__SIM_CFG__ROTATE_TIME, str_name);
-
-	// LBx
-	str_name = "SIM.CFG.aLBx.PICK.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name,"sec",1,0,9999,"");
-	LINK__VAR_ANALOG_CTRL(aCH__SIM_CFG__LBx_PICK_TIME, str_name);
-
-	str_name = "SIM.CFG.aLBx.PLACE.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name,"sec",1,0,9999,"");
-	LINK__VAR_ANALOG_CTRL(aCH__SIM_CFG__LBx_PLACE_TIME, str_name);
-
-	// PMx
-	str_name = "SIM.CFG.aPMx.PICK.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name,"sec",1,0,9999,"");
-	LINK__VAR_ANALOG_CTRL(aCH__SIM_CFG__PMx_PICK_TIME, str_name);
-
-	str_name = "SIM.CFG.aPMx.PLACE.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name,"sec",1,0,9999,"");
-	LINK__VAR_ANALOG_CTRL(aCH__SIM_CFG__PMx_PLACE_TIME, str_name);
-
-	//
-	str_name = "SIM.CFG.aEXTEND.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name,"sec",1,0,9999,"");
-	LINK__VAR_ANALOG_CTRL(aCH__SIM_CFG__EXTEND_TIME, str_name);
-
-	str_name = "SIM.CFG.aRETRACT.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name,"sec",1,0,9999,"");
-	LINK__VAR_ANALOG_CTRL(aCH__SIM_CFG__RETRACT_TIME, str_name);
-
-	// HIGH/LOW Full Value
-	str_name = "GET.CPTR.SNS.FULL.VALUE";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_SNS_FULL_VAL, str_name);
-
-
-	// ----------------- ARM A -------------------------
-	// After EXTEND.. HIGH Sns
-	str_name = "GET.CPTR.ARM_A.SNS.R.EX.VALUE.H";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_A_SNS_R_EX_VALUE_HIGH, str_name);
-
-	str_name = "GET.CPTR.ARM_A.SNS.T.EX.VALUE.H";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_A_SNS_T_EX_VALUE_HIGH, str_name);
-
-	str_name = "GET.CPTR.ARM_A.SNS.Z.EX.VALUE.H";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_A_SNS_Z_EX_VALUE_HIGH, str_name);
-
-	// After EXTEND.. LOW Sns
-	str_name = "GET.CPTR.ARM_A.SNS.R.EX.VALUE.L";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_A_SNS_R_EX_VALUE_LOW, str_name);
-
-	str_name = "GET.CPTR.ARM_A.SNS.T.EX.VALUE.L";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_A_SNS_T_EX_VALUE_LOW, str_name);
-
-	str_name = "GET.CPTR.ARM_A.SNS.Z.EX.VALUE.L";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_A_SNS_Z_EX_VALUE_LOW, str_name);
-
-	// After RETRACT.. HIGH Sns
-	str_name = "GET.CPTR.ARM_A.SNS.R.RE.VALUE.H";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_A_SNS_R_RE_VALUE_HIGH, str_name);
-
-	str_name = "GET.CPTR.ARM_A.SNS.T.RE.VALUE.H";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_A_SNS_T_RE_VALUE_HIGH, str_name);
-
-	str_name = "GET.CPTR.ARM_A.SNS.Z.RE.VALUE.H";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_A_SNS_Z_RE_VALUE_HIGH, str_name);
-
-	// After RETRACT.. LOW Sns
-	str_name = "GET.CPTR.ARM_A.SNS.R.RE.VALUE.L";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_A_SNS_R_RE_VALUE_LOW, str_name);
-
-	str_name = "GET.CPTR.ARM_A.SNS.T.RE.VALUE.L";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_A_SNS_T_RE_VALUE_LOW, str_name);
-
-	str_name = "GET.CPTR.ARM_A.SNS.Z.RE.VALUE.L";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_A_SNS_Z_RE_VALUE_LOW, str_name);
-
-
-	// ----------------- ARM B -------------------------
-	// After EXTEND.. HIGH Sns
-	str_name = "GET.CPTR.ARM_B.SNS.R.EX.VALUE.H";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_B_SNS_R_EX_VALUE_HIGH, str_name);
-
-	str_name = "GET.CPTR.ARM_B.SNS.T.EX.VALUE.H";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_B_SNS_T_EX_VALUE_HIGH, str_name);
-
-	str_name = "GET.CPTR.ARM_B.SNS.Z.EX.VALUE.H";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_B_SNS_Z_EX_VALUE_HIGH, str_name);
-
-	// After EXTEND.. LOW Sns
-	str_name = "GET.CPTR.ARM_B.SNS.R.EX.VALUE.L";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_B_SNS_R_EX_VALUE_LOW, str_name);
-
-	str_name = "GET.CPTR.ARM_B.SNS.T.EX.VALUE.L";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_B_SNS_T_EX_VALUE_LOW, str_name);
-
-	str_name = "GET.CPTR.ARM_B.SNS.Z.EX.VALUE.L";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_B_SNS_Z_EX_VALUE_LOW, str_name);
-
-	// After RETRACT.. HIGH Sns
-	str_name = "GET.CPTR.ARM_B.SNS.R.RE.VALUE.H";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_B_SNS_R_RE_VALUE_HIGH, str_name);
-
-	str_name = "GET.CPTR.ARM_B.SNS.T.RE.VALUE.H";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_B_SNS_T_RE_VALUE_HIGH, str_name);
-
-	str_name = "GET.CPTR.ARM_B.SNS.Z.RE.VALUE.H";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_B_SNS_Z_RE_VALUE_HIGH, str_name);
-
-	// After RETRACT.. LOW Sns
-	str_name = "GET.CPTR.ARM_B.SNS.R.RE.VALUE.L";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_B_SNS_R_RE_VALUE_LOW, str_name);
-
-	str_name = "GET.CPTR.ARM_B.SNS.T.RE.VALUE.L";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_B_SNS_T_RE_VALUE_LOW, str_name);
-
-	str_name = "GET.CPTR.ARM_B.SNS.Z.RE.VALUE.L";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__CPTR_ARM_B_SNS_Z_RE_VALUE_LOW, str_name);
-
-
-	// RQ STN FULL VALUE
-	str_name = "GET.RQ.STN.FULL.VALUE";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__RQ_STN_FULL_VAL, str_name);
-
-	// R, T, Z
-	str_name = "GET.RQSTN.SNS.R.VALUE";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__RQSTN_SNS_R_VALUE, str_name);
-
-	str_name = "GET.RQSTN.SNS.T.VALUE";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__RQSTN_SNS_T_VALUE, str_name);
-
-	str_name = "GET.RQSTN.SNS.Z.VALUE";
-	STD__ADD_STRING(str_name);
-	LINK__VAR_STRING_CTRL(sCH__RQSTN_SNS_Z_VALUE, str_name);
-
-	// Config...
-	str_name = "CFG.aACTION.TIMEOUT.DOWN";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:1.8");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_DOWN, str_name);
-
-	str_name = "CFG.aACTION.TIMEOUT.UP";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:1.8");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_UP, str_name);
-
-	str_name = "CFG.aACTION.TIMEOUT.EXTEND";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:2.2");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_EXTEND, str_name);
-
-	str_name = "CFG.aACTION.TIMEOUT.GOTO.DA.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:2.28");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_GOTO_DA_TIME, str_name);
-
-	str_name = "CFG.aACTION.TIMEOUT.RETRACT.DA.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:1.73");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_RETRACT_DA_TIME, str_name);
-
-	str_name = "CFG.aACTION.TIMEOUT.RETRACT.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:2.2");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_RETRACT_TIME, str_name);
-
-	str_name = "CFG.aACTION.TIMEOUT.ROTATE.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:2.3");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_ROTATE_TIME, str_name);
-
-	str_name = "CFG.aACTION.TIMEOUT.PICK.DA.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:9");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_PICK_DA_TIME, str_name);
-
-	str_name = "CFG.aACTION.TIMEOUT.PICK.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:4.3");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_PICK_TIME, str_name);
-
-	str_name = "CFG.aACTION.TIMEOUT.PLACE.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:3.9");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_PLACE_TIME, str_name);
-
-	str_name = "CFG.aACTION.TIMEOUT.PLACE.ADJUST.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:3.25");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_PLACE_ADJUST_TIME, str_name);
-
-	str_name = "CFG.dPAD.TYPE";
-	STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "UNKNOWN", "");
-	LINK__VAR_DIGITAL_CTRL(dCH__CFG_PAD_TYPE, str_name);
-
-	str_name = "CFG.dWAFER.SIZE";
-	STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "300 200 OTHER", "");
-	LINK__VAR_DIGITAL_CTRL(dCH__CFG_WAFER_SIZE, str_name);
-
-	// Swap : Only Register...
-	str_name = "CFG.aSWAP.LL.BVL.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:7.63");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_SWAP_LL_BVL_TIME, str_name);
-
-	str_name = "CFG.aSWAP.LL.DA.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:7.63");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_SWAP_LL_DA_TIME, str_name);
-
-	str_name = "CFG.aSWAP.LL.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:7.63");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_SWAP_LL_TIME, str_name);
-
-	str_name = "CFG.aSWAP.BVL.NO.Z.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:7.63");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_SWAP_BVL_NO_Z_TIME, str_name);
-
-	str_name = "CFG.aSWAP.BVL.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:7.59");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_SWAP_BVL_TIME, str_name);
-
-	str_name = "CFG.aSWAP.DA.NO.Z.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:5.1");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_SWAP_DA_NO_Z_TIME, str_name);
-
-	str_name = "CFG.aSWAP.DA.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:9.01");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_SWAP_DA_TIME, str_name);
-
-	str_name = "CFG.aSWAP.NO.Z.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:4.91");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_SWAP_NO_Z_TIME, str_name);
-
-	str_name = "CFG.aSWAP.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:8.91");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_SWAP_TIME, str_name);
-
-	str_name = "CFG.aPM1.ROTATE.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "60deg..recommand:1.5");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_PM1_ROTATE_TIME, str_name);
-
-	str_name = "CFG.aPM2.ROTATE.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "120deg..recommand:2.2");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_PM2_ROTATE_TIME, str_name);
-
-	str_name = "CFG.aPM3.ROTATE.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "180deg..recommand:2");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_PM3_ROTATE_TIME, str_name);
-
-	str_name = "CFG.aPM4.ROTATE.TIME";
-	STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "240deg..recommand:2");
-	LINK__VAR_ANALOG_CTRL(aCH__CFG_PM4_ROTATE_TIME, str_name);
-
-	str_name = "CFG.dWAFER.SENSOR.CHECK";
-	STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "TRUE FALSE", "");
-	LINK__VAR_DIGITAL_CTRL(dCH__CFG_WFR_SNS_CHECK, str_name);
+	{
+		str_name = "SIM.CFG.aROTATE.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name,"sec",1,0,9999,"");
+		LINK__VAR_ANALOG_CTRL(aCH__SIM_CFG__ROTATE_TIME, str_name);
+
+		// LBx
+		str_name = "SIM.CFG.aLBx.PICK.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name,"sec",1,0,9999,"");
+		LINK__VAR_ANALOG_CTRL(aCH__SIM_CFG__LBx_PICK_TIME, str_name);
+
+		str_name = "SIM.CFG.aLBx.PLACE.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name,"sec",1,0,9999,"");
+		LINK__VAR_ANALOG_CTRL(aCH__SIM_CFG__LBx_PLACE_TIME, str_name);
+
+		// PMx
+		str_name = "SIM.CFG.aPMx.PICK.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name,"sec",1,0,9999,"");
+		LINK__VAR_ANALOG_CTRL(aCH__SIM_CFG__PMx_PICK_TIME, str_name);
+
+		str_name = "SIM.CFG.aPMx.PLACE.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name,"sec",1,0,9999,"");
+		LINK__VAR_ANALOG_CTRL(aCH__SIM_CFG__PMx_PLACE_TIME, str_name);
+
+		//
+		str_name = "SIM.CFG.aEXTEND.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name,"sec",1,0,9999,"");
+		LINK__VAR_ANALOG_CTRL(aCH__SIM_CFG__EXTEND_TIME, str_name);
+
+		str_name = "SIM.CFG.aRETRACT.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name,"sec",1,0,9999,"");
+		LINK__VAR_ANALOG_CTRL(aCH__SIM_CFG__RETRACT_TIME, str_name);
+	}
+
+	// DA.RESULT ...
+	{
+		str_name = "GET.CPTR.SNS.FULL.VALUE";
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__CPTR_SNS_FULL_VAL, str_name);
+
+		str_name = "DA.RESULT.FULL.VALUE";
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__DA_RESULT_FULL_VAL, str_name);
+
+		// 
+		str_name = "DA.RESULT.R_OFFSET.MM";			// mm
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__DA_RESULT_R_OFFSET_MM, str_name);
+
+		str_name = "DA.RESULT.T_OFFSET.DEG";		// degree
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__DA_RESULT_T_OFFSET_DEG, str_name);
+
+		//
+		str_name = "DA.RESULT.X_OFFSET.MM";			// mm
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__DA_RESULT_X_OFFSET_MM, str_name);
+
+		str_name = "DA.RESULT.Y_OFFSET.MM";			// mm
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__DA_RESULT_Y_OFFSET_MM, str_name);
+	}
+
+	// CFG.TIMEOUT ...
+	{
+		str_name = "CFG.aACTION.TIMEOUT.DOWN";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:1.8");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_DOWN, str_name);
+
+		str_name = "CFG.aACTION.TIMEOUT.UP";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:1.8");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_UP, str_name);
+
+		str_name = "CFG.aACTION.TIMEOUT.EXTEND";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:2.2");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_EXTEND, str_name);
+
+		str_name = "CFG.aACTION.TIMEOUT.GOTO.DA.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:2.28");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_GOTO_DA_TIME, str_name);
+
+		str_name = "CFG.aACTION.TIMEOUT.RETRACT.DA.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:1.73");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_RETRACT_DA_TIME, str_name);
+
+		str_name = "CFG.aACTION.TIMEOUT.RETRACT.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:2.2");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_RETRACT_TIME, str_name);
+
+		str_name = "CFG.aACTION.TIMEOUT.ROTATE.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:2.3");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_ROTATE_TIME, str_name);
+
+		str_name = "CFG.aACTION.TIMEOUT.PICK.DA.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:9");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_PICK_DA_TIME, str_name);
+
+		str_name = "CFG.aACTION.TIMEOUT.PICK.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:4.3");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_PICK_TIME, str_name);
+
+		str_name = "CFG.aACTION.TIMEOUT.PLACE.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:3.9");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_PLACE_TIME, str_name);
+
+		str_name = "CFG.aACTION.TIMEOUT.PLACE.ADJUST.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "recommand:3.25");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_ACTION_TIMEOUT_PLACE_ADJUST_TIME, str_name);
+
+		str_name = "CFG.dPAD.TYPE";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "UNKNOWN", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_PAD_TYPE, str_name);
+
+		str_name = "CFG.dWAFER.SIZE";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "300 200 OTHER", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_WAFER_SIZE, str_name);
+
+		//
+		str_name = "CFG.aPM1.ROTATE.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "60deg..recommand:1.5");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_PM1_ROTATE_TIME, str_name);
+
+		str_name = "CFG.aPM2.ROTATE.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "120deg..recommand:2.2");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_PM2_ROTATE_TIME, str_name);
+
+		str_name = "CFG.aPM3.ROTATE.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "180deg..recommand:2");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_PM3_ROTATE_TIME, str_name);
+
+		str_name = "CFG.aPM4.ROTATE.TIME";
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "sec", 1, 0.5, 100, "240deg..recommand:2");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_PM4_ROTATE_TIME, str_name);
+
+		//
+		str_name = "CFG.dWAFER.SENSOR.CHECK";
+		STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "TRUE FALSE", "");
+		LINK__VAR_DIGITAL_CTRL(dCH__CFG_WFR_SNS_CHECK, str_name);
+	}
 
 	// CHECK CMMD & ERR_CODE
 	{
@@ -887,9 +446,28 @@ int CObj__VacRobot_PSK::__DEFINE__VARIABLE_STD(p_variable)
 		LINK__VAR_DIGITAL_CTRL(dCH__REQ_ARM_B_MATERIAL_STATE, str_name);
 	}
 
+	// DRV_INFO ...
+	{
+		str_name = "DRV_INFO.ACTIVE_BUSY";
+		STD__ADD_DIGITAL(str_name, "ON OFF");
+		LINK__VAR_DIGITAL_CTRL(dCH__DRV_INFO_ACTIVE_BUSY, str_name);
+
+		str_name = "DRV_INFO.ERRID";
+		STD__ADD_STRING(str_name);
+		LINK__VAR_STRING_CTRL(sCH__DRV_INFO_ERRID, str_name);
+
+		//
+		str_name = "DRV_INFO.ArmAMat.Read";
+		STD__ADD_DIGITAL(str_name, APP_DSP__MATERIAL);
+		LINK__VAR_DIGITAL_CTRL(dCH__DRV_INFO_ARM_A_MAT_READ, str_name);
+
+		str_name = "DRV_INFO.ArmBMat.Read";
+		STD__ADD_DIGITAL(str_name, APP_DSP__MATERIAL);
+		LINK__VAR_DIGITAL_CTRL(dCH__DRV_INFO_ARM_B_MAT_READ, str_name);
+	}
+
 	// ...
 	{
-		p_variable->Add__MONITORING_PROC(1.0, MON_ID__ANI_MONITOR);
 		p_variable->Add__MONITORING_PROC(3.0, MON_ID__IO_MONITOR);
 		p_variable->Add__MONITORING_PROC(3.0, MON_ID__HYPER_TERMINAL);
 	}
@@ -932,10 +510,23 @@ int CObj__VacRobot_PSK::__DEFINE__ALARM(p_alarm)
 
 	// ...
 	{
-		alarm_id = ALID__OFFLINE_ALARM;
+		alarm_id = ALID__OFFLINE_ALARM__MON;
 
 		alarm_title  = title;
-		alarm_title += "Offline.";
+		alarm_title += "Offline (Monitoring) !";
+
+		alarm_msg  = "Controller is Offline.\n";
+		alarm_msg += "Please, Check Communication Status !\n";
+
+		ACT__CHECK_ALARM;
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
+	// ...
+	{
+		alarm_id = ALID__OFFLINE_ALARM__ACT;
+
+		alarm_title  = title;
+		alarm_title += "Offline (Action) !";
 
 		alarm_msg  = "Controller is Offline.\n";
 		alarm_msg += "Please, Check Communication Status !\n";
@@ -943,6 +534,7 @@ int CObj__VacRobot_PSK::__DEFINE__ALARM(p_alarm)
 		ACT__RETRY_ABORT;
 		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
 	}
+
 	// ...
 	{
 		alarm_id = ALID__ERROR_CODE;
@@ -951,6 +543,21 @@ int CObj__VacRobot_PSK::__DEFINE__ALARM(p_alarm)
 		alarm_title += "Error Code !";
 
 		alarm_msg = "Please, check HW status !\n";
+
+		l_act.RemoveAll();
+		l_act.Add(ACT__ABORT);
+		l_act.Add(ACT__IGNORE);
+
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);	
+	}
+	// ...
+	{
+		alarm_id = ALID__ROBOT_BUSY_CHECK;
+
+		alarm_title  = title;
+		alarm_title += "Robot Busy Check !";
+
+		alarm_msg = "Please, check robot status !\n";
 
 		l_act.RemoveAll();
 		l_act.Add(ACT__ABORT);
@@ -1210,7 +817,7 @@ int CObj__VacRobot_PSK::__DEFINE__ALARM(p_alarm)
  APickAL APlaceAL									\
  BPickAL BPlaceAL									\
  LoadA LoadB UnloadA UnloadB						\
- ChkLoad ChkLoadA ChkLoadB							\
+ ChkLoad ChkLoadA ChkLoadB  ChkLoad.All				\
  WfrSnsIntk ComInit ASet_Cptr_On ASet_Cptr_Off		\
  BSet_Cptr_On BSet_Cptr_Off AGet_Cptr BGet_Cptr		\
  AGet_Current_Stn BGet_Current_Stn					\
@@ -1221,7 +828,6 @@ int CObj__VacRobot_PSK::__DEFINE__ALARM(p_alarm)
 
 #define APP_DSP__STN_NUM				"1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16"
 #define APP_DSP__CPTR_STN_NUM			"1 2 3 4 5 6 7 8 9 10"
-#define APP_DSP__MATERIAL				"Unknown Absent Present"
 #define APP_DSP__WAFER_SNS				"Yes No"
 #define APP_DSP__ARM_STS				"Unknown Retracted Extended"
 
@@ -1252,11 +858,6 @@ int CObj__VacRobot_PSK::__DEFINE__VARIABLE_IO(p_io_variable)
 
 	// Analog
 	{
-		// AI  -----------------------------
-		str_name = "eai.RB1.ErrId";
-		IO__ADD_ANALOG_READ(str_name, "num", 0, 0, 100000);
-		LINK__IO_VAR_ANALOG_CTRL(aiCH__ERRID, str_name);
-
 		// AO  -----------------------------
 		str_name = "eao.RB1.RO.Offset";
 		IO__ADD_ANALOG_WRITE(str_name, "", 0, -9999999, 9999999);
@@ -1335,13 +936,18 @@ int CObj__VacRobot_PSK::__DEFINE__VARIABLE_IO(p_io_variable)
 		IO__ADD_DIGITAL_READ__MANUAL(str_name, APP_DSP__ARM_STS);
 		LINK__IO_VAR_DIGITAL_CTRL(diCH__ARM_B_READ, str_name);
 
-		str_name = "edi.RB1.ArmAMat.Read";
-		IO__ADD_DIGITAL_READ__MANUAL(str_name, APP_DSP__MATERIAL);
-		LINK__IO_VAR_DIGITAL_CTRL(diCH__ARM_A_MAT_READ, str_name);
+		str_name = "edi.RB.INIT.CMD";
+		IO__ADD_DIGITAL_READ__MANUAL(str_name, "SUCCESS  FAIL");
+		LINK__IO_VAR_DIGITAL_CTRL(diCH__ROBOT_INIT_CMD, str_name);
 
-		str_name = "edi.RB1.ArmBMat.Read";
-		IO__ADD_DIGITAL_READ__MANUAL(str_name, APP_DSP__MATERIAL);
-		LINK__IO_VAR_DIGITAL_CTRL(diCH__ARM_B_MAT_READ, str_name);
+		//
+		str_name = "edi.RB.Status.Read.Auto";
+		IO__ADD_DIGITAL_READ(str_name, "SUCCESS  FAIL");
+		LINK__IO_VAR_DIGITAL_CTRL(diCH__ROBOT_STATE_READ__AUTO, str_name);
+
+		str_name = "edi.RB.Status.Read.Manual";
+		IO__ADD_DIGITAL_READ__MANUAL(str_name, "SUCCESS  FAIL");
+		LINK__IO_VAR_DIGITAL_CTRL(diCH__ROBOT_STATE_READ__MANUAL, str_name);
 	}
 
 	return 1;
@@ -1356,17 +962,6 @@ int CObj__VacRobot_PSK::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 	CString obj_name;
 	CString str_name;
 	int i;
-
-	// DB_CFG
-	{
-		def_name = "OBJ__DB";
-		p_variable->Get__DEF_CONST_DATA(def_name,def_data);
-
-		iActive__SIM_MODE = -1;
-
-		str_name = "CFG.SIM.MODE";
-		LINK__EXT_VAR_DIGITAL_CTRL(dEXT_CH__CFG_SIM_MODE, def_data,str_name);
-	}
 
 	iFlag__APP_LOG = 1;
 
@@ -1417,7 +1012,6 @@ int CObj__VacRobot_PSK::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		SCX__SEQ_INFO x_seq_info;
 
 		iActive__SIM_MODE = x_seq_info->Is__SIMULATION_MODE();
-		iCFG__SIM_FLAG = -1;
 
 		x_seq_info->Get__DIR_ROOT(m_szRoot);
 
@@ -1492,8 +1086,7 @@ int CObj__VacRobot_PSK::__INITIALIZE__IO(p_io_para)
 		int end_len;
 
 		str_end += (char) __CR;
-		str_end += (char) __LF;
-
+		//str_end += (char) __LF;
 		end_len = str_end.GetLength();
 
 		mX_Net->SET__TERMINAL_InSTRING(str_end,  end_len);
@@ -1544,9 +1137,10 @@ int CObj__VacRobot_PSK::__INITIALIZE__IO(p_io_para)
 	CString err_msg;
 	printf("%s : Connecting (%s %s) ... \n", sObject_Name, net_ip,net_port);
 
-	if(iActive__SIM_MODE)
+	if(iActive__SIM_MODE > 0)
 	{
-
+		printf("VAC_RobotSimulation_Mode");
+		return 1;
 	}
 	else
 	{
@@ -1666,47 +1260,31 @@ LOOP_RETRY:
 
 	// ...
 	{
-		IF__CTRL_MODE(sMODE__INIT)
-		{
-			flag = Call__INIT(p_variable,p_alarm);
-		}
-		ELSE_IF__CTRL_MODE(sMODE__PICK)
-		{
-			flag = Call__PICK(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot);
+		     IF__CTRL_MODE(sMODE__INIT)					flag = Call__INIT(p_variable,p_alarm);
 
-			// Save Before Info...
-			if(para__arm_type.CompareNoCase(ARM_A) == 0)	m_sBefore_Stn_Retract_ArmA = para__stn_name;
-			else											m_sBefore_Stn_Retract_ArmB = para__stn_name;
-		}
-		ELSE_IF__CTRL_MODE(sMODE__PLACE)		flag = Call__PLACE(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot);
-		ELSE_IF__CTRL_MODE(sMODE__ROTATE)		flag = Call__ROTATE(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot);
+		ELSE_IF__CTRL_MODE(sMODE__PICK)					flag = Call__PICK(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot);
+		ELSE_IF__CTRL_MODE(sMODE__PLACE)				flag = Call__PLACE(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot);
+		ELSE_IF__CTRL_MODE(sMODE__ROTATE)				flag = Call__ROTATE(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot);
 
-		ELSE_IF__CTRL_MODE(sMODE__HOME)			flag = Call__HOME(p_variable,p_alarm);
-		ELSE_IF__CTRL_MODE(sMODE__MAP)			flag = Call__MAP(p_variable,p_alarm);
+		ELSE_IF__CTRL_MODE(sMODE__HOME)					flag = Call__HOME(p_variable,p_alarm);
+		ELSE_IF__CTRL_MODE(sMODE__MAP)					flag = Call__MAP(p_variable,p_alarm);
 
-		ELSE_IF__CTRL_MODE(sMODE__EXTEND)		flag = Call__EXTEND(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot,ACTIVE_HAND_OFF);
-		ELSE_IF__CTRL_MODE(sMODE__RETRACT)
-		{
-			flag = Call__RETRACT(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot,ACTIVE_HAND_OFF);
+		ELSE_IF__CTRL_MODE(sMODE__EXTEND)				flag = Call__EXTEND(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot, ACTIVE_HAND_OFF);
+		ELSE_IF__CTRL_MODE(sMODE__RETRACT)				flag = Call__RETRACT(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot, ACTIVE_HAND_OFF);
 
-			// Save Before Info...
-			if(para__arm_type.CompareNoCase(ARM_A) == 0)	m_sBefore_Stn_Retract_ArmA = para__stn_name;
-			else											m_sBefore_Stn_Retract_ArmB = para__stn_name;
-		}
+		ELSE_IF__CTRL_MODE(sMODE__GOUP)					flag = Call__GOUP(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot);
+		ELSE_IF__CTRL_MODE(sMODE__GODOWN)				flag = Call__GODOWN(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot);
 
-		ELSE_IF__CTRL_MODE(sMODE__GOUP)			flag = Call__GOUP(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot);
-		ELSE_IF__CTRL_MODE(sMODE__GODOWN)		flag = Call__GODOWN(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot);
-
-		ELSE_IF__CTRL_MODE(sMODE__RQ_STN)		flag = Call__RQ_STN(p_variable,p_alarm, para__stn_name,para__arm_type);
-		ELSE_IF__CTRL_MODE(sMODE__SET_STN)		flag = Call__SET_STN(p_variable,p_alarm, para__stn_name,para__arm_type);
-
-		ELSE_IF__CTRL_MODE(sMODE__TEACHED_CPTR_SAVE)	flag = Call__TEACHED_CPTR_SAVE(p_variable,p_alarm, para__stn_name,para__arm_type);
+		ELSE_IF__CTRL_MODE(sMODE__TEST_DA_REPORT)		flag = Call__TEST_DA_REPORT(p_variable, p_alarm);
 
 		ELSE_IF__CTRL_MODE(sMODE__CHECK_CMMD)			flag = Call__CHECK_CMMD(p_variable,p_alarm);
 		ELSE_IF__CTRL_MODE(sMODE__CHECK_ERR_CODE)		flag = Call__CHECK_ERR_CODE(p_variable,p_alarm);
 	}
 
 	// ...
+	bool active__err_check = false;
+
+	// ERR_CHECK ...
 	{
 		CString err_code;
 		CString err_msg;
@@ -1715,6 +1293,8 @@ LOOP_RETRY:
 		{
 			int i_error = atoi(err_code);
 			if(i_error == 0)		continue;
+
+			active__err_check = true;
 
 			// ...
 			{
@@ -1758,33 +1338,86 @@ LOOP_RETRY:
 
 			p_alarm->Popup__ALARM_With_MESSAGE(alm_id,alm_msg,r_act);			
 
-			if(r_act.CompareNoCase(ACT__RETRY) == 0)
-			{
-				// ...
-				{
-					CString log_msg = "Alarm Selection <- Retry";
-					Fnc__APP_LOG(log_msg);
-				}
-
-				goto LOOP_RETRY;
-			}
 			if(r_act.CompareNoCase(ACT__ABORT) == 0)
 			{
-				// ...
-				{
-					CString log_msg = "Alarm Selection <- Abort";
-					Fnc__APP_LOG(log_msg);
-				}
+				CString log_msg = "Alarm Selection <- Abort";
+				Fnc__APP_LOG(log_msg);
 
 				flag = -1;
-			}
-
-			if(r_act.CompareNoCase(ACT__IGNORE) == 0)
-			{
-				// ...
+				break;
 			}
 		}
 	}
+
+LOOP__ROBOT_STATE:
+	// KMS, Material Check
+	{
+		CString ch_data = diCH__ROBOT_STATE_READ__MANUAL->Get__STRING();
+
+		     if(dCH__DRV_INFO_ARM_A_MAT_READ->Check__DATA("Present") > 0)		dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Set__DATA(STR__EXIST);
+		else if(dCH__DRV_INFO_ARM_A_MAT_READ->Check__DATA("Absent")  > 0)		dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Set__DATA(STR__NONE);
+		else																	dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Set__DATA(STR__UNKNOWN);
+
+		     if(dCH__DRV_INFO_ARM_B_MAT_READ->Check__DATA("Present") > 0)		dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Set__DATA(STR__EXIST);
+		else if(dCH__DRV_INFO_ARM_B_MAT_READ->Check__DATA("Absent")  > 0)		dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Set__DATA(STR__NONE);
+		else											                        dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Set__DATA(STR__UNKNOWN);
+
+		// Error Check
+		if(active__err_check)
+		{
+
+		}
+		else
+		{
+			CString err_code = sCH__DRV_INFO_ERRID->Get__STRING();
+			int err_id = atoi(err_code);
+
+			if(err_id > 0)
+			{
+				int alm_id = ALID__ERROR_CODE;
+				CString alm_msg;
+				CString alm_bff;
+				CString r_act;
+
+				alm_msg.Format("Control_Mode : %s \n", mode);
+
+				alm_bff.Format("Error_Code : %s \n", err_code);
+				alm_msg += alm_bff;
+				alm_bff.Format("Error_Message \n");
+				alm_msg += alm_bff;
+				alm_msg += "  * ";
+				alm_msg += Get__Error_Msg_Of_Error_Code(err_id);
+
+				p_alarm->Popup__ALARM_With_MESSAGE(alm_id,alm_msg,r_act);			
+
+				if(r_act.CompareNoCase(ACT__ABORT) == 0)
+				{
+					CString log_msg = "Alarm Selection <- Abort";
+					Fnc__APP_LOG(log_msg);
+
+					flag = -1;
+				}
+			}
+		}
+
+		// State Check
+		if(dCH__DRV_INFO_ACTIVE_BUSY->Check__DATA(STR__ON) > 0)
+		{
+			int alarm_id = ALID__ROBOT_BUSY_CHECK;
+			CString alm_msg;
+			CString r_act;
+
+			alm_msg.Format(" * %s <- %s \n",
+							dCH__DRV_INFO_ACTIVE_BUSY->Get__CHANNEL_NAME(),
+							dCH__DRV_INFO_ACTIVE_BUSY->Get__STRING());
+
+			p_alarm->Popup__ALARM_With_MESSAGE(alarm_id, alm_msg, r_act);
+			
+			if(r_act.CompareNoCase(ACT__RETRY) == 0)		goto LOOP__ROBOT_STATE;
+			if(r_act.CompareNoCase(ACT__IGNORE) != 0)		flag = -1;
+		}
+	}
+
 
 	if((flag < 0)||(p_variable->Check__CTRL_ABORT() > 0))
 	{
@@ -1823,10 +1456,6 @@ int CObj__VacRobot_PSK::__CALL__MONITORING(id, p_variable, p_alarm)
 {
 	switch(id)
 	{
-		case MON_ID__ANI_MONITOR:
-			Mon__ANI_MONITOR(p_variable,p_alarm);
-			break;
-
 		case MON_ID__IO_MONITOR:
 			Mon__IO_MONITOR(p_variable,p_alarm);
 			break;

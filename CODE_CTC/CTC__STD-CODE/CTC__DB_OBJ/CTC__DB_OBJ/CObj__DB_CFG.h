@@ -13,12 +13,16 @@ private:
 	CX_FA_300mm_LINK xFA_300mm_Link;
 	SCX__CTC__SCH_MATERIAL_CTRL xI_SCH_MATERIAL_CTRL;
 
+	int iActive__SIM_MODE;
+
 	//-------------------------------------------------------------------------
 	//  INTERNAL PROPERTY
 
 	// SYSTEM
 	CX__VAR_STRING_CTRL sCH_SYS__USER_LEVEL;
 	CX__VAR_STRING_CTRL sCH_SYS__USER_ID;
+
+	CX__VAR_STRING_CTRL sCH__SERVER_NET_IP;
 
 	CString sVAR__SYS_MSG;
 	CString sVAR__FNC_MSG;
@@ -41,7 +45,6 @@ private:
 
 	CString sVAR__PMC_SYS_MSG[CFG_PM_LIMIT];
 	CString sVAR__PMC_FNC_MSG[CFG_PM_LIMIT];
-
 
 	// CFG ...
 	CX__VAR_DIGITAL_CTRL dCH__SCH_TEST_CFG_SIM_ALARM_REPORT;
@@ -196,12 +199,32 @@ private:
 
 	// ...
 	CX__VAR_STRING_CTRL  sCH__UI_MEMORY_USAGE;
-
 	CX__VAR_DIGITAL_CTRL dCH__CFG_LPx_ACCESS_MODE_AUTO_CTRL_FLAG;
+
+	// LINK_TIME ...
+	CX__VAR_DIGITAL_CTRL dCH__SYNC_LINK_TIME_ACTIVE;
+	CX__VAR_DIGITAL_CTRL dCH__SYNC_LINK_TIME_REQ;
+
+	CX__VAR_DIGITAL_CTRL dCH__SYNC_LINK_TIME_CFG_USE;
+	CX__VAR_DIGITAL_CTRL dCH__SYNC_LINK_TIME_CFG__REF_TYPE;
+	CX__VAR_ANALOG_CTRL  aCH__SYNC_LINK_TIME_CFG__REF_TIME;
+
+	CX__VAR_STRING_CTRL  sCH__SYNC_LINK_TIME_INFO;
 	//
 
-	//.....
-	void Mon__INFO_REPORT(CII_OBJECT__ALARM *p_alarm);
+	//-------------------------------------------------------------------------
+	//  EXTERNAL PROPERTY
+
+	// OBJ_PMx ...
+	int iDATA__PMx_SIZE;
+	
+	CX__VAR_STRING_CTRL  sEXT_CH__PMx_MODULE_TIME_X[CFG_PM_LIMIT];
+	//
+
+	// ...
+	void Mon__INFO_REPORT(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM *p_alarm);
+
+	void Fnc__Set_Module_Time();
 	//
 
 

@@ -49,3 +49,5 @@
 
 #define  ALID__FR_VALVE_NOT_CLOSE						33
 #define  ALID__FR_VALVE_NOT_OPEN						34
+
+#define  ALID__WAFER_SLIDE_SENSOR_DETECTED              35

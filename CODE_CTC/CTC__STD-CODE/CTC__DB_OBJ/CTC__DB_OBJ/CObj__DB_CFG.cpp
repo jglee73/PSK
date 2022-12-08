@@ -60,13 +60,13 @@ int CObj__DB_CFG::__DEFINE__VERSION_HISTORY(version)
 
 
 // ...
-#define LINK__VAR(VAR_NAME,CH_NAME)								\
-str_name = CH_NAME;												\
+#define LINK__VAR(VAR_NAME,CH_NAME)					\
+str_name = CH_NAME;									\
 VAR_NAME = CH_NAME;
 
 
 // ...
-#define MON_ID__CFG_PORT							1
+#define MON_ID__INFO_REPORT							1
 
 
 int CObj__DB_CFG::__DEFINE__VARIABLE_STD(p_variable)
@@ -90,6 +90,11 @@ int CObj__DB_CFG::__DEFINE__VARIABLE_STD(p_variable)
 	str_name = "SYS.USER.ID";
 	STD__ADD_STRING_WITH_COMMENT(str_name,"");
 	LINK__VAR_STRING_CTRL(sCH_SYS__USER_ID,str_name);
+
+	//
+	str_name = "SERVER.NET_IP";
+	STD__ADD_STRING(str_name);
+	LINK__VAR_STRING_CTRL(sCH__SERVER_NET_IP, str_name);
 
 	//
 	str_name = "SYS.MSG";
@@ -843,6 +848,42 @@ int CObj__DB_CFG::__DEFINE__VARIABLE_STD(p_variable)
 		LINK__VAR_DIGITAL_CTRL(dCH__CFG_LPx_ACCESS_MODE_AUTO_CTRL_FLAG, str_name);
 	}
 
+	// LINK_TIME ...
+	{
+		// SYNC ...
+		{
+			str_name = "SYNC.LINK_TIME.ACTIVE";
+			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "OFF  ON", "");
+			LINK__VAR_DIGITAL_CTRL(dCH__SYNC_LINK_TIME_ACTIVE, str_name);
+
+			str_name = "SYNC.LINK_TIME.REQ";
+			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO  YES", "");
+			LINK__VAR_DIGITAL_CTRL(dCH__SYNC_LINK_TIME_REQ ,str_name);
+		}
+
+		// CFG ...
+		{
+			str_name = "SYNC.LINK_TIME.CFG.USE";
+			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "NO  YES", "");
+			LINK__VAR_DIGITAL_CTRL(dCH__SYNC_LINK_TIME_CFG_USE, str_name);
+
+			str_name = "SYNC.LINK_TIME.CFG.REF_TYPE";
+			STD__ADD_DIGITAL_WITH_X_OPTION(str_name, "HOUR  MINUTE", "");
+			LINK__VAR_DIGITAL_CTRL(dCH__SYNC_LINK_TIME_CFG__REF_TYPE, str_name);
+
+			str_name = "SYNC.LINK_TIME.CFG.REF_TIME";
+			STD__ADD_ANALOG_WITH_X_OPTION(str_name, "Hour or Min", 0, 1, 60, "");
+			LINK__VAR_ANALOG_CTRL(aCH__SYNC_LINK_TIME_CFG__REF_TIME, str_name);
+		}
+
+		// INFO ...
+		{
+			str_name = "SYNC.LINK_TIME.INFO";
+			STD__ADD_STRING(str_name);
+			LINK__VAR_STRING_CTRL(sCH__SYNC_LINK_TIME_INFO, str_name);
+		}
+	}
+
 	// ...
 	{
 		str_name = "TEST.RANGE.MINUS";
@@ -851,7 +892,7 @@ int CObj__DB_CFG::__DEFINE__VARIABLE_STD(p_variable)
 
 	// ...
 	{
-		p_variable->Add__MONITORING_PROC(1.0, MON_ID__CFG_PORT);
+		p_variable->Add__MONITORING_PROC(1.0, MON_ID__INFO_REPORT);
 	}
 	return 1;
 }
@@ -931,6 +972,7 @@ int CObj__DB_CFG::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		p_variable->Set__VARIABLE_DATA(sVAR__ANI_PRESSURE_STATUS__ATM,"ATM");
 	}
 
+
 	// ...
 	{
 		CString var_data;
@@ -942,6 +984,51 @@ int CObj__DB_CFG::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 		}
 	}
 
+	// OBJ_PMx ...
+	{
+		CString def_name;
+		CString def_data;
+		CString ch_name;
+		CString obj_name;
+		CString var_name;
+
+		def_name = "DATA.PMx_SIZE";
+		p_ext_obj_create->Get__DEF_CONST_DATA(def_name, def_data);
+
+		int pm_size = atoi(def_data);
+		if(pm_size > CFG_PM_LIMIT)			pm_size = CFG_PM_LIMIT;
+		
+		iDATA__PMx_SIZE = pm_size;
+	
+		for(int pm_i=0; pm_i<iDATA__PMx_SIZE; pm_i++)
+		{
+			int id = pm_i + 1;
+
+			def_name.Format("OBJ__PM%1d", id);
+			p_ext_obj_create->Get__DEF_CONST_DATA(def_name, obj_name);
+	
+			var_name = "MODULE.TIME";
+			LINK__EXT_VAR_STRING_CTRL(sEXT_CH__PMx_MODULE_TIME_X[pm_i], obj_name,var_name);
+		}
+	}
+
+	// ..
+	{
+		SCX__SEQ_INFO x_seq_info;
+
+		iActive__SIM_MODE = x_seq_info->Is__SIMULATION_MODE();
+
+		// ...
+		int eqp_id;
+		CString eqp_name;
+		CString net_ip;
+		int net_port;
+
+		x_seq_info->Get__SEQ_INFO(eqp_name, eqp_id);
+		x_seq_info->Get__IP_PORT_INFO_OF_SEQ_ID(eqp_id, net_ip, net_port);
+
+		sCH__SERVER_NET_IP->Set__DATA(net_ip);
+	}
 	return 1;
 }
 
@@ -953,12 +1040,7 @@ int CObj__DB_CFG::__CALL__CONTROL_MODE(mode,p_debug,p_variable,p_alarm)
 }
 int CObj__DB_CFG::__CALL__MONITORING(id,p_variable,p_alarm)
 {
-	switch(id)
-	{
-		case MON_ID__CFG_PORT:
-			Mon__INFO_REPORT(p_alarm);
-			break;
-	}
+	if(id == MON_ID__INFO_REPORT)			Mon__INFO_REPORT(p_variable, p_alarm);
 
 	return 1;
 }

@@ -19,16 +19,19 @@ void CObj__LBx_CHM_SLOT
 	{
 		for(int i=0; i<iLBx_SLOT_SIZE; i++)
 		{
-			// SLOT VALVE ...
-			diEXT_CH__LLx__SV_OPEN_X[i]->Set__DATA(STR__OFF);
-			diEXT_CH__LLx__SV_CLOSE_X[i]->Set__DATA(STR__ON);
-
-			// DOOR VALVE ...
-			diEXT_CH__LLx__DV_OPEN_X[i]->Set__DATA(STR__OFF);
-			diEXT_CH__LLx__DV_CLOSE_X[i]->Set__DATA(STR__ON);
+			// SV ...
+			{
+				doEXT_CH__LLx__SV_OPEN_X[i]->Set__DATA(STR__OFF);
+				doEXT_CH__LLx__SV_CLOSE_X[i]->Set__DATA(STR__ON);
+			}
+			// DV ...
+			{
+				doEXT_CH__LLx__DV_OPEN_X[i]->Set__DATA(STR__OFF);
+				doEXT_CH__LLx__DV_CLOSE_X[i]->Set__DATA(STR__ON);
+			}
 		}
 
-		// LIFT_PIN VALVE ...
+		// LIFT_PIN ...
 		if(bActive__LIFT_PIN)
 		{
 			diEXT_CH__LBx__LIFT_PIN_UP->Set__DATA(STR__OFF);
@@ -73,7 +76,6 @@ void CObj__LBx_CHM_SLOT
 			aCH__PRESSURE_TORR->Set__DATA(var__data);
 		}
 
-		// jglee : 2020.10.20
 		if(bActive__ATM_SNS_Virtual_Type)
 		{
 			aiEXT_CH__LBx__PRESSURE_TORR->Get__DATA(var__data);
@@ -291,27 +293,57 @@ void CObj__LBx_CHM_SLOT
 void CObj__LBx_CHM_SLOT
 ::Update__SV_STS(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm)
 {
-	CString str__open_sns;
-	CString str__close_sns;
+	bool active__io_off_mode = false;
+	if(dCH__CFG_IO_OFF_MODE->Check__DATA(STR__ENABLE) > 0)			active__io_off_mode = true;
 
-	for(int i=0; i<iLBx_SLOT_SIZE; i++)
+	if(iActive__SIM_MODE > 0)
 	{
-		diEXT_CH__LLx__SV_OPEN_X[i]->Get__DATA(str__open_sns);
-		diEXT_CH__LLx__SV_CLOSE_X[i]->Get__DATA(str__close_sns);
+		CString str__open_sns;
+		CString str__close_sns;
 
-		if((str__open_sns.CompareNoCase(STR__ON)   == 0)
-		&& (str__close_sns.CompareNoCase(STR__OFF) == 0))
+		for(int i=0; i<iLBx_SLOT_SIZE; i++)
 		{
-			dCH__SLIT_VALVE_STATUS_X[i]->Set__DATA(STR__OPEN);
+			str__open_sns  = doEXT_CH__LLx__SV_OPEN_X[i]->Get__STRING();
+			str__close_sns = doEXT_CH__LLx__SV_CLOSE_X[i]->Get__STRING();
+
+			if(active__io_off_mode)
+			{
+				if((str__open_sns.CompareNoCase(STR__OFF)  == 0)
+				&& (str__close_sns.CompareNoCase(STR__OFF) == 0))
+				{
+					continue;
+				}
+			}
+
+			diEXT_CH__LLx__SV_OPEN_X[i]->Set__DATA(str__open_sns);
+			diEXT_CH__LLx__SV_CLOSE_X[i]->Set__DATA(str__close_sns);
 		}
-		else if((str__open_sns.CompareNoCase(STR__OFF) == 0)
-			 && (str__close_sns.CompareNoCase(STR__ON) == 0))
+	}
+
+	// ...
+	{
+		CString str__open_sns;
+		CString str__close_sns;
+
+		for(int i=0; i<iLBx_SLOT_SIZE; i++)
 		{
-			dCH__SLIT_VALVE_STATUS_X[i]->Set__DATA(STR__CLOSE);
-		}
-		else
-		{
-			dCH__SLIT_VALVE_STATUS_X[i]->Set__DATA(STR__UNKNOWN);
+			diEXT_CH__LLx__SV_OPEN_X[i]->Get__DATA(str__open_sns);
+			diEXT_CH__LLx__SV_CLOSE_X[i]->Get__DATA(str__close_sns);
+
+			if((str__open_sns.CompareNoCase(STR__ON)   == 0)
+			&& (str__close_sns.CompareNoCase(STR__OFF) == 0))
+			{
+				dCH__SLIT_VALVE_STATUS_X[i]->Set__DATA(STR__OPEN);
+			}
+			else if((str__open_sns.CompareNoCase(STR__OFF) == 0)
+				 && (str__close_sns.CompareNoCase(STR__ON) == 0))
+			{
+				dCH__SLIT_VALVE_STATUS_X[i]->Set__DATA(STR__CLOSE);
+			}
+			else
+			{
+				dCH__SLIT_VALVE_STATUS_X[i]->Set__DATA(STR__UNKNOWN);
+			}
 		}
 	}
 
@@ -324,27 +356,57 @@ void CObj__LBx_CHM_SLOT
 void CObj__LBx_CHM_SLOT
 ::Update__DV_STS(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
 {
-	CString str__open_sns;
-	CString str__close_sns;
+	bool active__io_off_mode = false;
+	if(dCH__CFG_IO_OFF_MODE->Check__DATA(STR__ENABLE) > 0)			active__io_off_mode = true;
 
-	for(int i=0; i<iLBx_SLOT_SIZE; i++)
+	if(iActive__SIM_MODE > 0)
 	{
-		diEXT_CH__LLx__DV_OPEN_X[i]->Get__DATA(str__open_sns);
-		diEXT_CH__LLx__DV_CLOSE_X[i]->Get__DATA(str__close_sns);
+		CString str__open_sns;
+		CString str__close_sns;
 
-		if((str__open_sns.CompareNoCase(STR__ON)   == 0)
-		&& (str__close_sns.CompareNoCase(STR__OFF) == 0))
+		for(int i=0; i<iLBx_SLOT_SIZE; i++)
 		{
-			dCH__DOOR_VALVE_STATUS_X[i]->Set__DATA(STR__OPEN);
+			str__open_sns  = doEXT_CH__LLx__DV_OPEN_X[i]->Get__STRING();
+			str__close_sns = doEXT_CH__LLx__DV_CLOSE_X[i]->Get__STRING();
+
+			if(active__io_off_mode)
+			{
+				if((str__open_sns.CompareNoCase(STR__OFF)  == 0)
+				&& (str__close_sns.CompareNoCase(STR__OFF) == 0))
+				{
+					continue;
+				}
+			}
+
+			diEXT_CH__LLx__DV_OPEN_X[i]->Set__DATA(str__open_sns);
+			diEXT_CH__LLx__DV_CLOSE_X[i]->Set__DATA(str__close_sns);
 		}
-		else if((str__open_sns.CompareNoCase(STR__OFF) == 0)
-			 && (str__close_sns.CompareNoCase(STR__ON) == 0))
+	}
+
+	// ...
+	{
+		CString str__open_sns;
+		CString str__close_sns;
+
+		for(int i=0; i<iLBx_SLOT_SIZE; i++)
 		{
-			dCH__DOOR_VALVE_STATUS_X[i]->Set__DATA(STR__CLOSE);
-		}
-		else
-		{
-			dCH__DOOR_VALVE_STATUS_X[i]->Set__DATA(STR__UNKNOWN);
+			diEXT_CH__LLx__DV_OPEN_X[i]->Get__DATA(str__open_sns);
+			diEXT_CH__LLx__DV_CLOSE_X[i]->Get__DATA(str__close_sns);
+
+			if((str__open_sns.CompareNoCase(STR__ON)   == 0)
+			&& (str__close_sns.CompareNoCase(STR__OFF) == 0))
+			{
+				dCH__DOOR_VALVE_STATUS_X[i]->Set__DATA(STR__OPEN);
+			}
+			else if((str__open_sns.CompareNoCase(STR__OFF) == 0)
+				 && (str__close_sns.CompareNoCase(STR__ON) == 0))
+			{
+				dCH__DOOR_VALVE_STATUS_X[i]->Set__DATA(STR__CLOSE);
+			}
+			else
+			{
+				dCH__DOOR_VALVE_STATUS_X[i]->Set__DATA(STR__UNKNOWN);
+			}
 		}
 	}
 

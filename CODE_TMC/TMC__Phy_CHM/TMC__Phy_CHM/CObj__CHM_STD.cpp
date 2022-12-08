@@ -254,6 +254,15 @@ int CObj__CHM_STD::__DEFINE__VARIABLE_STD(p_variable)
 		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mtorr", 0, 10, 3000, "");
 		LINK__VAR_ANALOG_CTRL(aCH__CFG_TM_BALLAST_N2_PRESSURE_mTORR, str_name);
 
+		str_name = "CFG.aTM.BALLAST.N2.PRESSURE.MIN";	
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mtorr", 0, 0, 1000, "");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_TM_BALLAST_N2_PRESSURE_MIN, str_name);
+
+		str_name = "CFG.aTM.BALLAST.N2.PRESSURE.MAX";	
+		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "mtorr", 0, 0, 10000, "");
+		LINK__VAR_ANALOG_CTRL(aCH__CFG_TM_BALLAST_N2_PRESSURE_MAX, str_name);
+
+		//
 		str_name = "CFG.aTM.BALLAST.N2.P.GAIN";
 		STD__ADD_ANALOG_WITH_X_OPTION(str_name, "val", 3, 0.001, 100.00, "");
 		LINK__VAR_ANALOG_CTRL(aCH__CFG_TM_BALLAST_N2_P_GAIN,str_name);
@@ -474,6 +483,19 @@ int CObj__CHM_STD::__DEFINE__ALARM(p_alarm)
 		alarm_msg.Format("Please, check the state of FR valve.\n");
 
 		ACT__RETRY_ABORT;
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
+
+	// ...
+	{
+		alarm_id = ALID__BALLAST_VLV_CLOSE;
+
+		alarm_title  = title;
+		alarm_title += "Ballast Open must be closed !";
+
+		alarm_msg.Format("Please, check the state of pumping. \n");
+
+		ACT__CHECK;
 		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
 	}
 

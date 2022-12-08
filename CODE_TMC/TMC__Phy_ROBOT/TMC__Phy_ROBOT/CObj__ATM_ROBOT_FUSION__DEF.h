@@ -4,6 +4,11 @@
 
 
 // ...
+#define  ALIGN_TYPE__ROBOT			1
+#define  ALIGN_TYPE__ALIGNER		2
+
+
+// ...
 #define  CMMD__INIT					"INIT"
 
 #define  CMMD__PICK					"PICK"

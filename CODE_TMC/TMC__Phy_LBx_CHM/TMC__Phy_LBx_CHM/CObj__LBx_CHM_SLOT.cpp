@@ -904,6 +904,19 @@ int CObj__LBx_CHM_SLOT::__DEFINE__ALARM(p_alarm)
 		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
 	}
 
+	// ...
+	{
+		alarm_id = ALID__WAFER_SLIDE_SENSOR_DETECTED;
+
+		alarm_title  = title;
+		alarm_title += "Wafer slide sensor is detected !";
+
+		alarm_msg = "Please, check the state of wafer on SV.";
+
+		ACT__RETRY_ABORT;
+		ADD__ALARM_EX(alarm_id,alarm_title,alarm_msg,l_act);
+	}
+
 	return 1;
 }
 
@@ -1230,6 +1243,26 @@ int CObj__LBx_CHM_SLOT::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 			def_name = "DATA.RNE_OFF";
 			p_ext_obj_create->Get__DEF_CONST_DATA(def_name, def_data);
 			sDATA__RNE_OFF = def_data;
+		}
+	}
+
+	// WAFER.SLIDE SENSOR
+	{
+		def_name = "DATA_SV.WAFER_OUT.SIZE";
+		p_ext_obj_create->Get__DEF_CONST_DATA(def_name, def_data);
+
+		int sns_size = atoi(def_data);
+		if(sns_size > _CFG__WAFER_OUT_SIZE)			sns_size = _CFG__WAFER_OUT_SIZE;
+
+		iData__WAFER_SLIDE_OUT = sns_size;
+
+		for(int sns_i = 0; sns_i < iData__WAFER_SLIDE_OUT; sns_i++)
+		{
+			def_name.Format("VAR_SV.DI_WAFER_OUT.%1d", sns_i + 1);			
+			p_ext_obj_create->Get__DEF_CONST_DATA(def_name, ch_name);
+
+			p_ext_obj_create->Get__CHANNEL_To_OBJ_VAR(ch_name, obj_name,var_name);
+			LINK__EXT_VAR_DIGITAL_CTRL(diEXT_CH__WAFER_SKIDE_OUT_X[sns_i], obj_name,var_name);
 		}
 	}
 

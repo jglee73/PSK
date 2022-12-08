@@ -193,7 +193,7 @@ void CObj_Phy__PMC_STD::Set__Module_Time()
 					cur_time.wMinute,
 					cur_time.wSecond);
 
-	xCH__MODULE_TIME->Set__DATA(str_time);
+	sCH__MODULE_TIME->Set__DATA(str_time);
 }
 void CObj_Phy__PMC_STD::Clear__PMC_Info()
 {
@@ -411,7 +411,7 @@ void CObj_Phy__PMC_STD::Fnc__SET_TIME()
 					cur_time.wMinute,
 					cur_time.wSecond);
 							
-	xCH__MODULE_TIME->Set__DATA(str_time);
+	sCH__MODULE_TIME->Set__DATA(str_time);
 }
 
 

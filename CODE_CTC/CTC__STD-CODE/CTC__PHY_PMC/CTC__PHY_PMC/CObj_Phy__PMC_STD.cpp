@@ -293,7 +293,7 @@ int CObj_Phy__PMC_STD::__DEFINE__VARIABLE_STD(p_variable)
 	{
 		str_name = "MODULE.TIME";
 		STD__ADD_STRING_WITH_COMMENT(str_name,"");
-		LINK__VAR_STRING_CTRL(xCH__MODULE_TIME,str_name);
+		LINK__VAR_STRING_CTRL(sCH__MODULE_TIME,str_name);
 
 		//
 		str_name = "TIME.ACT.START";
@@ -1789,6 +1789,7 @@ int CObj_Phy__PMC_STD::__INITIALIZE__OBJECT(p_variable,p_ext_obj_create)
 	// ...
 	{
 		SCX__SEQ_INFO x_seq_info;
+
 		x_seq_info->Get__DIR_ROOT(sDir_ROOT);
 
 		iSIM_MODE = x_seq_info->Is__SIMULATION_MODE();

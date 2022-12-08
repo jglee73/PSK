@@ -12,23 +12,23 @@
 int  CObj__VacRobot_PSK
 ::Call__INIT(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm)
 {
-	if(iCFG__SIM_FLAG > 0)
+	if(iActive__SIM_MODE > 0)
 	{
 		return Fnc__SIM_INIT(p_variable,p_alarm);
 	}
 
-	// Info. Update ...
+	// ...
 	{
 		siCH__VERSION->Get__STRING();
-	}
 
-	if(Fnc__INIT(p_variable,p_alarm) < 0)
-	{
-		return -11;
-	}
-	if(Fnc__MAP(p_variable,p_alarm) < 0)
-	{
-		return -12;
+		if(Fnc__INIT(p_variable,p_alarm) < 0)
+		{
+			return -11;
+		}
+		if(Fnc__MAP(p_variable,p_alarm) < 0)
+		{
+			return -12;
+		}
 	}
 	return 1;
 }
@@ -86,11 +86,13 @@ LOOP_RETRY:
 	if(dCH__CFG_WFR_SNS_CHECK->Check__DATA("TRUE") > 0)
 	{
 		doCH__ARM_WFR_SNS->Set__DATA("Yes");
+
 		state = doCH__COMMAND->Set__DATA("WfrSnsIntk");
 	}
 	else
 	{
 		doCH__ARM_WFR_SNS->Set__DATA("No");
+
 		state = doCH__COMMAND->Set__DATA("WfrSnsIntk");
 	}
 
@@ -174,801 +176,51 @@ int  CObj__VacRobot_PSK
 
 	if(stn_name.Find("PM") >= 0)	is_act_handoff = ACTIVE_HAND_OFF;
 	else							is_act_handoff = NORMAL;
+	
+	int r_flag = Fnc__PICK(p_variable,p_alarm, stn_name,arm_type,stn_slot,is_act_handoff);
+	if(r_flag > 0)
+	{
+		if(iActive__SIM_MODE > 0)
+		{
+			if(arm_type.CompareNoCase(ARM_A) == 0)     dCH__DRV_INFO_ARM_A_MAT_READ->Set__DATA("Present");
+			if(arm_type.CompareNoCase(ARM_B) == 0)     dCH__DRV_INFO_ARM_B_MAT_READ->Set__DATA("Present");
+		}
+	}
 
-	return Fnc__PICK_DYNAMIC_ALIGN_N(p_variable,p_alarm, stn_name,arm_type,stn_slot,is_act_handoff);
+	return r_flag;
 }
 
-int  CObj__VacRobot_PSK
-::Fnc__SIM_PICK(CII_OBJECT__VARIABLE* p_variable,
-			    CII_OBJECT__ALARM* p_alarm,
-			    const CString& stn_name,
-			    const CString& arm_type,
-			    const CString& stn_slot)
-{
-	SCX__TIMER_CTRL x_timer_ctrl;
-	x_timer_ctrl->REGISTER__ABORT_OBJECT(sObject_Name);
-
-	double  cfg__pick_time = 1.0;
-	CString var_data;
-
-	if(Macro__CHECK_LLx_INDEX(stn_name) >= 0)
-	{
-		aCH__SIM_CFG__LBx_PICK_TIME->Get__DATA(var_data);
-	}
-	else if(Macro__CHECK_PMx_INDEX(stn_name) >= 0)
-	{
-		aCH__SIM_CFG__PMx_PICK_TIME->Get__DATA(var_data);
-	}
-
-	cfg__pick_time = atof(var_data);
-	if(x_timer_ctrl->WAIT(cfg__pick_time) < 0)
-	{
-		return -1;
-	}
-
-	return 1;
-}
 int  CObj__VacRobot_PSK
 ::Fnc__PICK(CII_OBJECT__VARIABLE* p_variable,
 		    CII_OBJECT__ALARM* p_alarm,
 		    const CString& stn_name,
 		    const CString& arm_type,
-		    const CString& stn_slot)
+		    const CString& stn_slot,
+		    const int is_act_handoff)
 {
-	Fnc__ACT_MSG("Pick Start...");
-
-	if(Is__LOCAL(p_alarm)   < 0)		return -1;
-	if(Is__OFFLINE(p_alarm) < 0)		return -1;
-
-	// ...
-	CString str__trg_stn_num;
-
-	// Set Station
-	{
-		str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
-
-		     if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
-	}
-
-	// Set Slot
-	doCH__SLOT->Set__DATA(stn_slot);
-
-	// ...
-	int state = -1;
-
-	// Action : [Pick]	
-	{
-		     if(arm_type.CompareNoCase(ARM_A) == 0)		state = doCH__COMMAND->Set__DATA("APick");
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		state = doCH__COMMAND->Set__DATA("BPick");
-
-		if(state == 0)    // Abort
-		{
-			return -1;
-		}
-
-		if(Is__OFFLINE(p_alarm) < 0)
-		{
-			return -1;
-		}
-	}
+	if(Is__LOCAL(p_alarm)   < 0)		return -11;
+	if(Is__OFFLINE(p_alarm) < 0)		return -12;
 
 	// ...
 	{
-		state = Is__ERROR_EXIST(p_alarm);
+		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name, stn_slot);
 
-		if(state != OBJ_AVAILABLE)
-		{
-			return -1;
-		}
+		     if(arm_type.CompareNoCase(ARM_A) == 0)			doCH__STN_A->Set__DATA(str__trg_stn_num);
+		else if(arm_type.CompareNoCase(ARM_B) == 0)			doCH__STN_B->Set__DATA(str__trg_stn_num);
 
-		if(p_variable->Check__CTRL_ABORT() > 0)
-		{
-			return -1;
-		}
-	}
-
-	return 1;
-}
-
-int  CObj__VacRobot_PSK
-::Fnc__PICK_DYNAMIC_ALIGN(CII_OBJECT__VARIABLE* p_variable,
-						  CII_OBJECT__ALARM* p_alarm,
-						  const CString& stn_name,
-						  const CString& arm_type,
-						  const CString& stn_slot,
-						  const int is_act_handoff)
-{
-	CString set_ro_offset, set_to_offset;
-	CString str_log;
-
-	Fnc__ACT_MSG("Pick DA Start...");
-
-	// Dynamic Alignment
-	// Initialize
-	// RETRACT... HIGH Sns
-	if(arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		sCH__CPTR_ARM_A_SNS_R_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_A_SNS_T_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_A_SNS_Z_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-
-		// RETRACT... LOW Sns
-		sCH__CPTR_ARM_A_SNS_R_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_A_SNS_T_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_A_SNS_Z_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-	}
-	else
-	{
-		sCH__CPTR_ARM_B_SNS_R_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_B_SNS_T_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_B_SNS_Z_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-
-		// RETRACT... LOW Sns
-		sCH__CPTR_ARM_B_SNS_R_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_B_SNS_T_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_B_SNS_Z_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-	}
-	
-	// 1. SET CPTR (OFF and ON)
-	int nRet = Set__CPTR_SNS_OFF_ON(p_variable, p_alarm, arm_type, stn_name);
-	if(nRet <= 0)	return OBJ_ABORT;
-
-	if(Is__LOCAL(p_alarm)   < 0)		return -1;
-	if(Is__OFFLINE(p_alarm) < 0)		return -1;
-
-	// ...
-	CString str__trg_stn_num;
-
-	// Set Station
-	{
-		str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
-
-		     if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
-	}
-
-	// Set Slot
-	doCH__SLOT->Set__DATA(stn_slot);
-
-	// ...
-	int state = -1;
-
-	// Action : [Pick]	
-	{
-			 if(arm_type.CompareNoCase(ARM_A) == 0)		state = doCH__COMMAND->Set__DATA("APick");
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		state = doCH__COMMAND->Set__DATA("BPick");
-
-		if(state == 0)    // Abort
-		{
-			return -1;
-		}
-
-		if(Is__OFFLINE(p_alarm) < 0)
-		{
-			return -1;
-		}
-	}
-
-	// ...
-	{
-		state = Is__ERROR_EXIST(p_alarm);
-
-		if(state != OBJ_AVAILABLE)
-		{
-			return -1;
-		}
-
-		if(p_variable->Check__CTRL_ABORT() > 0)
-		{
-			return -1;
-		}
-	}
-
-	// 3. Get Sns Value
-	{
-		nRet = Get__CPTR_SNS(p_variable,p_alarm, arm_type,stn_name,"RETRACT");
-		if(nRet <= 0)	return OBJ_ABORT;
-
-		// Simulation 일때는 Dynamic Align 안함..
-		if(iCFG__SIM_FLAG > 0)
-		{
-			return OBJ_AVAILABLE;
-		}
-	}
-
-	// 4. PICK 후에 얻어온 R, T, Z 값과 CALIBRATION 된 R, T, Z 값들을 비교 계산한다.
-	if(arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		Fnc__calculation_CPTR_SNS_VAL(stn_name, arm_type, ARM_A_m_set_cptr_tune_val);
-
-		// 5. Rotate 전에 체크한다.
-		set_ro_offset.Format("%.f", ARM_A_m_set_cptr_tune_val.ro_tuned_val);
-		set_to_offset.Format("%.f", ARM_A_m_set_cptr_tune_val.to_tuned_val);
-
-		str_log.Format("After Calculation, Offset Val --> R:%s, T:%s", set_ro_offset, set_to_offset);
-		Fnc__APP_LOG(str_log);
-		
-		if(Check_Offset_Range(stn_name, p_variable, p_alarm, ARM_A_m_set_cptr_tune_val) < 0)
-		{
-			return OBJ_ABORT;
-		}
-	}
-	else
-	{
-		Fnc__calculation_CPTR_SNS_VAL(stn_name, arm_type, ARM_B_m_set_cptr_tune_val);
-
-		// 5. Rotate 전에 체크한다.
-		set_ro_offset.Format("%.f", ARM_B_m_set_cptr_tune_val.ro_tuned_val);
-		set_to_offset.Format("%.f", ARM_B_m_set_cptr_tune_val.to_tuned_val);
-
-		str_log.Format("After Calculation, Offset Val --> R:%s, T:%s", set_ro_offset, set_to_offset);
-		Fnc__APP_LOG(str_log);
-		
-		if(Check_Offset_Range(stn_name, p_variable, p_alarm, ARM_B_m_set_cptr_tune_val) < 0)
-		{
-			return OBJ_ABORT;
-		}
-	}
-
-	return OBJ_AVAILABLE;
-}
-
-int  CObj__VacRobot_PSK
-::Fnc__PICK_DYNAMIC_ALIGN_N(CII_OBJECT__VARIABLE* p_variable,
-						    CII_OBJECT__ALARM* p_alarm,
-						    const CString& stn_name,
-						    const CString& arm_type,
-						    const CString& stn_slot,
-						    const int is_act_handoff)
-{
-
-	Fnc__ACT_MSG("[Fnc__PICK_DYNAMIC_ALIGN_N] Start...");
-
-	int nRet;
-	CString set_ro_offset, set_to_offset;
-	CString str_log;
-
-	Fnc__ACT_MSG("Pick DA Start...");
-
-	/*
-	// RETRACT... HIGH Sns
-	if(arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		sCH__CPTR_ARM_A_SNS_R_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_A_SNS_T_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_A_SNS_Z_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-
-		// RETRACT... LOW Sns
-		sCH__CPTR_ARM_A_SNS_R_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_A_SNS_T_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_A_SNS_Z_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-	}
-	else
-	{
-		sCH__CPTR_ARM_B_SNS_R_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_B_SNS_T_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_B_SNS_Z_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-
-		// RETRACT... LOW Sns
-		sCH__CPTR_ARM_B_SNS_R_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_B_SNS_T_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_B_SNS_Z_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-	}	
-
-	if(dCH__CFG_DA_SENSOR_TYPE->Check__DATA(STR__YES) > 0)
-	{
-		// 1. SET CPTR OFF
-		{
-			Fnc__APP_LOG("Start Sensor Off");
-		
-			nRet = Set__CPTR_SNS_OFF_N(p_variable, p_alarm, arm_type, stn_name);
-			str_log.Format("End Sensor Off (Result:%d)", nRet);
-
-			Fnc__APP_LOG(str_log);
-
-			if(nRet <= 0)	
-			{
-				return OBJ_ABORT;
-			}
-		}
-		// 2. SET CPTR ON
-		{
-			Fnc__APP_LOG("Start Sensor On");
-		
-			nRet = Set__CPTR_SNS_ON_N(p_variable, p_alarm, arm_type, stn_name);
-			str_log.Format("End Sensor On (Result:%d)", nRet);
-
-			Fnc__APP_LOG(str_log);
-
-			if(nRet <= 0)
-			{
-				return OBJ_ABORT;
-			}
-		}
-	}
-	*/
-
-	if(Is__LOCAL(p_alarm)   < 0)		return -1;
-	if(Is__OFFLINE(p_alarm) < 0)		return -1;
-
-	// ...
-	CString str__trg_stn_num;
-
-	// Set Station
-	str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
-
-	     if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
-	else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
-
-	// Set Slot
-	doCH__SLOT->Set__DATA(stn_slot);
-
-	// ...
-	int state = -1;
-
-	// 3. PICK
-	// Action : [Pick]	
-	{
-		     if(arm_type.CompareNoCase(ARM_A) == 0)		state = doCH__COMMAND->Set__DATA("APick");
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		state = doCH__COMMAND->Set__DATA("BPick");
-
-		if(state == 0)    // Abort
-		{
-			return -1;
-		}
-
-		if(Is__OFFLINE(p_alarm) < 0)
-		{
-			return -1;
-		}
-	}
-
-	// ...
-	{
-		state = Is__ERROR_EXIST(p_alarm);
-
-		if(state != OBJ_AVAILABLE)
-		{
-			return -1;
-		}
-
-		if(p_variable->Check__CTRL_ABORT() > 0)
-		{
-			return -1;
-		}
-	}
-
-	/*
-	if(dCH__CFG_DA_SENSOR_TYPE->Check__DATA(STR__YES) > 0)
-	{
-		// 4. SET CPTR OFF 
-		{
-			Fnc__APP_LOG("Start Senosr Off");
-	
-			nRet = Set__CPTR_SNS_OFF_N(p_variable, p_alarm, arm_type, stn_name);
-			str_log.Format("End Sensor Off (Result:%d)", nRet);
-
-			Fnc__APP_LOG(str_log);
-
-			if(nRet <= 0)	
-			{
-				return OBJ_ABORT;
-			}
-		}
-	}
-
-	// 5. Get Sns Value
-	{
-		nRet = Get__CPTR_SNS_N(p_variable,p_alarm, arm_type,stn_name,"RETRACT");
-
-		if(nRet <= 0)
-		{
-			return OBJ_ABORT;
-		}
-	}
-
-	// 5. PICK 후에 얻어온 R, T, Z 값과 CALIBRATION 된 R, T, Z 값들을 비교 계산한다.
-	if(arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		Fnc__calculation_CPTR_SNS_VAL_N(stn_name, arm_type, ARM_A_m_set_cptr_tune_val);
-
-		// 5. Rotate 전에 체크한다.
-		set_ro_offset.Format("%f", ARM_A_m_set_cptr_tune_val.ro_tuned_val);
-		set_to_offset.Format("%f", ARM_A_m_set_cptr_tune_val.to_tuned_val);
-
-		str_log.Format("After Calculation, Offset Val --> Y:%s, X:%s", set_ro_offset, set_to_offset);
-		Fnc__APP_LOG(str_log);
-	}
-	else
-	{
-		Fnc__calculation_CPTR_SNS_VAL_N(stn_name, arm_type, ARM_B_m_set_cptr_tune_val);
-
-		// 5. Rotate 전에 체크한다.
-		set_ro_offset.Format("%f", ARM_B_m_set_cptr_tune_val.ro_tuned_val);
-		set_to_offset.Format("%f", ARM_B_m_set_cptr_tune_val.to_tuned_val);
-
-		str_log.Format("After Calculation, Offset Val --> R:%s, T:%s", set_ro_offset, set_to_offset);
-		Fnc__APP_LOG(str_log);
-	}
-	*/
-
-	Fnc__ACT_MSG("[Fnc__PICK_DYNAMIC_ALIGN_N] End...");
-	return OBJ_AVAILABLE;
-}
-
-int  CObj__VacRobot_PSK
-::Fnc__PLACE_DYNAMIC_ALIGN(CII_OBJECT__VARIABLE* p_variable,
-						   CII_OBJECT__ALARM* p_alarm,
-						   const CString& stn_name,
-						   const CString& before_stn_name,
-						   const CString& arm_type,
-						   const CString& stn_slot,
-						   const int is_act_handoff)
-{
-	CString set_ro_offset;
-	CString set_to_offset;
-	CString str_log;
-
-	Fnc__ACT_MSG("Place DA Start...");
-
-	// 1. SET CPTR (OFF and ON)
-	{
-		int nRet = Set__CPTR_SNS_OFF_ON(p_variable, p_alarm, arm_type, stn_name);
-		
-		if(nRet <= 0)
-		{
-			return OBJ_ABORT;
-		}
-	}
-
-	if(Is__LOCAL(p_alarm)   < 0)		return -1;
-	if(Is__OFFLINE(p_alarm) < 0)		return -1;
-
-	// ...
-	CString str__trg_stn_num;
-
-	// Set Station
-	{
-		str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
-
-		     if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
-	}
-
-	// Set Slot
-	doCH__SLOT->Set__DATA(stn_slot);
-
-	if(arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		if(Check_Offset_Range(before_stn_name, p_variable, p_alarm, ARM_A_m_set_cptr_tune_val) < 0)	
-		{
-			return OBJ_ABORT;
-		}
-
-		set_ro_offset.Format("%.f", ARM_A_m_set_cptr_tune_val.ro_tuned_val);
-		set_to_offset.Format("%.f", ARM_A_m_set_cptr_tune_val.to_tuned_val);
-	}
-	else
-	{
-		if(Check_Offset_Range(before_stn_name, p_variable, p_alarm, ARM_B_m_set_cptr_tune_val) < 0)	
-		{
-			return OBJ_ABORT;
-		}
-
-		set_ro_offset.Format("%.f", ARM_B_m_set_cptr_tune_val.ro_tuned_val);
-		set_to_offset.Format("%.f", ARM_B_m_set_cptr_tune_val.to_tuned_val);
-	}
-
-	str_log.Format("To Set OFFSET.. RO:%s microns, TO:%s milidegrees", set_ro_offset, set_to_offset);
-	Fnc__APP_LOG(str_log);
-
-	// Set Offset
-	aoCH_RO_OFFSET->Set__DATA(set_ro_offset);
-	aoCH_TO_OFFSET->Set__DATA(set_to_offset);
-
-	// ...
-	int state = -1;
-
-	// Action : [Place]	
-	{
-		     if(arm_type.CompareNoCase(ARM_A) == 0)		state = doCH__COMMAND->Set__DATA("APlace_Offset");
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		state = doCH__COMMAND->Set__DATA("BPlace_Offset");
-
-		if(state == 0)    // Abort
-		{
-			return -1;
-		}
-
-		if(Is__OFFLINE(p_alarm) < 0)
-		{
-			return -1;
-		}
-	}
-
-	// ...
-	{
-		state = Is__ERROR_EXIST(p_alarm);
-
-		if(state != OBJ_AVAILABLE)
-		{
-			return -1;
-		}
-
-		if(p_variable->Check__CTRL_ABORT() > 0)
-		{
-			return -1;
-		}
-	}
-
-	// 3. Get Sns Value
-	{
-		int nRet = Get__CPTR_SNS(p_variable,p_alarm, arm_type,stn_name,"EXTEND");
-
-		if(nRet <= 0)
-		{
-			return OBJ_ABORT;	
-		}
-	}
-
-	return OBJ_AVAILABLE;
-}
-
-int  CObj__VacRobot_PSK
-::Fnc__PLACE_DYNAMIC_ALIGN_N(CII_OBJECT__VARIABLE* p_variable,
-						     CII_OBJECT__ALARM* p_alarm,
-						     const CString& stn_name,
-						     const CString& before_stn_name,
-						     const CString& arm_type,
-						     const CString& stn_slot,
-						     const int is_act_handoff,
-						     const CString& da_usage)
-{
-	CString str_log;
-	CString szCount;
-
-	CString set_ro_offset;
-	CString set_to_offset;
-
-	
-	Fnc__ACT_MSG("[Fnc__PLACE_DYNAMIC_ALIGN_N] Start...");
-	Fnc__ACT_MSG("Place DA Start...");
-
-	// EXTEND... HIGH Sns
-	if(arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		sCH__CPTR_ARM_A_SNS_R_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_A_SNS_T_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_A_SNS_Z_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-
-		// RETRACT... LOW Sns
-		sCH__CPTR_ARM_A_SNS_R_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_A_SNS_T_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_A_SNS_Z_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-	}
-	else
-	{
-		sCH__CPTR_ARM_B_SNS_R_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_B_SNS_T_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_B_SNS_Z_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-
-		// RETRACT... LOW Sns
-		sCH__CPTR_ARM_B_SNS_R_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_B_SNS_T_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-		sCH__CPTR_ARM_B_SNS_Z_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-	}
-
-	aDA_DA_RETRY_CHECK_COUNT->Get__DATA(szCount);
-	int nCount = atoi(szCount);
-
-LOOP_RETRY:
-
-	if(dCH__CFG_DA_SENSOR_TYPE->Check__DATA(STR__YES) > 0)
-	{
-		// 1. SET CPTR OFF
-		{
-			Fnc__APP_LOG("Start Sensor Off");
-
-			int nRet = Set__CPTR_SNS_OFF_N(p_variable, p_alarm, arm_type, stn_name);
-
-			str_log.Format("End Sensor Off (Result:%d)", nRet);
-			Fnc__APP_LOG(str_log);
-
-			if(nRet <= 0)
-			{
-				return OBJ_ABORT;
-			}
-		}
-		// 2. SET CPTR ON
-		{
-			Fnc__APP_LOG("Start Sensor On ");
-
-			int nRet = Set__CPTR_SNS_ON_N(p_variable, p_alarm, arm_type, stn_name);
-
-			str_log.Format("End Sensor On (Result:%d)", nRet);
-			Fnc__APP_LOG(str_log);
-
-			if(nRet <= 0)
-			{
-				return OBJ_ABORT;
-			}
-		}
-	}
-
-	if(Is__LOCAL(p_alarm)   < 0)		return -1;
-	if(Is__OFFLINE(p_alarm) < 0)		return -1;
-
-	// ...
-	{
-		// Set Station
-		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
-
-		     if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
-
-		// Set Slot
 		doCH__SLOT->Set__DATA(stn_slot);
 	}
 
-	// 3. Get Station Information
-	{
-		int nRet = Fnc__RQ_STN(p_variable,p_alarm, stn_name, arm_type);
-
-		if(nRet <= 0)
-		{
-			return OBJ_ABORT;
-		}
-	}
-
 	// ...
-	CString strArmR;
-	double dbl_Arm_R;
-
-	sCH__RQSTN_SNS_R_VALUE->Get__DATA(strArmR);	
-	dbl_Arm_R = atof(strArmR);
-	
-
-	// 4. Calculate R & T(angle) Offset
-	double dbl_Offset_X;
-	double dbl_Offset_Y;
-
-	double dbl_Offset_R;
-	double dbl_Offset_T;
-
-	if(arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		dbl_Offset_X = ARM_A_m_set_cptr_tune_val.to_tuned_val;
-		dbl_Offset_Y = ARM_A_m_set_cptr_tune_val.ro_tuned_val;
-	}
-	else
-	{
-		dbl_Offset_X = ARM_B_m_set_cptr_tune_val.to_tuned_val;
-		dbl_Offset_Y = ARM_B_m_set_cptr_tune_val.ro_tuned_val;
-	}
-
-	dbl_Offset_R = (-1.0) * dbl_Offset_Y;		// Offsets mean deviation from reference. So, Arm for place should be corrected as inverse values of offsets
-	dbl_Offset_T = (-1.0) * atan(dbl_Offset_X/(dbl_Arm_R+dbl_Offset_Y))*180.0/3.141592*1000.0;
-
-	str_log.Format("Offset X:(%f), Offset Y:(%f), Teaching Arm Length:(%f), Offset R:(%f)micro mm, Offset T:(%f)mili deg", dbl_Offset_X, dbl_Offset_Y, dbl_Arm_R, dbl_Offset_R, dbl_Offset_T);
-	Fnc__APP_LOG(str_log);
-
-
-	// Value Display about Offsets in GUI
-	CString strOffset;
-
-	strOffset.Format("%.2f", dbl_Offset_R);
-	sCH__Estimated_R_OFFSET->Set__DATA(strOffset);
-
-	strOffset.Format("%.2f", dbl_Offset_T);
-	sCH__Estimated_T_OFFSET->Set__DATA(strOffset);
-
-
-	// 5. Set Offset
-	if(da_usage.CompareNoCase(STR__YES) == 0)
-	{
-		Fnc__APP_LOG("==> DA Offsets are APPLIED");
-
-		if(arm_type.CompareNoCase(ARM_A) == 0)
-		{
-			ARM_A_m_set_cptr_tune_val.ro_tuned_val = dbl_Offset_R;
-			ARM_A_m_set_cptr_tune_val.to_tuned_val = dbl_Offset_T;
-
-			if(Check_Offset_Range(before_stn_name, p_variable, p_alarm, ARM_A_m_set_cptr_tune_val) < 0)		
-			{
-				if(nCount > 0)
-				{
-					--nCount;
-					str_log.Format("Retray Check:%d", nCount);
-					Fnc__APP_LOG(str_log);
-
-					goto LOOP_RETRY;
-				}
-
-				return OBJ_ABORT;
-			}
-
-			set_ro_offset.Format("%.f", ARM_A_m_set_cptr_tune_val.ro_tuned_val);
-			set_to_offset.Format("%.f", ARM_A_m_set_cptr_tune_val.to_tuned_val);
-		}
-		else
-		{
-			ARM_B_m_set_cptr_tune_val.ro_tuned_val = dbl_Offset_R;
-			ARM_B_m_set_cptr_tune_val.to_tuned_val = dbl_Offset_T;
-
-			if(Check_Offset_Range(before_stn_name, p_variable, p_alarm, ARM_B_m_set_cptr_tune_val) < 0)
-			{
-				if(nCount > 0)
-				{
-					--nCount;
-					str_log.Format("Retray Check:%d",nCount);
-					Fnc__APP_LOG(str_log);
-
-					goto LOOP_RETRY;
-				}
-				
-				return OBJ_ABORT;
-			}
-
-			set_ro_offset.Format("%.f", ARM_B_m_set_cptr_tune_val.ro_tuned_val);
-			set_to_offset.Format("%.f", ARM_B_m_set_cptr_tune_val.to_tuned_val);
-		}
-		
-		str_log.Format("To Set OFFSET.. RO:%s microns, TO:%s milidegrees", set_ro_offset, set_to_offset);
-		Fnc__APP_LOG(str_log);
-	}
-	else
-	{
-		Fnc__APP_LOG("==> DA Offsets are NOT APPLIED");
-	}
-
-
-	// 6. Do place action according to Dynamic Alignment Usage
 	int state = -1;
 
-	if(da_usage.CompareNoCase(STR__YES) == 0)
+	// Action : PICK ...
 	{
-		Fnc__APP_LOG("==> OFFSET PLACE is APPLIED");
+		     if(arm_type.CompareNoCase(ARM_A) == 0)			state = doCH__COMMAND->Set__DATA("APick");
+		else if(arm_type.CompareNoCase(ARM_B) == 0)			state = doCH__COMMAND->Set__DATA("BPick");
 
-		// Check Offset range
-		if(arm_type.CompareNoCase(ARM_A) == 0)
-		{
-			if(Check_Offset_Range(stn_name, p_variable, p_alarm, ARM_A_m_set_cptr_tune_val) < 0)
-			{
-				return OBJ_ABORT;
-			}
-		}
-		else
-		{	
-			if(Check_Offset_Range(stn_name, p_variable, p_alarm, ARM_B_m_set_cptr_tune_val) < 0)
-			{
-				return OBJ_ABORT;
-			}
-		}
-
-		// Set Offset
-		aoCH_RO_OFFSET->Set__DATA(set_ro_offset);
-		aoCH_TO_OFFSET->Set__DATA(set_to_offset);
-
-		// Action : [Place]	
-		     if(arm_type.CompareNoCase(ARM_A) == 0)		state = doCH__COMMAND->Set__DATA("APlace_Offset");
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		state = doCH__COMMAND->Set__DATA("BPlace_Offset");
-	}
-	else
-	{
-		Fnc__APP_LOG("==> NORMAL PLACE is APPLIED without OFFSET");
-
-		     if(arm_type.CompareNoCase(ARM_A) == 0)		state = doCH__COMMAND->Set__DATA("APlace");
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		state = doCH__COMMAND->Set__DATA("BPlace");
-	}
-
-	if(state == 0)    // Abort
-	{
-		return -1;
-	}
-
-	if(Is__OFFLINE(p_alarm) < 0)
-	{
-		return -1;
+		if(state < 0)						return -21;
+		if(Is__OFFLINE(p_alarm) < 0)		return -22;
 	}
 
 	// ...
@@ -979,51 +231,11 @@ LOOP_RETRY:
 		{
 			return -1;
 		}
-
-		if(p_variable->Check__CTRL_ABORT() > 0)
-		{
-			return -1;
-		}
 	}
 
-	if(dCH__CFG_DA_SENSOR_TYPE->Check__DATA(STR__YES) > 0)
-	{
-		// 7. SET CPTR OFF
-		{
-			Fnc__APP_LOG("Start Senosr Off");
-
-			int nRet = Set__CPTR_SNS_OFF_N(p_variable, p_alarm, arm_type, stn_name);
-
-			str_log.Format("End Sensor Off (Result:%d)", nRet);
-			Fnc__APP_LOG(str_log);
-
-			if(nRet <= 0)
-			{
-				return OBJ_ABORT;
-			}
-		}
-	}
-
-	// 5. Get Sns Value
-	{
-		int nRet = Get__CPTR_SNS_N(p_variable,p_alarm, arm_type,stn_name,"EXTEND");
-
-		if(nRet <= 0)
-		{
-			return OBJ_ABORT;
-		}
-
-		Fnc__ACT_MSG("[Fnc__PLACE_DYNAMIC_ALIGN_N] End...");
-		
-		if(nRet <= 0)
-		{
-			return OBJ_ABORT;	
-		}
-	}
-
-	return OBJ_AVAILABLE;
+	_Update__WFR_CEN_DATA(p_variable);
+	return 1;
 }
-
 
 // Place -----
 int  CObj__VacRobot_PSK
@@ -1034,39 +246,18 @@ int  CObj__VacRobot_PSK
 			  const CString& stn_slot)
 {
 
-	return Fnc__PLACE(p_variable,p_alarm, stn_name,arm_type,stn_slot);
+	int r_flag = Fnc__PLACE(p_variable,p_alarm, stn_name,arm_type,stn_slot);
+	if(r_flag > 0)
+	{
+		if(iActive__SIM_MODE > 0)
+		{
+			if(arm_type.CompareNoCase(ARM_A) == 0)		dCH__DRV_INFO_ARM_A_MAT_READ->Set__DATA("Absent");
+			if(arm_type.CompareNoCase(ARM_B) == 0)		dCH__DRV_INFO_ARM_B_MAT_READ->Set__DATA("Absent");
+		}
+	}
+	return r_flag;
 }
 
-int  CObj__VacRobot_PSK
-::Fnc__SIM_PLACE(CII_OBJECT__VARIABLE* p_variable,
-			     CII_OBJECT__ALARM* p_alarm,
-			     const CString& stn_name,
-			     const CString& arm_type,
-			     const CString& stn_slot)
-{
-	SCX__TIMER_CTRL x_timer_ctrl;
-	x_timer_ctrl->REGISTER__ABORT_OBJECT(sObject_Name);
-
-	double  cfg__place_time = 1.0;
-	CString var_data;
-
-	if(Macro__CHECK_LLx_INDEX(stn_name) >= 0)
-	{
-		aCH__SIM_CFG__LBx_PLACE_TIME->Get__DATA(var_data);
-	}
-	else if(Macro__CHECK_PMx_INDEX(stn_name) >= 0)
-	{
-		aCH__SIM_CFG__PMx_PLACE_TIME->Get__DATA(var_data);
-	}
-
-	cfg__place_time = atof(var_data);
-	if(x_timer_ctrl->WAIT(cfg__place_time) < 0)
-	{
-		return -1; 
-	}
-
-	return 1;
-}
 int  CObj__VacRobot_PSK
 ::Fnc__PLACE(CII_OBJECT__VARIABLE* p_variable,
 		     CII_OBJECT__ALARM* p_alarm,
@@ -1081,7 +272,7 @@ int  CObj__VacRobot_PSK
 
 	// Set Station
 	{
-		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
+		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name, stn_slot);
 
 		     if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
 		else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
@@ -1123,21 +314,7 @@ int  CObj__VacRobot_PSK
 		}
 	}
 
-	// ...
-	{
-		int state = doCH__COMMAND->Set__DATA("WAF_CEN.DATA");
-
-		if(state > 0)
-		{
-			CString str_data;
-
-			str_data = sCH__RQSTN_SNS_T_VALUE->Get__STRING();
-			sCH__DA_RESULT_R_OFFSET_DEG->Set__DATA(str_data);
-
-			str_data = sCH__RQSTN_SNS_R_VALUE->Get__STRING();
-			sCH__DA_RESULT_T_OFFSET_MM->Set__DATA(str_data);
-		}
-	}
+	_Update__WFR_CEN_DATA(p_variable);
 	return 1;
 }
 
@@ -1150,7 +327,7 @@ int  CObj__VacRobot_PSK
 			   const CString& para__arm_type,
 			   const CString& para__stn_slot)
 {
-	if(iCFG__SIM_FLAG > 0)
+	if(iActive__SIM_MODE > 0)
 	{
 		return Fnc__SIM_ROTATE(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot);
 	}
@@ -1195,7 +372,7 @@ int  CObj__VacRobot_PSK
 
 	// ...
 	{
-		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
+		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name, stn_slot);
 
 			 if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
 		else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
@@ -1263,7 +440,7 @@ int  CObj__VacRobot_PSK
 int  CObj__VacRobot_PSK
 ::Call__HOME(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm)
 {
-	if(iCFG__SIM_FLAG > 0)
+	if(iActive__SIM_MODE > 0)
 	{
 		return Fnc__SIM_HOME(p_variable,p_alarm);
 	}
@@ -1339,45 +516,6 @@ int  CObj__VacRobot_PSK
 			   const CString& stn_slot,
 			   const int is_active_handoff)
 {
-	CString str_cfg_val;
-	CString str_data;
-	CString str_wfr_sts;
-	CString str_before_stn;
-	CString act_name;
-
-	if(arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		sCH__ARM_A_BEFORE_MODE_STS->Get__DATA(str_data);
-		dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Get__DATA(str_wfr_sts);
-		str_before_stn = m_sBefore_Stn_Retract_ArmA;
-	}
-	else
-	{
-		sCH__ARM_B_BEFORE_MODE_STS->Get__DATA(str_data);
-		dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Get__DATA(str_wfr_sts);
-		str_before_stn = m_sBefore_Stn_Retract_ArmB;
-	}
-
-	str_cfg_val = Get__CFG_DYNAMIC_ALGN_USE(stn_name);
-	str_cfg_val = Get__CFG_DYNAMIC_ALGN_USE(str_before_stn);
-
-	if((str_data.CompareNoCase("RETRACT_Success") == 0) 
-	|| (str_data.CompareNoCase("PICK_Success")    == 0))
-	{
-		if(str_wfr_sts.CompareNoCase("NONE") != 0)
-		{
-			act_name.Format("Arm-%s, Station From %s to %s", arm_type,str_before_stn, stn_name);
-			Fnc__APP_LOG(act_name);
-
-			return Fnc__EXTEND_DYNAMIC_ALIGN_N(p_variable, 
-											   p_alarm, 
-											   stn_name, 
-											   arm_type, 
-											   stn_slot, 
-											   is_active_handoff,
-											   str_cfg_val);
-		}
-	}
 
 	return Fnc__EXTEND(p_variable,p_alarm, stn_name, arm_type, stn_slot, is_active_handoff);
 }
@@ -1392,7 +530,13 @@ int  CObj__VacRobot_PSK
 			    const CString& stn_slot,
 			    const int is_active_handoff)
 {
-	return Fnc__RETRACT_DYNAMIC_ALIGN_N(p_variable,p_alarm, stn_name,arm_type,stn_slot,is_active_handoff);
+	int r_flag = Fnc__RETRACT(p_variable,p_alarm, stn_name,arm_type,stn_slot,is_active_handoff);
+
+	if(r_flag > 0)
+	{
+		_Update__WFR_CEN_DATA(p_variable);
+	}
+	return r_flag;
 }
 
 
@@ -1421,84 +565,6 @@ int  CObj__VacRobot_PSK
 
 // -----
 int  CObj__VacRobot_PSK
-::Call__RQ_STN(CII_OBJECT__VARIABLE* p_variable,
-			   CII_OBJECT__ALARM* p_alarm,
-			   const CString& stn_name, 
-			   const CString& arm_type)
-{
-	return Fnc__RQ_STN(p_variable,p_alarm, stn_name, arm_type);
-}
-
-int  CObj__VacRobot_PSK
-::Call__SET_STN(CII_OBJECT__VARIABLE* p_variable,
-			    CII_OBJECT__ALARM* p_alarm,
-			    const CString& stn_name, 
-			    const CString& arm_type)
-{
-	return Fnc__SET_STN(p_variable,p_alarm, stn_name, arm_type);
-}
-
-
-// -----
-int  CObj__VacRobot_PSK
-::Call__TEACHED_CPTR_SAVE(CII_OBJECT__VARIABLE* p_variable,
-						  CII_OBJECT__ALARM* p_alarm,
-					 	  const CString& stn_name, 
-						  const CString& arm_type)
-{
-	CString str_val;
-	double r_hi, t_hi, z_hi;
-	double r_lo, t_lo, z_lo;
-
-	CString str_data;
-	CString str_cfg_val;
-
-	CString str_wfr_sts;
-
-	// 초기화...
-	Init__CALED_CPTR_SNS_VAL_CH(stn_name, arm_type);
-
-	Sleep(1000);	// GUI에서 볼 수 있게...
-
-	if(arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		sCH__ARM_A_BEFORE_MODE_STS->Get__DATA(str_data);
-		dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Get__DATA(str_wfr_sts);
-	}
-	else
-	{
-		sCH__ARM_B_BEFORE_MODE_STS->Get__DATA(str_data);
-		dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Get__DATA(str_wfr_sts);
-	}
-
-	if(arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		sCH__CPTR_ARM_A_SNS_R_RE_VALUE_HIGH->Get__DATA(str_val);	r_hi = atof(str_val);
-		sCH__CPTR_ARM_A_SNS_T_RE_VALUE_HIGH->Get__DATA(str_val);	t_hi = atof(str_val);
-		sCH__CPTR_ARM_A_SNS_Z_RE_VALUE_HIGH->Get__DATA(str_val);	z_hi = atof(str_val);
-
-		// RETRACT... LOW Sns
-		sCH__CPTR_ARM_A_SNS_R_RE_VALUE_LOW->Get__DATA(str_val);		r_lo = atof(str_val);
-		sCH__CPTR_ARM_A_SNS_T_RE_VALUE_LOW->Get__DATA(str_val);		t_lo = atof(str_val);
-		sCH__CPTR_ARM_A_SNS_Z_RE_VALUE_LOW->Get__DATA(str_val);		z_lo = atof(str_val);
-	}
-	else
-	{
-		sCH__CPTR_ARM_B_SNS_R_RE_VALUE_HIGH->Get__DATA(str_val);	r_hi = atof(str_val);
-		sCH__CPTR_ARM_B_SNS_T_RE_VALUE_HIGH->Get__DATA(str_val);	t_hi = atof(str_val);
-		sCH__CPTR_ARM_B_SNS_Z_RE_VALUE_HIGH->Get__DATA(str_val);	z_hi = atof(str_val);
-
-		// RETRACT... LOW Sns
-		sCH__CPTR_ARM_B_SNS_R_RE_VALUE_LOW->Get__DATA(str_val);		r_lo = atof(str_val);
-		sCH__CPTR_ARM_B_SNS_T_RE_VALUE_LOW->Get__DATA(str_val);		t_lo = atof(str_val);
-		sCH__CPTR_ARM_B_SNS_Z_RE_VALUE_LOW->Get__DATA(str_val);		z_lo = atof(str_val);
-	}
-
-	Save__CALED_CPTR_SNS_VAL(stn_name, arm_type, r_hi,t_hi,z_hi, r_lo,t_lo,z_lo);
-	return 1;
-}
-
-int  CObj__VacRobot_PSK
 ::Fnc__SIM_MAP(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm)
 {
 	diCH__COMM_STS->Set__DATA(STR__ONLINE);
@@ -1515,6 +581,11 @@ LOOP_RETRY:
 
 		if(Is__LOCAL(p_alarm)   < 0)		return -1;
 		if(Is__OFFLINE(p_alarm) < 0)		return -1;
+	}
+
+	// ...
+	{
+		doCH__COMMAND->Set__DATA("ChkLoad.All");
 	}
 
 	/*
@@ -1585,9 +656,23 @@ LOOP_RETRY:
 	CString str__wfr_sts;
 	CString var_data;
 
+	// if(iActive__SIM_MODE > 0)
+	{
+		if(dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Check__DATA(STR__NONE) > 0)
+			dCH__DRV_INFO_ARM_A_MAT_READ->Set__DATA("Absent");
+		else
+			dCH__DRV_INFO_ARM_A_MAT_READ->Set__DATA("Present");
+
+		if(dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Check__DATA(STR__NONE) > 0)
+			dCH__DRV_INFO_ARM_B_MAT_READ->Set__DATA("Absent");
+		else
+			dCH__DRV_INFO_ARM_B_MAT_READ->Set__DATA("Present");
+	}
+
+	/*
 	// A ARM ----- 
 	{
-		diCH__ARM_A_MAT_READ->Get__DATA(var_data);
+		dCH__DRV_INFO_ARM_A_MAT_READ->Get__DATA(var_data);
 
 			 if(var_data.CompareNoCase("Present") == 0)		str__wfr_sts = "EXIST";
 		else if(var_data.CompareNoCase("Absent")  == 0)		str__wfr_sts = "NONE";
@@ -1618,7 +703,7 @@ LOOP_RETRY:
 
 	// B ARM ----- 
 	{
-		diCH__ARM_B_MAT_READ->Get__DATA(var_data);
+		dCH__DRV_INFO_ARM_B_MAT_READ->Get__DATA(var_data);
 
 		     if(var_data.CompareNoCase("Present") == 0)		str__wfr_sts = "EXIST";
 		else if(var_data.CompareNoCase("Absent")  == 0)		str__wfr_sts = "NONE";
@@ -1646,6 +731,7 @@ LOOP_RETRY:
 			dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Set__DATA(str__wfr_sts);
 		}
 	}
+	*/
 
 	return 1;
 }
@@ -1676,7 +762,7 @@ int  CObj__VacRobot_PSK
 	// ...
 	{
 		// Set Station 
-		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
+		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name, stn_slot);
 
 		     if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
 		else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
@@ -1720,7 +806,7 @@ int  CObj__VacRobot_PSK
 		}
 	}
 
-	if(iCFG__SIM_FLAG > 0)
+	if(iActive__SIM_MODE > 0)
 	{
 		aCH__SIM_CFG__EXTEND_TIME->Get__DATA(var_data);
 		cfg__sim_time = atof(var_data);
@@ -1776,275 +862,16 @@ int  CObj__VacRobot_PSK
 }
 
 int  CObj__VacRobot_PSK
-::Fnc__EXTEND_OFFSET(CII_OBJECT__VARIABLE* p_variable,
-				     CII_OBJECT__ALARM* p_alarm,
-				     const CString& stn_name,
-				     const CString& arm_type,
-				     const CString& stn_slot,
-				     const int is_active_handoff)
+::Fnc__RETRACT(CII_OBJECT__VARIABLE* p_variable,
+			   CII_OBJECT__ALARM* p_alarm,
+			   const CString& para__stn_name, 
+			   const CString& para__arm_type,
+			   const CString& para__stn_slot,
+			   const int is_active_handoff)
 {
 	CString set_ro_offset;
 	CString set_to_offset;
-
-	double  cfg__sim_time = 1.0;
-	CString var_data;
 	CString str_log;
-
-	// ...
-	SCX__TIMER_CTRL x_timer_ctrl;
-	x_timer_ctrl->REGISTER__ABORT_OBJECT(sObject_Name);
-
-	// ...
-	{
-		Fnc__ACT_MSG("EXTEND_OFFSET Start...");
-
-		if(Is__LOCAL(p_alarm)   < 0)		return -1;
-		if(Is__OFFLINE(p_alarm) < 0)		return -1;
-	}
-
-	// ...
-	{
-		// Set Station
-		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
-
-		     if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
-
-		// Set Slot
-		doCH__SLOT->Set__DATA(stn_slot);
-
-		// Extend
-		doCH__RPOS->Set__DATA("Extend");
-
-		if(arm_type.CompareNoCase(ARM_A) == 0)
-		{
-			if(Check_Offset_Range(stn_name, p_variable, p_alarm, ARM_A_m_set_cptr_tune_val) < 0)
-			{
-				return OBJ_ABORT;
-			}
-
-			set_ro_offset.Format("%.f", ARM_A_m_set_cptr_tune_val.ro_tuned_val);
-			set_to_offset.Format("%.f", ARM_A_m_set_cptr_tune_val.to_tuned_val);
-		}
-		else
-		{
-			if(Check_Offset_Range(stn_name, p_variable, p_alarm, ARM_B_m_set_cptr_tune_val) < 0)
-			{
-				return OBJ_ABORT;
-			}
-
-			set_ro_offset.Format("%.f", ARM_B_m_set_cptr_tune_val.ro_tuned_val);
-			set_to_offset.Format("%.f", ARM_B_m_set_cptr_tune_val.to_tuned_val);
-		}
-		
-		str_log.Format("To Set OFFSET.. RO:%s microns, TO:%s milidegrees", set_ro_offset,set_to_offset);
-		Fnc__APP_LOG(str_log);
-	
-		// Set Offset
-		aoCH_RO_OFFSET->Set__DATA(set_ro_offset);
-		aoCH_TO_OFFSET->Set__DATA(set_to_offset);
-	}
-
-	// ...
-	{
-		CString str__zpos = "Down";
-
-		if(arm_type.CompareNoCase(ARM_A) == 0)
-		{
-			if(dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Check__DATA("NONE") > 0)
-				str__zpos = "Down";
-			else
-				str__zpos = "Up";
-		}
-		else if(arm_type.CompareNoCase(ARM_B) == 0)
-		{
-			if(dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Check__DATA("NONE") > 0)
-				str__zpos = "Down";
-			else
-				str__zpos = "Up";
-		}
-
-		if(stn_name.Find("PM") >= 0)
-		{
-			if(is_active_handoff == ACTIVE_HAND_OFF)
-			{
-				doCH__ZPOS->Set__DATA("Down");
-			}
-		}
-		else
-		{
-			doCH__ZPOS->Set__DATA(str__zpos);
-		}
-
-		if(iCFG__SIM_FLAG > 0)
-		{
-			aCH__SIM_CFG__EXTEND_TIME->Get__DATA(var_data);
-			cfg__sim_time = atof(var_data);
-
-			if(x_timer_ctrl->WAIT(cfg__sim_time) < 0)
-			{
-				return -1;
-			}
-			return 1;
-		}
-	}
-
-	// ...
-	{
-		int state = -1;
-
-		// Action : [AGoto_Offset, BGoto_Offset]	
-			 if(arm_type.CompareNoCase(ARM_A) == 0)		state = doCH__COMMAND->Set__DATA("AGoto_Offset");
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		state = doCH__COMMAND->Set__DATA("BGoto_Offset");
-
-		str_log.Format("Extend Offset.. Command Ret : %d", state);	
-		Fnc__ACT_MSG(str_log);
-
-		if(state == 0)    // Abort
-		{
-			return -1;
-		}
-
-		if(Is__OFFLINE(p_alarm) < 0)
-		{
-			return -1;
-		}
-	}
-
-	// ...
-	{
-		int state = Is__ERROR_EXIST(p_alarm);
-
-		str_log.Format("Extend Offset..Error Exist Check Ret : %d", state);	
-		Fnc__ACT_MSG(str_log);
-		
-		if(state != OBJ_AVAILABLE)
-		{
-			return -1;
-		}
-
-		if(p_variable->Check__CTRL_ABORT() > 0)
-		{
-			return -1;
-		}
-	}
-
-	return 1;
-}
-
-int  CObj__VacRobot_PSK
-::Fnc__EXTEND_DYNAMIC_ALIGN(CII_OBJECT__VARIABLE* p_variable,
-						    CII_OBJECT__ALARM* p_alarm,
-						    const CString& para__stn_name, 
-						    const CString& para__arm_type,
-						    const CString& para__stn_slot,
-						    const int is_active_handoff)
-{
-	Fnc__APP_LOG("Extend Dynamic Align Start..");
-
-	// Driver에서 timeout으로 적용된다.
-	{
-		sCH__ACTION_STS->Set__DATA("EXTEND_DYNAMIC_ALIGN");
-
-		if(para__arm_type.CompareNoCase(ARM_A) == 0)
-		{
-			if(dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Check__DATA("NONE") < 0)
-			{
-				// 1. SET CPTR (OFF and ON)
-				int nRet = Set__CPTR_SNS_OFF_ON(p_variable, p_alarm, para__arm_type, para__stn_name);
-				if(nRet <= 0)	return OBJ_ABORT;
-			}
-		}
-		else if(para__arm_type.CompareNoCase(ARM_B) == 0)
-		{
-			if(dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Check__DATA("NONE") < 0)
-			{
-				// 1. SET CPTR (OFF and ON)
-				int nRet = Set__CPTR_SNS_OFF_ON(p_variable, p_alarm, para__arm_type, para__stn_name);
-				if(nRet <= 0)	return OBJ_ABORT;
-			}
-		}
-	}
-
-	// 2. EXTEND
-	{
-		int nRet = Fnc__EXTEND_OFFSET(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot,is_active_handoff);
-		if(nRet <= 0)	return OBJ_ABORT;
-	}
-
-	if(para__arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		if(dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Check__DATA("NONE") < 0)
-		{
-			// Initialize
-
-			// EXTEND... HIGH Sns
-			sCH__CPTR_ARM_A_SNS_R_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_T_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_Z_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-
-			// EXTEND... LOW Sns
-			sCH__CPTR_ARM_A_SNS_R_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_T_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_Z_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-
-			// 3. Get Sns Value
-			int nRet = Get__CPTR_SNS(p_variable,p_alarm, para__arm_type,para__stn_name,"EXTEND");
-			if(nRet <= 0)	return OBJ_ABORT;
-		}
-	}
-	else if(para__arm_type.CompareNoCase(ARM_B) == 0)
-	{
-		if(dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Check__DATA("NONE") < 0)
-		{
-			// Initialize
-			
-			// EXTEND... HIGH Sns
-			sCH__CPTR_ARM_B_SNS_R_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_T_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_Z_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-
-			// EXTEND... LOW Sns
-			sCH__CPTR_ARM_B_SNS_R_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_T_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_Z_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-
-			// 3. Get Sns Value
-			int nRet = Get__CPTR_SNS(p_variable,p_alarm, para__arm_type,para__stn_name,"EXTEND");
-			if(nRet <= 0)	return OBJ_ABORT;
-		}
-	}
-
-	Fnc__APP_LOG("Extend Dynamic Align Complete..");
-	return OBJ_AVAILABLE;
-}
-
-int  CObj__VacRobot_PSK
-::Fnc__EXTEND_DYNAMIC_ALIGN_N(CII_OBJECT__VARIABLE* p_variable,
-							  CII_OBJECT__ALARM* p_alarm,
-							  const CString& para__stn_name, 
-							  const CString& para__arm_type,
-							  const CString& para__stn_slot,
-							  const int is_active_handoff,
-							  const CString& da_usage)
-{
-	int nCount = 1;
-
-	CString str_log;
-	CString szCount;
-
-	// ...
-	{
-		aDA_DA_RETRY_CHECK_COUNT->Get__DATA(szCount);
-		nCount = atoi(szCount);
-
-		Fnc__APP_LOG("[Fnc__EXTEND_DYNAMIC_ALIGN_N] Start...");
-
-		// Driver에서 timeout으로 적용된다.
-		sCH__ACTION_STS->Set__DATA("EXTEND_DYNAMIC_ALIGN");
-	}
-
-LOOP_RETRY:
 
 	if(dCH__CFG_DA_SENSOR_TYPE->Check__DATA(STR__YES) > 0)
 	{
@@ -2052,364 +879,9 @@ LOOP_RETRY:
 		{
 			Fnc__APP_LOG("Start Sensor Off");
 
-			int nRet = Set__CPTR_SNS_OFF_N(p_variable,p_alarm, para__arm_type,para__stn_name);
+			int nRet = Set__CPTR_SNS_OFF_N(p_variable, p_alarm, para__arm_type, para__stn_name, para__stn_slot);
 
-			str_log.Format("End Sensor Off (Result:%d)", nRet);
-			Fnc__APP_LOG(str_log);
-
-			if(nRet <= 0)
-			{
-				return OBJ_ABORT;
-			}
-		}
-		// 2. SET CPTR ON
-		{
-			Fnc__APP_LOG("Start Sensor On ");
-
-			int nRet = Set__CPTR_SNS_ON_N(p_variable, p_alarm, para__arm_type, para__stn_name);
-
-			str_log.Format("End Sensor On (Result:%d)", nRet);
-			Fnc__APP_LOG(str_log);
-
-			if(nRet <= 0)
-			{
-				return OBJ_ABORT;
-			}
-		}
-	}
-
-	// 3. Get Station Information
-	{
-		int nRet = Fnc__RQ_STN(p_variable,p_alarm, para__stn_name, para__arm_type);
-
-		if(nRet <= 0)
-		{
-			return OBJ_ABORT;
-		}
-	}
-
-	// ...
-	CString strArmR;
-	double dbl_Arm_R;
-	
-	sCH__RQSTN_SNS_R_VALUE->Get__DATA(strArmR);	
-	dbl_Arm_R = atof(strArmR);
-
-	// 4. Calculate R & T(angle) Offset
-	double dbl_Offset_X;
-	double dbl_Offset_Y;
-
-	double dbl_Offset_R;
-	double dbl_Offset_T;
-
-	if(para__arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		dbl_Offset_X = ARM_A_m_set_cptr_tune_val.to_tuned_val;
-		dbl_Offset_Y = ARM_A_m_set_cptr_tune_val.ro_tuned_val;
-	}
-	else
-	{
-		dbl_Offset_X = ARM_B_m_set_cptr_tune_val.to_tuned_val;
-		dbl_Offset_Y = ARM_B_m_set_cptr_tune_val.ro_tuned_val;
-	}
-
-	dbl_Offset_R = (-1.0) * dbl_Offset_Y;		// Offsets mean deviation from reference. So, Arm for place should be corrected as inverse values of offsets
-	dbl_Offset_T = (-1.0) * atan(dbl_Offset_X/(dbl_Arm_R+dbl_Offset_Y))*180.0/3.141592*1000.0;
-
-	str_log.Format("Offset X:(%f), Offset Y:(%f), Teaching Arm Length:(%f), Offset R:(%f)micro mm, Offset T:(%f)mili deg", 
-		           dbl_Offset_X,dbl_Offset_Y,dbl_Arm_R,dbl_Offset_R,dbl_Offset_T);
-	Fnc__APP_LOG(str_log);
-
-	// Value Display about Offsets in GUI
-	CString strOffset;
-
-	strOffset.Format("%.2f", dbl_Offset_R);
-	sCH__Estimated_R_OFFSET->Set__DATA(strOffset);
-
-	strOffset.Format("%.2f", dbl_Offset_T);
-	sCH__Estimated_T_OFFSET->Set__DATA(strOffset);
-
-	// 5. Set Offset
-	if(da_usage.CompareNoCase(STR__YES) == 0)
-	{
-		Fnc__APP_LOG("==> DA Offsets are APPLIED");
-
-		if(para__arm_type.CompareNoCase(ARM_A) == 0)
-		{
-			ARM_A_m_set_cptr_tune_val.ro_tuned_val = dbl_Offset_R;
-			ARM_A_m_set_cptr_tune_val.to_tuned_val = dbl_Offset_T;
-		}
-		else
-		{
-			ARM_B_m_set_cptr_tune_val.ro_tuned_val = dbl_Offset_R;
-			ARM_B_m_set_cptr_tune_val.to_tuned_val = dbl_Offset_T;
-		}
-
-		str_log.Format("To Set OFFSET.. RO:%f microns, TO:%f milidegrees", dbl_Offset_R,dbl_Offset_T);
-		Fnc__APP_LOG(str_log);
-	}
-	else
-	{
-		Fnc__APP_LOG("==> DA Offsets are NOT APPLIED");
-	}
-
-	// 6. Do place action according to Dynamic Alignment Usage
-	if(da_usage.CompareNoCase(STR__YES) == 0)
-	{
-		Fnc__APP_LOG("==> OFFSET EXTEND is APPLIED");
-
-		// 2. EXTEND
-		int nRet = Fnc__EXTEND_OFFSET(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot,is_active_handoff);
-
-		if(nRet < 0)
-		{
-			if (nCount > 0)
-			{
-				--nCount;
-
-				str_log.Format("Retray Check:%d", nCount);
-				Fnc__APP_LOG(str_log);
-				
-				goto LOOP_RETRY;
-			}
-
-			return OBJ_ABORT;
-		}
-	}
-	else
-	{
-		Fnc__APP_LOG("==> NORMAL EXTEND is APPLIED without OFFSET");
-
-		int nRet = Fnc__EXTEND(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot,is_active_handoff);
-		if(nRet <= 0)		return OBJ_ABORT;
-	}
-
-	if(p_variable->Check__CTRL_ABORT() > 0)
-	{
-		return OBJ_ABORT;
-	}
-
-	if(dCH__CFG_DA_SENSOR_TYPE->Check__DATA(STR__YES) > 0)
-	{
-		// 7. SET CPTR OFF
-		{
-			Fnc__APP_LOG("Start Senosr Off");
-
-			int nRet = Set__CPTR_SNS_OFF_N(p_variable,p_alarm, para__arm_type,para__stn_name);
-
-			str_log.Format("End Sensor Off (Result:%d)", nRet);
-			Fnc__APP_LOG(str_log);
-
-			if(nRet <= 0)		return OBJ_ABORT;
-		}
-	}
-
-	if(para__arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		if(dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Check__DATA("NONE") < 0)
-		{
-			// Initialize
-
-			// EXTEND... HIGH Sns
-			sCH__CPTR_ARM_A_SNS_R_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_T_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_Z_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-
-			// EXTEND... LOW Sns
-			sCH__CPTR_ARM_A_SNS_R_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_T_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_Z_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-
-			// 3. Get Sns Value
-			int nRet = Get__CPTR_SNS_N(p_variable,p_alarm, para__arm_type,para__stn_name,"EXTEND");
-			if(nRet <= 0)		return OBJ_ABORT;
-		}
-	}
-	else if(para__arm_type.CompareNoCase(ARM_B) == 0)
-	{
-		if(dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Check__DATA("NONE") < 0)
-		{
-			// Initialize
-			
-			// EXTEND... HIGH Sns
-			sCH__CPTR_ARM_B_SNS_R_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_T_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_Z_EX_VALUE_HIGH->Set__DATA("UNKNOWN");
-
-			// EXTEND... LOW Sns
-			sCH__CPTR_ARM_B_SNS_R_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_T_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_Z_EX_VALUE_LOW->Set__DATA("UNKNOWN");
-
-			// 3. Get Sns Value
-			int nRet = Get__CPTR_SNS_N(p_variable,p_alarm, para__arm_type,para__stn_name,"EXTEND");
-			if(nRet <= 0)		return OBJ_ABORT;
-		}
-	}
-
-	Fnc__APP_LOG("[Fnc__EXTEND_DYNAMIC_ALIGN_N] End...");
-	return OBJ_AVAILABLE;
-}
-
-int  CObj__VacRobot_PSK
-::Fnc__RETRACT_DYNAMIC_ALIGN(CII_OBJECT__VARIABLE* p_variable,
-						     CII_OBJECT__ALARM* p_alarm,
-						     const CString& para__stn_name, 
-						     const CString& para__arm_type,
-						     const CString& para__stn_slot,
-						     const int is_active_handoff)
-{
-	CString set_ro_offset;
-	CString set_to_offset;
-	CString str_log;
-
-	Fnc__APP_LOG("Retract Dynamic Align Start..");
-
-	// Driver에서 timeout으로 적용된다.
-	{
-		sCH__ACTION_STS->Set__DATA("RETRACT_DYNAMIC_ALIGN");
-
-		if(para__arm_type.CompareNoCase(ARM_A) == 0)
-		{
-			if(dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Check__DATA("NONE") < 0)
-			{
-				// 1. SET CPTR (OFF and ON)
-				int nRet = Set__CPTR_SNS_OFF_ON(p_variable, p_alarm, para__arm_type, para__stn_name);
-				if(nRet <= 0)		return OBJ_ABORT;
-			}
-		}
-		else if(para__arm_type.CompareNoCase(ARM_B) == 0)
-		{
-			if(dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Check__DATA("NONE") < 0)
-			{
-				// 1. SET CPTR (OFF and ON)
-				int nRet = Set__CPTR_SNS_OFF_ON(p_variable, p_alarm, para__arm_type, para__stn_name);
-				if(nRet <= 0)		return OBJ_ABORT;
-			}
-		}
-	}
-
-	// 2. RETRACT
-	{
-		int nRet = Fnc__RETRACT(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot,is_active_handoff);
-		if(nRet <= 0)		return OBJ_ABORT;
-	}
-
-	if(para__arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		if(dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Check__DATA("NONE") < 0)
-		{
-			// Initialize
-
-			// RETRACT... HIGH Sns
-			sCH__CPTR_ARM_A_SNS_R_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_T_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_Z_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-
-			// RETRACT... LOW Sns
-			sCH__CPTR_ARM_A_SNS_R_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_T_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_Z_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-
-			// 3. Get Sns Value
-			int nRet = Get__CPTR_SNS(p_variable,p_alarm, para__arm_type,para__stn_name,"RETRACT");
-			if(nRet <= 0)		return OBJ_ABORT;
-
-			// 4. PICK 후에 얻어온 R, T, Z 값과 CALIBRATION 된 R, T, Z 값들을 비교 계산한다.
-			Fnc__calculation_CPTR_SNS_VAL(para__stn_name, para__arm_type, ARM_A_m_set_cptr_tune_val);
-			
-			// 5. Rotate 전에 체크한다.
-			set_ro_offset.Format("%.f", ARM_A_m_set_cptr_tune_val.ro_tuned_val);
-			set_to_offset.Format("%.f", ARM_A_m_set_cptr_tune_val.to_tuned_val);
-
-			str_log.Format("After Calculation, Offset Val --> R:%s, T:%s", set_ro_offset,set_to_offset);
-			Fnc__APP_LOG(str_log);
-			
-			if(Check_Offset_Range(para__stn_name, p_variable, p_alarm, ARM_A_m_set_cptr_tune_val) < 0)
-			{
-				return OBJ_ABORT;
-			}
-		}
-	}
-	else if(para__arm_type.CompareNoCase(ARM_B) == 0)
-	{
-		if(dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Check__DATA("NONE") < 0)
-		{
-			// Initialize
-
-			// RETRACT... HIGH Sns
-			sCH__CPTR_ARM_B_SNS_R_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_T_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_Z_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-
-			// RETRACT... LOW Sns
-			sCH__CPTR_ARM_B_SNS_R_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_T_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_Z_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-
-			// 3. Get Sns Value
-			int nRet = Get__CPTR_SNS(p_variable,p_alarm, para__arm_type,para__stn_name,"RETRACT");
-			if(nRet <= 0)		return OBJ_ABORT;
-
-			// 4. RETRACT 후에 얻어온 R, T, Z 값과 CALIBRATION 된 R, T, Z 값들을 비교 계산한다.
-			Fnc__calculation_CPTR_SNS_VAL(para__stn_name, para__arm_type, ARM_B_m_set_cptr_tune_val);
-			
-			// 5. Rotate 전에 체크한다.
-			set_ro_offset.Format("%.f", ARM_B_m_set_cptr_tune_val.ro_tuned_val);
-			set_to_offset.Format("%.f", ARM_B_m_set_cptr_tune_val.to_tuned_val);
-
-			str_log.Format("After Calculation, Offset Val --> R:%s, T:%s", set_ro_offset,set_to_offset);
-			Fnc__APP_LOG(str_log);
-			
-			if(Check_Offset_Range(para__stn_name, p_variable, p_alarm, ARM_B_m_set_cptr_tune_val) < 0)
-			{
-				return OBJ_ABORT;
-			}
-		}
-	}
-
-	Fnc__APP_LOG("Retract Dynamic Align Complete..");
-	return OBJ_AVAILABLE;
-}
-
-int  CObj__VacRobot_PSK
-::Fnc__RETRACT_DYNAMIC_ALIGN_N(CII_OBJECT__VARIABLE* p_variable,
-							   CII_OBJECT__ALARM* p_alarm,
-							   const CString& para__stn_name, 
-							   const CString& para__arm_type,
-							   const CString& para__stn_slot,
-							   const int is_active_handoff)
-{
-	int nCount = 0;
-
-	CString set_ro_offset;
-	CString set_to_offset;
-	CString str_log;
-
-	// ...
-	{
-		CString ch_data;
-
-		aDA_DA_RETRY_CHECK_COUNT->Get__DATA(ch_data);
-		nCount = atoi(ch_data);
-
-		Fnc__APP_LOG("[Fnc__RETRACT_DYNAMIC_ALIGN_N] Start...");
-	}
-
-	// Driver에서 timeout으로 적용된다.
-	{
-		sCH__ACTION_STS->Set__DATA("RETRACT_DYNAMIC_ALIGN");
-	}
-
-	if(dCH__CFG_DA_SENSOR_TYPE->Check__DATA(STR__YES) > 0)
-	{
-		// 1. SET CPTR OFF
-		{
-			Fnc__APP_LOG("Start Sensor Off");
-
-			int nRet = Set__CPTR_SNS_OFF_N(p_variable, p_alarm, para__arm_type, para__stn_name);
-
-			str_log.Format("End Sensor Off (Result:%d)", nRet);
+			str_log.Format("End Sensor Off (Result %d)", nRet);
 			Fnc__APP_LOG(str_log);
 
 			if(nRet <= 0)		return OBJ_ABORT;
@@ -2419,9 +891,9 @@ int  CObj__VacRobot_PSK
 		{
 			Fnc__APP_LOG("Start Sensor On ");
 
-			int nRet = Set__CPTR_SNS_ON_N(p_variable, p_alarm, para__arm_type, para__stn_name);
+			int nRet = Set__CPTR_SNS_ON_N(p_variable, p_alarm, para__arm_type, para__stn_name, para__stn_slot);
 
-			str_log.Format("End Sensor On (Result:%d)", nRet);
+			str_log.Format("End Sensor On (Result %d)", nRet);
 			Fnc__APP_LOG(str_log);
 
 			if(nRet <= 0)		return OBJ_ABORT;
@@ -2430,7 +902,7 @@ int  CObj__VacRobot_PSK
 
 	// 3. RETRACT
 	{
-		int nRet = Fnc__RETRACT(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot,is_active_handoff);
+		int nRet = _Fnc__RETRACT(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot,is_active_handoff);
 
 		if(nRet <= 0)		return OBJ_ABORT;
 	}
@@ -2439,9 +911,9 @@ int  CObj__VacRobot_PSK
 	{
 		// 4. SET CPTR OFF
 		{
-			Fnc__APP_LOG("Start Senosr Off");
+			Fnc__APP_LOG("Start Sensor Off");
 
-			int nRet = Set__CPTR_SNS_OFF_N(p_variable, p_alarm, para__arm_type, para__stn_name);
+			int nRet = Set__CPTR_SNS_OFF_N(p_variable, p_alarm, para__arm_type, para__stn_name, para__stn_slot);
 
 			str_log.Format("End Sensor Off (Result:%d)", nRet);
 			Fnc__APP_LOG(str_log);
@@ -2450,80 +922,16 @@ int  CObj__VacRobot_PSK
 		}
 	}
 
-	if(para__arm_type.CompareNoCase(ARM_A) == 0)
-	{
-		if(dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Check__DATA("NONE") < 0)
-		{
-			// Initialize
-
-			// RETRACT... HIGH Sns
-			sCH__CPTR_ARM_A_SNS_R_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_T_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_Z_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-
-			// RETRACT... LOW Sns
-			sCH__CPTR_ARM_A_SNS_R_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_T_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_A_SNS_Z_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-
-			// 5. Get Sns Value
-			int nRet = Get__CPTR_SNS_N(p_variable,p_alarm, para__arm_type,para__stn_name,"RETRACT");
-			if(nRet <= 0)		return OBJ_ABORT;
-
-			// 6. PICK 후에 얻어온 R, T, Z 값과 CALIBRATION 된 R, T, Z 값들을 비교 계산한다.		
-			Fnc__calculation_CPTR_SNS_VAL_N(para__stn_name, para__arm_type, ARM_A_m_set_cptr_tune_val);
-			
-			// 5. Rotate 전에 체크한다.
-			set_ro_offset.Format("%.f", ARM_A_m_set_cptr_tune_val.ro_tuned_val);
-			set_to_offset.Format("%.f", ARM_A_m_set_cptr_tune_val.to_tuned_val);
-
-			str_log.Format("After Calculation, Offset Val --> Y:%s, X:%s", set_ro_offset,set_to_offset);
-			Fnc__APP_LOG(str_log);
-		}
-	}
-	else if(para__arm_type.CompareNoCase(ARM_B) == 0)
-	{
-		if(dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Check__DATA("NONE") < 0)
-		{
-			// Initialize
-
-			// RETRACT... HIGH Sns
-			sCH__CPTR_ARM_B_SNS_R_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_T_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_Z_RE_VALUE_HIGH->Set__DATA("UNKNOWN");
-
-			// RETRACT... LOW Sns
-			sCH__CPTR_ARM_B_SNS_R_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_T_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-			sCH__CPTR_ARM_B_SNS_Z_RE_VALUE_LOW->Set__DATA("UNKNOWN");
-
-			// 5. Get Sns Value
-			int nRet = Get__CPTR_SNS_N(p_variable,p_alarm, para__arm_type,para__stn_name,"RETRACT");
-			if(nRet <= 0)		return OBJ_ABORT;
-
-			// 6. RETRACT 후에 얻어온 R, T, Z 값과 CALIBRATION 된 R, T, Z 값들을 비교 계산한다.
-			Fnc__calculation_CPTR_SNS_VAL_N(para__stn_name, para__arm_type, ARM_B_m_set_cptr_tune_val);
-
-			// 5. Rotate 전에 체크한다.
-			set_ro_offset.Format("%.f", ARM_B_m_set_cptr_tune_val.ro_tuned_val);
-			set_to_offset.Format("%.f", ARM_B_m_set_cptr_tune_val.to_tuned_val);
-
-			str_log.Format("After Calculation, Offset Val --> Y:%s, X:%s", set_ro_offset,set_to_offset);
-			Fnc__APP_LOG(str_log);
-		}
-	}
-
-	Fnc__APP_LOG("[Fnc__RETRACT_DYNAMIC_ALIGN_N] End...");
 	return OBJ_AVAILABLE;
 }
 
 int  CObj__VacRobot_PSK
-::Fnc__RETRACT(CII_OBJECT__VARIABLE* p_variable,
-			   CII_OBJECT__ALARM* p_alarm,
-			   const CString& stn_name,
-			   const CString& arm_type,
-			   const CString& stn_slot,
-			   const int is_active_handoff)
+::_Fnc__RETRACT(CII_OBJECT__VARIABLE* p_variable,
+			    CII_OBJECT__ALARM* p_alarm,
+			    const CString& stn_name,
+			    const CString& arm_type,
+			    const CString& stn_slot,
+			    const int is_active_handoff)
 {	
 	double  cfg__sim_time = 1.0;
 	CString var_data;
@@ -2543,7 +951,7 @@ int  CObj__VacRobot_PSK
 	// ...
 	{
 		// Set Station
-		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
+		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name, stn_slot);
 
 		     if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
 		else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
@@ -2562,7 +970,7 @@ int  CObj__VacRobot_PSK
 			}
 		}
 
-		if(iCFG__SIM_FLAG > 0)
+		if(iActive__SIM_MODE > 0)
 		{
 			aCH__SIM_CFG__RETRACT_TIME->Get__DATA(var_data);
 			cfg__sim_time = atof(var_data);
@@ -2634,7 +1042,7 @@ int  CObj__VacRobot_PSK
 	// ...
 	{
 		// Set Station
-		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
+		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name, stn_slot);
 
 		     if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
 		else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
@@ -2699,7 +1107,7 @@ int  CObj__VacRobot_PSK
 	// ...
 	{
 		// Set Station
-		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
+		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name, stn_slot);
 
 		     if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
 		else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
@@ -2749,271 +1157,12 @@ int  CObj__VacRobot_PSK
 	return 1;
 }
 
-// -----
+
+// ...
 int  CObj__VacRobot_PSK
-::Fnc__RQ_STN(CII_OBJECT__VARIABLE* p_variable,
-		 	  CII_OBJECT__ALARM* p_alarm,
-			  const CString& stn_name,
-			  const CString& arm_type)
+::Call__TEST_DA_REPORT(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
 {
-	CString str_sns_val;
-	CString szLog;
-
-	char *token;
-	CString szTokenData;
-	char szGetData[512];
-	char seps[] = " ";
-	int  i = 0;
-
-	// ...
-	Fnc__ACT_MSG("RQ STN Start...");
-
-	// 초기화
-	{
-		sCH__RQSTN_SNS_R_VALUE->Set__DATA("UNKNOWN");
-		sCH__RQSTN_SNS_T_VALUE->Set__DATA("UNKNOWN");
-		sCH__RQSTN_SNS_Z_VALUE->Set__DATA("UNKNOWN");
-
-		if(Is__LOCAL(p_alarm)   < 0)		return -1;
-		if(Is__OFFLINE(p_alarm) < 0)		return -1;
-	}
-
-	// ...
-	{
-		// Set Station
-		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
-
-		     if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
-	}
-
-	if(dCH__CFG_DA_SENSOR_TYPE->Check__DATA(STR__YES) > 0)
-	{
-		int state = -1;
-
-			 if(arm_type.CompareNoCase(ARM_A) == 0)		state = doCH__COMMAND->Set__DATA("AGet_Current_Stn");
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		state = doCH__COMMAND->Set__DATA("BGet_Current_Stn");
-
-		if(iCFG__SIM_FLAG > 0)
-		{
-			state = 1;
-
-			str_sns_val = "STN 0002 A 0936750 150340 019457"; 
-		}
-
-		if(state > 0)
-		{
-			sCH__RQ_STN_FULL_VAL->Get__DATA(str_sns_val);
-
-			szLog.Format("Get Stn Val : %s", str_sns_val);
-			Fnc__APP_LOG(szLog);
-
-			strcpy(szGetData, str_sns_val);
-			token = strtok(szGetData, seps);
-
-			while(token != NULL)
-			{	
-				szTokenData = token;
-				
-				if(i == 3)		sCH__RQSTN_SNS_R_VALUE->Set__DATA(szTokenData);
-				if(i == 4)		sCH__RQSTN_SNS_T_VALUE->Set__DATA(szTokenData);
-				if(i == 5)		sCH__RQSTN_SNS_Z_VALUE->Set__DATA(szTokenData);
-
-				i++;
-
-				/* Get next token: */
-				token = strtok( NULL, seps);	
-			}
-		}
-	}
-	else
-	{
-		/*
-		int state = -1;
-
-			 if(arm_type.CompareNoCase(ARM_A) == 0)		state = doCH__COMMAND->Set__DATA("AGet.WAF_CEN");
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		state = doCH__COMMAND->Set__DATA("BGet.WAF_CEN");
-		*/
-
-		doCH__COMMAND->Set__DATA("WAF_CEN.DATA");
-	}
-
-	if(Is__OFFLINE(p_alarm) < 0)
-	{
-		return -1;
-	}
-
-	// ...
-	{
-		int state = Is__ERROR_EXIST(p_alarm);
-
-		if(state != OBJ_AVAILABLE)
-		{
-			return -1;
-		}
-
-		if(p_variable->Check__CTRL_ABORT() > 0)
-		{
-			return -1;
-		}
-	}
-
+	_Update__WFR_CEN_DATA(p_variable);
 	return 1;
 }
 
-// -----
-int  CObj__VacRobot_PSK
-::Fnc__SET_STN(CII_OBJECT__VARIABLE* p_variable,
-			   CII_OBJECT__ALARM* p_alarm,
-			   const CString& stn_name,
-			   const CString& arm_type)
-{
-	CString str_r_val, str_t_val;
-	CString szLog;
-
-	// ...
-	Fnc__ACT_MSG("SET STN Start...");
-
-	// 초기화
-	{
-		aCH__SET_STN_R_VALUE->Get__DATA(str_r_val);
-		aCH__SET_STN_T_VALUE->Get__DATA(str_t_val);
-	}
-
-	if(Is__LOCAL(p_alarm)   < 0)		return -1;
-	if(Is__OFFLINE(p_alarm) < 0)		return -1;
-
-	// ...
-	{
-		// Set Station
-		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
-
-		     if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
-
-		// Set Stn Value
-		aoCH_STN_R_VAL->Set__DATA(str_r_val);
-		aoCH_STN_T_VAL->Set__DATA(str_t_val);
-	}
-
-	// ...
-	{
-		int state = -1;
-
-			 if(arm_type.CompareNoCase(ARM_A) == 0)		state = doCH__COMMAND->Set__DATA("ASet_Stn");
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		state = doCH__COMMAND->Set__DATA("BSet_Stn");
-
-		if(state > 0)
-		{
-
-		}
-
-		if(Is__OFFLINE(p_alarm) < 0)
-		{
-			return -1;
-		}
-	}
-
-	// ...
-	{
-		int state = Is__ERROR_EXIST(p_alarm);
-
-		if(state != OBJ_AVAILABLE)
-		{
-			return -1;
-		}
-
-		if(p_variable->Check__CTRL_ABORT() > 0)
-		{
-			return -1;
-		}
-	}
-
-	return 1;
-}
-
-
-// Swap -----
-int  CObj__VacRobot_PSK
-::Call__SWAP(CII_OBJECT__VARIABLE* p_variable,
-		     CII_OBJECT__ALARM* p_alarm,
-		     const CString& para__stn_name,
-		     const CString& para__arm_type,
-		     const CString& para__stn_slot)
-{
-	if(iCFG__SIM_FLAG > 0)
-	{
-		return Fnc__SIM_SWAP(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot);
-	}
-
-	return Fnc__SWAP(p_variable,p_alarm, para__stn_name,para__arm_type,para__stn_slot);
-}
-
-int  CObj__VacRobot_PSK
-::Fnc__SIM_SWAP(CII_OBJECT__VARIABLE* p_variable,
-			    CII_OBJECT__ALARM* p_alarm,
-			    const CString& para__stn_name,
-			    const CString& para__arm_type,
-			    const CString& para__stn_slot)
-{
-	diCH__COMM_STS->Set__DATA(STR__ONLINE);
-	return 1;
-}
-int  CObj__VacRobot_PSK
-::Fnc__SWAP(CII_OBJECT__VARIABLE* p_variable,
-		    CII_OBJECT__ALARM* p_alarm,
-		    const CString& stn_name,
-		    const CString& arm_type,
-		    const CString& stn_slot)
-{
-	Fnc__ACT_MSG("Swap Start...");
-
-	if(Is__LOCAL(p_alarm)   < 0)		return -1;
-	if(Is__OFFLINE(p_alarm) < 0)		return -1;
-
-	// ...
-	{
-		// Set Station -----
-		CString str__trg_stn_num = Get__CFG_STN_NUM(stn_name);
-
-		if(arm_type.CompareNoCase(ARM_A) == 0)		doCH__STN_A->Set__DATA(str__trg_stn_num);
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		doCH__STN_B->Set__DATA(str__trg_stn_num);
-
-		// Set Slot -----
-		doCH__SLOT->Set__DATA(stn_slot);
-	}
-
-	// ...
-	{
-		int state = -1;
-
-		     if(arm_type.CompareNoCase(ARM_A) == 0)		state = doCH__COMMAND->Set__DATA("ASwap");
-		else if(arm_type.CompareNoCase(ARM_B) == 0)		state = doCH__COMMAND->Set__DATA("BSwap");
-
-		if(state == 0)    // Abort
-		{
-			return -1;
-		}
-		if(Is__OFFLINE(p_alarm) < 0)
-		{
-			return -1;
-		}
-	}
-
-	// ...
-	{
-		int state = Is__ERROR_EXIST(p_alarm);
-
-		if(state != OBJ_AVAILABLE)
-		{
-			return -1;
-		}
-
-		if(p_variable->Check__CTRL_ABORT() > 0)
-		{
-			return -1;
-		}
-	}
-
-	return 1;
-}

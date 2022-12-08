@@ -668,6 +668,7 @@ Call__RETRACT(CII_OBJECT__VARIABLE* p_variable,
 
 	_Clear__DA_STS(active_place, arm_type,stn_name,stn_slot);
 	_Set__DA_RT_OFFSET(stn_name,stn_slot);
+
 	return r_flag;
 
 }

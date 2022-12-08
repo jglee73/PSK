@@ -5,6 +5,7 @@
 #define  _CFG_LLx__SLOT_SIZE        2
 #define  _CFG_RBx__ARM_RNE_SIZE     2
 
+#define  _CFG__WAFER_OUT_SIZE		5
 
 // ...
 #define  STR__ENABLE			"ENABLE"

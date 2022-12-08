@@ -266,6 +266,10 @@ private:
 	CString sDATA__RNE_ON;
 	CString sDATA__RNE_OFF;
 
+	// WAFER.SLIDE SENSOR ...
+	int iData__WAFER_SLIDE_OUT;
+	CX__VAR_DIGITAL_CTRL diEXT_CH__WAFER_SKIDE_OUT_X[_CFG__WAFER_OUT_SIZE];
+
 	// PUMP OBJECT ...
 	CII_EXT_OBJECT__CTRL *pPUMP__OBJ_CTRL;
 
@@ -433,8 +437,11 @@ private:
 	bool Is__SLOT_DV_OPEN();
 	bool Is__SLOT_DV_CLOSE();
 
-	bool Set__SLOT_DV_OPEN();
-	bool Set__SLOT_DV_CLOSE();
+	int  Set_IO__DV_OPEN();
+	int  End_IO__DV_OPEN();
+
+	int  Set_IO__DV_CLOSE();
+	int  End_IO__DV_CLOSE();
 
 	// ...
 	bool Is__ALL_SV_OPEN();
@@ -443,8 +450,11 @@ private:
 	bool Is__SLOT_SV_OPEN();
 	bool Is__SLOT_SV_CLOSE();
 
-	bool Set__SLOT_SV_OPEN();
-	bool Set__SLOT_SV_CLOSE();
+	int  Set_IO__SV_OPEN();
+	int  End_IO__SV_OPEN();
+
+	int  Set_IO__SV_CLOSE();
+	int  End_IO__SV_CLOSE();
 
 	// ...
 	int  Check__PRESSURE_ATM(CII_OBJECT__ALARM* p_alarm, const int alarm_id);
@@ -478,8 +488,8 @@ private:
 	int  Fnc__VENT_FAST_VLV__OPEN(CII_OBJECT__ALARM* p_alarm);
 
 	// ...
-	int  Sub__SV_OPEN(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm, double dblTimeout);
-	int  Sub__SV_CLOSE(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm, double dblTimeout);
+	int  Sub__SV_OPEN(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm, const double dblTimeout);
+	int  Sub__SV_CLOSE(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm, const double dblTimeout);
 
 	int  Check__SV_OPEN_MAX_DIFFERENTIAL_PRESS(CII_OBJECT__VARIABLE* p_variable,CII_OBJECT__ALARM* p_alarm);
 
