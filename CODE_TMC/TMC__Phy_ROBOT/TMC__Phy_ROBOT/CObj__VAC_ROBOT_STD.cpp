@@ -1720,11 +1720,7 @@ int CObj__VAC_ROBOT_STD::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_alarm
 
 			if(flag > 0)
 			{
-				dEXT_CH__ROBOT_ARM_A_MATERIAL_STATUS->Get__DATA(var_data);
-				dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Set__DATA(var_data);
-
-				dEXT_CH__ROBOT_ARM_B_MATERIAL_STATUS->Get__DATA(var_data);
-				dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Set__DATA(var_data);
+				_Update__MATERIAL_INFO();
 			}
 		}
 		ELSE_IF__CTRL_MODE(sMODE__SET_PARA)
@@ -1777,11 +1773,7 @@ int CObj__VAC_ROBOT_STD::__CALL__CONTROL_MODE(mode, p_debug, p_variable, p_alarm
 
 			if(flag > 0)
 			{
-				dEXT_CH__ROBOT_ARM_A_MATERIAL_STATUS->Get__DATA(var_data);
-				dCH__OTR_OUT_MON__ARM_A_MATERIAL_STATUS->Set__DATA(var_data);
-
-				dEXT_CH__ROBOT_ARM_B_MATERIAL_STATUS->Get__DATA(var_data);
-				dCH__OTR_OUT_MON__ARM_B_MATERIAL_STATUS->Set__DATA(var_data);			
+				_Update__MATERIAL_INFO();
 			}
 		}
 

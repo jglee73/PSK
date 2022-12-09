@@ -1,0 +1,6 @@
+; IO__GAS_CABINET_PSK.def : Declares the module parameters for the DLL.
+
+LIBRARY      "IO__GAS_CABINET_PSK"
+
+EXPORTS
+    ; Explicit exports can go here

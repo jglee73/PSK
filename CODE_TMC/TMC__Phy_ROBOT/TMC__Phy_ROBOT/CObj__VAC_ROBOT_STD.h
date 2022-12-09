@@ -495,6 +495,8 @@ private:
 									const CString& stn_name,
 									const CString& stn_slot);
 
+	int  _Update__MATERIAL_INFO();
+
 	// ...
 	void Set_ANI__ROBOT_EXTEND(const CString& arm_type,const CString& stn_name,const CString& stn_slot);
 	void _Set_ANI__ROBOT_EXTEND(const CString& arm_type,const CString& stn_name,const CString& stn_slot);

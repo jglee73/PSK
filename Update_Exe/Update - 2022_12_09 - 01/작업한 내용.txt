@@ -1,0 +1,6 @@
+
+# TMC VAC_ROBOT를 INIT 또는 MAP 실행 후 Wafer가 있는 경우 EXIST로만 변경되는 문제를 Patch함.
+ -. 관련 Code : TMC__PHY_ROBOT
+
+# IO__GAS_CABINET_PSK Code 작성
+
