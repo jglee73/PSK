@@ -1,0 +1,138 @@
+
+
+//------------------------------------------------
+#OBJECT_PROPERTY    PHY_HTR_CHUCK
+
+#DEFINE_CONSTANT    OBJ__DB_SYS							           DB_SYS
+
+#DEFINE_CONSTANT    ACTIVE.PROC_ERROR_CHECK            YES
+
+#DEFINE_CONSTANT    DATA.LOOP_SIZE                     1
+
+#DEFINE_CONSTANT    DATA__CTRL_ACTIVE.1                YES
+#DEFINE_CONSTANT    CH__AO_TEMPERATURE_SET.1           IO+ao.Heater.Chuck.Temp.Set
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_READ.1          IO+ai.Heater.Chuck.PV
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_SET.1           IO+ai.Heater.Chuck.Setpoint
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_POWER.1         IO+ai.Heater.Chuck.Output
+#DEFINE_CONSTANT    CH__AI_PV_OFFSET.1                 NULL
+#DEFINE_CONSTANT    CH__AI_OP_HIGH_LIMIT.1             NULL
+#DEFINE_CONSTANT    CH__AI_OP_FORWARD.1                NULL
+#DEFINE_CONSTANT    CH__DO_HEATER_POWER.1              IO+do.Heater.Chuck.Pwr
+#DEFINE_CONSTANT    CH__DI_OVER_TEMP.1                 IO+di.Heater.Chuck.OverTemp
+#DEFINE_CONSTANT    CH__DI_HIGH_LIMIT.1                IO+di.Heater.Chuck.LimitTemp
+
+#DEFINE_CONSTANT    CH__SI_ALARM_STATE.HEXA            NULL
+#DEFINE_CONSTANT    CH__SO_ALARM_RESET.HEXA            NULL
+//------------------------------------------------
+
+#OBJECT_PROPERTY    PHY_HTR_SLOT
+
+#DEFINE_CONSTANT    OBJ__DB_SYS							           DB_SYS
+
+#DEFINE_CONSTANT    ACTIVE.PROC_ERROR_CHECK            YES
+
+#DEFINE_CONSTANT    DATA.LOOP_SIZE                     1
+
+#DEFINE_CONSTANT    DATA__CTRL_ACTIVE.1                YES
+#DEFINE_CONSTANT    CH__AO_TEMPERATURE_SET.1           IO+ao.Heater.Slot_Valve.Temp.Set
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_READ.1          IO+ai.Heater.Slot_Valve.PV
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_SET.1           IO+ai.Heater.Slot_Valve.Setpoint
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_POWER.1         IO+ai.Heater.Slot_Valve.Output
+#DEFINE_CONSTANT    CH__AI_PV_OFFSET.1                 NULL
+#DEFINE_CONSTANT    CH__AI_OP_HIGH_LIMIT.1             NULL
+#DEFINE_CONSTANT    CH__AI_OP_FORWARD.1                NULL
+#DEFINE_CONSTANT    CH__DO_HEATER_POWER.1              IO+do.Heater.Slot_Valve.Pwr
+#DEFINE_CONSTANT    CH__DI_OVER_TEMP.1                 IO+di.Heater.Slot_Valve.OverTemp
+#DEFINE_CONSTANT    CH__DI_HIGH_LIMIT.1                IO+di.Heater.Slot_Valve.LimitTemp
+
+#DEFINE_CONSTANT    CH__SI_ALARM_STATE.HEXA            NULL
+#DEFINE_CONSTANT    CH__SO_ALARM_RESET.HEXA            NULL
+
+//------------------------------------------------
+
+#OBJECT_PROPERTY    PHY_HTR_VAPORIZER
+
+#DEFINE_CONSTANT    OBJ__DB_SYS							           DB_SYS
+
+#DEFINE_CONSTANT    ACTIVE.PROC_ERROR_CHECK            YES
+
+#DEFINE_CONSTANT    DATA.LOOP_SIZE                     2
+
+#DEFINE_CONSTANT    DATA__CTRL_ACTIVE.1                YES
+#DEFINE_CONSTANT    CH__AO_TEMPERATURE_SET.1           IO+ao.Heater.Vaporizer.Temp.Set
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_READ.1          IO+ai.Heater.Vaporizer.PV
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_SET.1           IO+ai.Heater.Vaporizer.Setpoint
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_POWER.1         IO+ai.Heater.Vaporizer.Output
+#DEFINE_CONSTANT    CH__AI_PV_OFFSET.1                 NULL
+#DEFINE_CONSTANT    CH__AI_OP_HIGH_LIMIT.1             NULL
+#DEFINE_CONSTANT    CH__AI_OP_FORWARD.1                NULL
+#DEFINE_CONSTANT    CH__DO_HEATER_POWER.1              IO+do.Heater.Vaporizer.Pwr
+#DEFINE_CONSTANT    CH__DI_OVER_TEMP.1                 IO+di.Heater.Vaporizer.OverTemp
+#DEFINE_CONSTANT    CH__DI_HIGH_LIMIT.1                IO+di.Heater.Vaporizer.LimitTemp
+
+#DEFINE_CONSTANT    DATA__CTRL_ACTIVE.2                YES
+#DEFINE_CONSTANT    CH__AO_TEMPERATURE_SET.2           IO+ao.Heater.Vaporizer_Line.Temp.Set
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_READ.2          IO+ai.Heater.Vaporizer_Line.PV
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_SET.2           IO+ai.Heater.Vaporizer_Line.Setpoint
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_POWER.2         IO+ai.Heater.Vaporizer_Line.Output
+#DEFINE_CONSTANT    CH__AI_PV_OFFSET.2                 NULL
+#DEFINE_CONSTANT    CH__AI_OP_HIGH_LIMIT.2             NULL
+#DEFINE_CONSTANT    CH__AI_OP_FORWARD.2                NULL
+#DEFINE_CONSTANT    CH__DO_HEATER_POWER.2              IO+do.Heater.Vaporizer_Line.Pwr
+#DEFINE_CONSTANT    CH__DI_OVER_TEMP.2                 IO+di.Heater.Vaporizer_Line.OverTemp
+#DEFINE_CONSTANT    CH__DI_HIGH_LIMIT.2                IO+di.Heater.Vaporizer_Line.LimitTemp
+
+#DEFINE_CONSTANT    CH__SI_ALARM_STATE.HEXA            NULL
+#DEFINE_CONSTANT    CH__SO_ALARM_RESET.HEXA            NULL
+
+//------------------------------------------------
+#OBJECT_PROPERTY    PHY_HTR_WALL
+
+#DEFINE_CONSTANT    OBJ__DB_SYS							           DB_SYS
+
+#DEFINE_CONSTANT    ACTIVE.PROC_ERROR_CHECK            YES
+
+#DEFINE_CONSTANT    DATA.LOOP_SIZE                     1
+
+#DEFINE_CONSTANT    DATA__CTRL_ACTIVE.1                YES
+#DEFINE_CONSTANT    CH__AO_TEMPERATURE_SET.1           IO+ao.Heater.Wall.Temp.Set
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_READ.1          IO+ai.Heater.Wall.PV
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_SET.1           IO+ai.Heater.Wall.Setpoint
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_POWER.1         IO+ai.Heater.Wall.Output
+
+#DEFINE_CONSTANT    CH__AI_PV_OFFSET.1                 NULL
+#DEFINE_CONSTANT    CH__AI_OP_HIGH_LIMIT.1             NULL
+#DEFINE_CONSTANT    CH__AI_OP_FORWARD.1                NULL
+#DEFINE_CONSTANT    CH__DO_HEATER_POWER.1              IO+do.Heater.Wall.Power
+#DEFINE_CONSTANT    CH__DI_OVER_TEMP.1                 IO+di.Heater.Wall.Over.Alarm
+#DEFINE_CONSTANT    CH__DI_HIGH_LIMIT.1                NULL
+
+#DEFINE_CONSTANT    CH__SI_ALARM_STATE.HEXA            NULL
+#DEFINE_CONSTANT    CH__SO_ALARM_RESET.HEXA            NULL
+
+
+//------------------------------------------------
+#OBJECT_PROPERTY    PHY_HTR_VAC
+
+#DEFINE_CONSTANT    OBJ__DB_SYS							           DB_SYS
+
+#DEFINE_CONSTANT    ACTIVE.PROC_ERROR_CHECK            NO
+
+#DEFINE_CONSTANT    DATA.LOOP_SIZE                     1
+
+#DEFINE_CONSTANT    DATA__CTRL_ACTIVE.1                YES
+#DEFINE_CONSTANT    CH__AO_TEMPERATURE_SET.1           IO+ao.Heater.Vac_Line.Temp.Set
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_READ.1          IO+ai.Heater.Vac_Line.PV
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_SET.1           IO+ai.Heater.Vac_Line.Setpoint
+#DEFINE_CONSTANT    CH__AI_TEMPERATURE_POWER.1         IO+ai.Heater.Vac_Line.Output
+
+#DEFINE_CONSTANT    CH__AI_PV_OFFSET.1                 NULL
+#DEFINE_CONSTANT    CH__AI_OP_HIGH_LIMIT.1             NULL
+#DEFINE_CONSTANT    CH__AI_OP_FORWARD.1                NULL
+#DEFINE_CONSTANT    CH__DO_HEATER_POWER.1              IO+do.Heater.Vac_Line.Pwr
+#DEFINE_CONSTANT    CH__DI_OVER_TEMP.1                 IO+di.Heater.Vac_Line.OverTemp
+#DEFINE_CONSTANT    CH__DI_HIGH_LIMIT.1                IO+di.Heater.Vac_Line.LimitTemp
+
+#DEFINE_CONSTANT    CH__SI_ALARM_STATE.HEXA            NULL
+#DEFINE_CONSTANT    CH__SO_ALARM_RESET.HEXA            NULL
+
