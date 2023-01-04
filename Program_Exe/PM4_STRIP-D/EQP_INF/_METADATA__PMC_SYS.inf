@@ -106,6 +106,9 @@
 
 #FNC_MODE     OBJ_MODE__INIT									          FNC_SYSTEM	    SYSTEM_INIT
 
+#DEFINE_CONSTANT    OBJ__CHM_FNC                              FNC_CHM
+#DEFINE_CONSTANT    BALLAST.END                               BALLAST_END
+#DEFINE_CONSTANT    CFG_TRANSFER_BALLAST_ENABLED              FNC_CHM+CFG.TRANSFER.BALLAST.ENABLED
 
 //------------------------------------------------
 #OBJECT_PROPERTY     OPR_PMC

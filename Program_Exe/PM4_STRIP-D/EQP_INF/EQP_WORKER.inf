@@ -81,6 +81,9 @@
 
 ===========================================================================
 #OBJECT_STD     PHY_HEATER__JGLEE           MINI8.IO                PHY_HTR_CHUCK
+#OBJECT_STD     PHY_HEATER__JGLEE           MINI8.IO                PHY_HTR_SLOT
+#OBJECT_STD     PHY_HEATER__JGLEE           MINI8.IO                PHY_HTR_VAPORIZER
+
 #OBJECT_STD     PHY_HEATER__JGLEE           MINI8.IO                PHY_HTR_WALL
 #OBJECT_STD     PHY_HEATER__JGLEE           MINI8.IO                PHY_HTR_VAC
 

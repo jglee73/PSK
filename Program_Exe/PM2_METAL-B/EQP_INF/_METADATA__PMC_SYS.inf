@@ -108,6 +108,9 @@
 
 #FNC_MODE     OBJ_MODE__INIT									          FNC_SYSTEM	    SYSTEM_INIT
 
+#DEFINE_CONSTANT    OBJ__CHM_FNC                              FNC_CHM
+#DEFINE_CONSTANT    BALLAST.END                               BALLAST_END
+#DEFINE_CONSTANT    CFG_TRANSFER_BALLAST_ENABLED              FNC_CHM+CFG.TRANSFER.BALLAST.ENABLED
 
 //------------------------------------------------
 #OBJECT_PROPERTY     OPR_PMC
@@ -134,11 +137,12 @@
 #DEFINE_CONSTANT    SHUTTER.CLOSE                       SHUTTER.CLOSE
 #DEFINE_CONSTANT    SHUTTER.OPEN                        SHUTTER.OPEN
 */
-
-#DEFINE_CONSTANT    OBJ__PM_SLOT  					            PHY_PM_SLOT
+#DEFINE_CONSTANT    OBJ__PM_SLOT  			NULL			//KMS
+/* // KMS Door Not Control
+#DEFINE_CONSTANT    OBJ__PM_SLOT  			PHY_PM_SLOT
 #DEFINE_CONSTANT    PM_SLOT.CLOSE                       DOOR.CLOSE
 #DEFINE_CONSTANT    PM_SLOT.OPEN                        DOOR.OPEN
-
+*/
 #DEFINE_CONSTANT    OBJ__CHAMBER                        FNC_CHM
 
 #FNC_MODE     OBJ_MODE__INIT									          FNC_SYSTEM	    SYSTEM_INIT
