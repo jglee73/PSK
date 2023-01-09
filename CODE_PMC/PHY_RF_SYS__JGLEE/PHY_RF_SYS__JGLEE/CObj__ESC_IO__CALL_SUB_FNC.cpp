@@ -118,7 +118,7 @@ int  CObj__ESC_IO
 		{
 			aoEXT_CH__ESC_Voltage_EDGE->Set__VALUE(0.0);
 		}
-
+		doEXT_CH__ESC_VOLTAGE_ON->Set__DATA(STR__Off); // KMS
 		doEXT_CH__ESC_All_Voltage->Set__DATA(STR__Off);
 	}	
 
@@ -783,7 +783,7 @@ Fnc__CHUCK(CII_OBJECT__VARIABLE* p_variable,
 			{
 				if(bActive__CENTER_USE)			aoEXT_CH__ESC_Voltage_CENTER->Set__VALUE(0.0);
 				if(bActive__EDGE_USE)			aoEXT_CH__ESC_Voltage_EDGE->Set__VALUE(0.0);
-
+				doEXT_CH__ESC_VOLTAGE_ON->Set__DATA(STR__Off); // KMS
 				doEXT_CH__ESC_All_Voltage->Set__DATA(STR__Off);
 			}
 
@@ -845,6 +845,7 @@ Fnc__CHUCK(CII_OBJECT__VARIABLE* p_variable,
 			if(bActive__EDGE_USE)			aoEXT_CH__ESC_Voltage_EDGE->Set__VALUE(para__set_volt_edge);
 
 			doEXT_CH__ESC_All_Voltage->Set__DATA(STR__On);
+			doEXT_CH__ESC_VOLTAGE_ON->Set__DATA(STR__On); //KMS Voltage ON
 		}
 
 		// HV On Delay ...
@@ -2848,7 +2849,7 @@ Fnc__DECHUCK(CII_OBJECT__VARIABLE* p_variable,
 				aoEXT_CH__He_Pressure_EDGE->Set__VALUE(0.0);
 				aoEXT_CH__ESC_Voltage_EDGE->Set__VALUE(0.0);
 			}
-
+			doEXT_CH__ESC_VOLTAGE_ON->Set__DATA(STR__Off); // KMS
 			doEXT_CH__ESC_All_Voltage->Set__DATA(STR__Off);
 		}
 
@@ -3002,6 +3003,7 @@ Fnc__DECHUCK(CII_OBJECT__VARIABLE* p_variable,
 					if(bActive__EDGE_USE)			aoEXT_CH__ESC_Voltage_EDGE->Set__VALUE(cfg_volt__edge);
 
 					doEXT_CH__ESC_All_Voltage->Set__DATA(STR__On);
+					doEXT_CH__ESC_VOLTAGE_ON->Set__DATA(STR__On); //KMS Voltage ON
 				}
 
 				// ...
@@ -3082,6 +3084,7 @@ Fnc__DECHUCK(CII_OBJECT__VARIABLE* p_variable,
 				if(bActive__EDGE_USE)			aoEXT_CH__ESC_Voltage_EDGE->Set__VALUE(cfg_volt_edge);
 
 				doEXT_CH__ESC_All_Voltage->Set__DATA(STR__On);
+				doEXT_CH__ESC_VOLTAGE_ON->Set__DATA(STR__On); //KMS Voltage ON
 			}
 
 			// ...
@@ -3103,6 +3106,7 @@ Fnc__DECHUCK(CII_OBJECT__VARIABLE* p_variable,
 		if(bActive__CENTER_USE)			aoEXT_CH__ESC_Voltage_CENTER->Set__VALUE(0.0);
 		if(bActive__EDGE_USE)			aoEXT_CH__ESC_Voltage_EDGE->Set__VALUE(0.0);
 
+		doEXT_CH__ESC_VOLTAGE_ON->Set__DATA(STR__Off); // KMS
 		doEXT_CH__ESC_All_Voltage->Set__DATA(STR__Off);
 	}
 
@@ -3412,7 +3416,9 @@ Fnc__HE_SET_OF_DECHUCK(const double center__he_set, const double edge__he_set)
 int  CObj__ESC_IO
 ::Fnc__DECHUCK_VERIFY(CII_OBJECT__VARIABLE* p_variable, CII_OBJECT__ALARM* p_alarm)
 {
-	// ...
+	int cur__repeat_count = 1;
+
+	LOOP_RETRY:
 	{
 		dCH__MON_HE_FLOW_CTRL_ACTIVE->Set__DATA(STR__ON);
 	}
@@ -3428,10 +3434,15 @@ int  CObj__ESC_IO
 		{
 			if(iDATA__HE_LINE_TYPE == _HE_LINE_TYPE__STD)
 			{
+				/** Ori:Yujin Tech
 				doEXT_CH__He_Final_Out_Vlv_CENTER->Set__DATA(STR__Close);
 				if(bActive__He_Final_Dump_Vlv_CENTER)			doEXT_CH__He_Final_Dump_Vlv_CENTER->Set__DATA(STR__Open);
-
 				if(bActive__He_Side_Dump_Vlv_CENTER)			doEXT_CH__He_Side_Dump_Vlv_CENTER->Set__DATA(STR__Open);
+				**/
+				doEXT_CH__He_Final_Out_Vlv_CENTER->Set__DATA(STR__Close);// KMS
+				if(bActive__He_Final_Dump_Vlv_CENTER)			doEXT_CH__He_Final_Dump_Vlv_CENTER->Set__DATA(STR__Close);
+				if(bActive__He_Side_Dump_Vlv_CENTER)			doEXT_CH__He_Side_Dump_Vlv_CENTER->Set__DATA(STR__Close);
+
 			}
 			else if(iDATA__HE_LINE_TYPE == _HE_LINE_TYPE__ICD)
 			{
@@ -3476,7 +3487,7 @@ int  CObj__ESC_IO
 			if(bActive__EDGE_USE)			aiEXT_CH__He_Flow_EDGE_IO->Set__VALUE(cfg__edge_pressure / 2.0);
 		}
 	}
-
+	/**
 	// Bypass Flow Stable ...
 	{
 		sCH__APP_LOG_SUB_MSG->Set__DATA("Bypass Flow Stable Delay ...");
@@ -3503,6 +3514,7 @@ int  CObj__ESC_IO
 		var_data.Format("%.1f", cur__center_flow);
 		sCH__CUR_HE_CENTER_BYPASS_FLOW_FOR_DECHUCK_VERIFY->Set__DATA(var_data);
 	}
+	**/
 
 	// Final Flow Stable ...
 	{
@@ -3512,10 +3524,20 @@ int  CObj__ESC_IO
 		{
 			if(iDATA__HE_LINE_TYPE == _HE_LINE_TYPE__STD)
 			{
+				/**
 				doEXT_CH__He_Final_Out_Vlv_CENTER->Set__DATA(STR__Open);
 				if(bActive__He_Final_Dump_Vlv_CENTER)			doEXT_CH__He_Final_Dump_Vlv_CENTER->Set__DATA(STR__Close);
-
 				if(bActive__He_Side_Dump_Vlv_CENTER)			doEXT_CH__He_Side_Dump_Vlv_CENTER->Set__DATA(STR__Open);
+				**/
+				doEXT_CH__He_Final_Out_Vlv_CENTER->Set__DATA(STR__Open);
+				if(bActive__He_Final_Dump_Vlv_CENTER)			doEXT_CH__He_Final_Dump_Vlv_CENTER->Set__DATA(STR__Close);
+				if(bActive__He_Side_Dump_Vlv_CENTER)
+				{
+					if(dCH__CFG_STABLE_VALVE_OPEN_DURING_CHUCKING->Check__DATA(STR__YES) < 0) doEXT_CH__He_Side_Dump_Vlv_CENTER->Set__DATA(STR__Open);
+					else doEXT_CH__He_Side_Dump_Vlv_CENTER->Set__DATA(STR__Close);
+				}
+
+
 			}
 			else if(iDATA__HE_LINE_TYPE == _HE_LINE_TYPE__ICD)
 			{
@@ -3552,21 +3574,58 @@ int  CObj__ESC_IO
 		if(iActive__SIM_MODE > 0)
 		{
 			double cfg__min_leak = aCH__CFG_HE_MINIMUM_LEAK_FOR_DECHUCK_VERIFY->Get__VALUE();
-			cfg__min_leak += 1.0;
+			cfg__min_leak = 5.0;
 
 			if(bActive__CENTER_USE)			aiEXT_CH__He_Flow_CENTER_IO->Set__VALUE(cfg__min_leak);
 			if(bActive__EDGE_USE)			aiEXT_CH__He_Flow_EDGE_IO->Set__VALUE(cfg__min_leak);
 		}
 
-		SCX__TIMER_CTRL x_app_timer;
-		x_app_timer->REGISTER__ABORT_OBJECT(sObject_Name);
-		x_app_timer->REGISTER__COUNT_CHANNEL(sCH__APP_TIMER_COUNT->Get__CHANNEL_NAME());
-
-		double cfg__stable_sec = aCH__CFG_HE_FINAL_FLOW_STABLE_TIME_FOR_DECHUCK_VERIFY->Get__VALUE();
-
-		if(x_app_timer->WAIT(cfg__stable_sec) < 0)
+		if(cur__repeat_count == 1)		// First Check is Wait
 		{
-			return -1;
+			SCX__TIMER_CTRL x_app_timer;
+			
+			x_app_timer->REGISTER__ABORT_OBJECT(sObject_Name);
+			x_app_timer->REGISTER__COUNT_CHANNEL(sCH__APP_TIMER_COUNT->Get__CHANNEL_NAME());
+			double cfg__stable_sec = aCH__CFG_HE_FINAL_FLOW_STABLE_TIME_FOR_DECHUCK_VERIFY->Get__VALUE();
+
+			if(x_app_timer->POLL(cfg__stable_sec) < 0)
+			{
+				return -1;
+			}
+		}
+		else		// Afrt Firs time check, Monitor He Pressure For Right away Exist
+		{
+			sCH__APP_LOG_SUB_MSG->Set__DATA("Dechuck Verify ReCheck ...");
+			
+			SCX__ASYNC_TIMER_CTRL x_app_timer;
+			x_app_timer->REGISTER__COUNT_CHANNEL_NAME(sCH__APP_TIMER_COUNT->Get__CHANNEL_NAME());
+			x_app_timer->STOP();
+			x_app_timer->START__COUNT_UP(9999);
+			
+			double cfg__stable_sec = aCH__CFG_HE_FINAL_FLOW_STABLE_TIME_FOR_DECHUCK_VERIFY->Get__VALUE();
+			
+			while(1)
+			{
+				if(cfg__stable_sec >= (x_app_timer->Get__CURRENT_TIME()))
+				{
+					double cur__center_flow = 0;
+					if(bActive__CENTER_USE)
+					{
+						cur__center_flow = aiEXT_CH__He_Flow_CENTER_IO->Get__VALUE();
+					}
+					double cur__center_leak;
+					cur__center_leak = cur__center_flow;
+					double cfg__min_leak = aCH__CFG_HE_MINIMUM_LEAK_FOR_DECHUCK_VERIFY->Get__VALUE();
+					if(cur__center_leak > cfg__min_leak) break;
+					if(p_variable->Check__CTRL_ABORT() > 0)//When Cehcking Aborted
+					{
+						return -1;
+					}
+				}
+				else break;
+				Sleep(100);
+			}
+			x_app_timer->STOP();
 		}
 	}
 
@@ -3594,8 +3653,20 @@ int  CObj__ESC_IO
 		sCH__CUR_HE_EDGE_BYPASS_FLOW_FOR_DECHUCK_VERIFY->Get__DATA(var_data);
 		double ref__edge_bypass = atof(var_data);
 
-		double cur__center_leak = cur__center_flow - ref__center_bypass;
-		double cur__edge_leak   = cur__edge_flow   - ref__edge_bypass;
+		double cur__center_leak;
+		double cur__edge_leak;
+		if(dCH__CFG_STABLE_VALVE_OPEN_DURING_CHUCKING->Check__DATA(STR__YES) < 0) // KMS
+		{
+			cur__center_leak = cur__center_flow - ref__center_bypass;
+			cur__edge_leak= cur__edge_flow - ref__edge_bypass;
+		}
+		else
+		{
+			cur__center_leak = cur__center_flow;
+			cur__edge_leak = cur__edge_flow;
+		}	
+		 
+		   
 
 		double cfg__min_leak = aCH__CFG_HE_MINIMUM_LEAK_FOR_DECHUCK_VERIFY->Get__VALUE();
 
@@ -3608,6 +3679,13 @@ int  CObj__ESC_IO
 		if(bActive__EDGE_USE)
 		{
 			if(cur__edge_leak < cfg__min_leak)			active__leak_err = true;
+		}
+
+		if((active__leak_err == true) 
+		&& (aCH__CFG_DECHUCK_VERIFY_CHECK_COUNT->Get__VALUE() > cur__repeat_count))
+		{
+			cur__repeat_count++;
+			goto LOOP_RETRY;
 		}
 
 		if(active__leak_err)
@@ -3646,9 +3724,19 @@ int  CObj__ESC_IO
 			}
 
 			alm_bff.Format("config Min. leak <- %.1f sccm \n", cfg__min_leak);
+			alm_msg += alm_bff;
+			alm_bff.Format("Repeat Repeat Check Count : %d \n", cur__repeat_count);
+			alm_msg += alm_bff;
+
 
 			p_alarm->Check__ALARM(alm_id,r_act);
-			p_alarm->Post__ALARM_With_MESSAGE(alm_id,alm_msg);
+			p_alarm->Popup__ALARM_With_MESSAGE(alm_id,alm_msg,r_act);
+
+			if(r_act.CompareNoCase(ACT__RETRY) == 0)
+			{
+				cur__repeat_count++;
+				goto LOOP_RETRY;
+			}
 			return -1;
 		}
 	}
@@ -3669,10 +3757,13 @@ int  CObj__ESC_IO
 		{
 			if(iDATA__HE_LINE_TYPE == _HE_LINE_TYPE__STD)
 			{
+				/**
 				if(bActive__He_Side_Dump_Vlv_CENTER)			doEXT_CH__He_Side_Dump_Vlv_CENTER->Set__DATA(STR__Open);
 
 				doEXT_CH__He_Final_Out_Vlv_CENTER->Set__DATA(STR__Close);
 				if(bActive__He_Final_Dump_Vlv_CENTER)			doEXT_CH__He_Final_Dump_Vlv_CENTER->Set__DATA(STR__Open);
+				**/
+
 			}
 			else if(iDATA__HE_LINE_TYPE == _HE_LINE_TYPE__ICD)
 			{
@@ -3689,16 +3780,13 @@ int  CObj__ESC_IO
 			if(iDATA__HE_LINE_TYPE == _HE_LINE_TYPE__STD)
 			{
 				if(bActive__He_Side_Dump_Vlv_EDGE)				doEXT_CH__He_Side_Dump_Vlv_EDGE->Set__DATA(STR__Open);
-
 				doEXT_CH__He_Final_Out_Vlv_EDGE->Set__DATA(STR__Close);
 				if(bActive__He_Final_Dump_Vlv_EDGE)				doEXT_CH__He_Final_Dump_Vlv_EDGE->Set__DATA(STR__Open);
 			}
 			else if(iDATA__HE_LINE_TYPE == _HE_LINE_TYPE__ICD)
 			{
 				if(bActive__He_Side_Exhaust_Vlv_EDGE)			doEXT_CH__He_Side_Exhaust_Vlv_EDGE->Set__DATA(STR__Open);
-
 				if(bActive__He_Side_Dump_Vlv_EDGE)				doEXT_CH__He_Side_Dump_Vlv_EDGE->Set__DATA(STR__Open);
-				
 				doEXT_CH__He_Final_Out_Vlv_EDGE->Set__DATA(STR__Open);
 				if(bActive__He_Final_Dump_Vlv_EDGE)				doEXT_CH__He_Final_Dump_Vlv_EDGE->Set__DATA(STR__Open);
 			}
@@ -3878,6 +3966,7 @@ Fnc__ESC_ABORT(CII_OBJECT__VARIABLE *p_variable,
 			if(bActive__CENTER_USE)			aoEXT_CH__ESC_Voltage_CENTER->Set__VALUE(0.0);
 			if(bActive__EDGE_USE)			aoEXT_CH__ESC_Voltage_EDGE->Set__VALUE(0.0);
 
+			doEXT_CH__ESC_VOLTAGE_ON->Set__DATA(STR__Off); // KMS
 			doEXT_CH__ESC_All_Voltage->Set__DATA(STR__Off);
 		}
 

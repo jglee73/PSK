@@ -1,0 +1,12 @@
+
+# PHY_RG_SYS__JGLEE
+  * Set 값이 0일 때 Offset 적용되지 않도록 수정 (0일 때 Offset으로 - 전압값 들어가는 문제)
+  -> Patch 함.
+
+# 기존 "PHY_IO__MATCHER_AE" 를 "IO__MATCHER_AE_PSK"로 변경함.
+  * EQP_WORKER.inf 파일에 변경된 이름으로 등록해야 합니다.
+
+# PMC__CONFIG_ESC_HELIUM.Page 에 아래의 항목을 추가함.
+ -. "Don't Check He Range During RF On."
+
+

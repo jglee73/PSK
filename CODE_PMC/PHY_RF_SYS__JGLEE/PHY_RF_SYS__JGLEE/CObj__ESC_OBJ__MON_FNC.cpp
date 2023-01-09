@@ -178,6 +178,8 @@ Mon__REQ_CTRL(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 void CObj__ESC_OBJ::
 Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 {
+	CString pre_range__cfg_chuck_type;
+
 	double pre_range__cfg_esc_volt_max = 0.0;
 	double pre_range__cfg_dechuck_volt_max__center = 0.0;
 
@@ -396,12 +398,21 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 
 			// ESC Parameter ...
 			{
+				bool active__range_change = false;
+
 				cfg_range_max = aCH__CFG_ESC_VOLTAGE_FULL_SCALE->Get__VALUE();
 
-				if(pre_range__cfg_esc_volt_max != cfg_range_max)
+				if((dCH__CFG_ELECTROSTATIC_CHUCK_TYPE->Check__DATA(pre_range__cfg_chuck_type) < 0)
+				|| (pre_range__cfg_esc_volt_max != cfg_range_max))
 				{
-					pre_range__cfg_esc_volt_max = cfg_range_max;
+					active__range_change = true;
 
+					pre_range__cfg_chuck_type = dCH__CFG_ELECTROSTATIC_CHUCK_TYPE->Get__STRING();
+					pre_range__cfg_esc_volt_max = cfg_range_max;
+				}
+
+				if(active__range_change)
+				{
 					double cfg_max = cfg_range_max;
 					double cfg_min = 0.0;
 					int    cfg_dec = 1;

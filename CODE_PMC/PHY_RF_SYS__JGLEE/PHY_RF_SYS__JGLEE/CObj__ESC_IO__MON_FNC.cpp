@@ -343,6 +343,7 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 			}
 
 			doEXT_CH__ESC_All_Voltage->Set__DATA(STR__On);
+			doEXT_CH__ESC_VOLTAGE_ON->Set__DATA(STR__On); //KMS Voltage ON
 
 			// DPC Center ...
 			if(bActive__CENTER_USE)
@@ -484,6 +485,15 @@ Mon__SYS_INFO(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 					if(dCH__MON_CHUCK_STATUS->Check__DATA(STR__CHUCKED) > 0)
 					{
 						double cfg__max_leak = aCH__CFG_HE_CENTER_WAFER_MAX_LEAK->Get__VALUE();
+
+						if(dCH__CFG_HE_DONOT_CHECK_DURING_ON_RF->Check__DATA(STR__YES) > 0)//KMS : When Using He Do Not Check max Leak Value
+						{
+							if(dEXT_CH__RF_ON_STAUTS->Check__DATA(STR__ON) > 0)
+							{
+								count__error_center = 0;
+								sCH__MON_FAULT_HE_LEAK_CENTER_STATE->Set__DATA(STR__NO);
+							}
+						}
 
 						if(cur__flow_leak > cfg__max_leak)
 						{
@@ -1348,6 +1358,21 @@ Mon__HELIUM_STABLE_CHECK(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_
 
 					continue;
 				}
+				
+				// KMS : When Using RF Don't Check He Pressur
+				if(dCH__CFG_HE_DONOT_CHECK_DURING_ON_RF->Check__DATA(STR__YES) > 0)
+				{
+					if(dEXT_CH__RF_ON_STAUTS->Check__DATA(STR__ON) > 0)
+					{
+						p_timer__check_delay->STOP_ZERO();
+						p_ch__fault->Set__DATA("");
+
+						p_timer__stable_delay->STOP_ZERO();
+						p_ch__stable->Set__DATA(STR__YES);
+						continue;
+					}
+				}
+				
 
 				if(Fnc__HE_ERROR_CHECK(p_alarm, he_type,CHECK_POINT__IO, -1) < 0)
 				{

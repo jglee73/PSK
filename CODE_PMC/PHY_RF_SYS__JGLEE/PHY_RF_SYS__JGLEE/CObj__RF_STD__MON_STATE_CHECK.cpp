@@ -151,7 +151,7 @@ Mon__STATE_CHECK(CII_OBJECT__VARIABLE *p_variable, CII_OBJECT__ALARM *p_alarm)
 					ch_data = aEXT_CH__RF_AO_SET_POWER->Get__STRING();
 					io_power_set = atof(ch_data);
 					
-					double io_value = io_power_set + set_offset;
+					double io_value = io_power_set - set_offset;
 
 					ch_data.Format("%.1f", io_value);
 					sCH__MON_IO_SET_POWER->Set__DATA(ch_data);

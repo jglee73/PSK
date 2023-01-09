@@ -1,0 +1,6 @@
+; IO__MATCHER_AE_PSK.def : Declares the module parameters for the DLL.
+
+LIBRARY      "IO__MATCHER_AE_PSK"
+
+EXPORTS
+    ; Explicit exports can go here
